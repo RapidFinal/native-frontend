@@ -7,9 +7,13 @@
     "test": "jest"
   },
   "dependencies": {
+    "prop-types": "^15.6.2",
     "react": "16.3.1",
     "react-native": "0.55.4",
-    "react-native-firebase": "^4.2.0"
+    "react-native-fbsdk": "^0.7.0",
+    "react-native-firebase": "^4.2.0",
+    "react-navigation": "^2.5.5",
+    "recompose": "^0.27.1"
   },
   "devDependencies": {
     "babel-jest": "23.2.0",
