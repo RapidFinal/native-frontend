@@ -1,6 +1,4 @@
 import { AppRegistry } from 'react-native';
-import {
-    App
-} from './src/screens';
+import App from './src/App';
 
 AppRegistry.registerComponent('JobMe', () => App);
