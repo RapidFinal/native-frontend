@@ -1,4 +1,4 @@
-package com.jobme;
+package com.jobme.androiod.app;
 
 import android.content.Intent;
 
