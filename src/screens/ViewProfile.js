@@ -1,6 +1,7 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
+import {StyleSheet} from "react-native";
 
 class ViewProfile extends React.Component {
 
@@ -15,5 +16,9 @@ class ViewProfile extends React.Component {
     }
 
 }
+
+const styles = StyleSheet.create({
+
+});
 
 export default compose() (ViewProfile)
