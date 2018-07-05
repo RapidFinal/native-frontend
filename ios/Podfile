@@ -14,6 +14,8 @@ target 'JobMe' do
   pod 'FBSDKShareKit'
   pod 'FBSDKLoginKit'
 
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
   target 'JobMeTests' do
     inherit! :search_paths
     # Pods for testing
