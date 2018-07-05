@@ -20,7 +20,7 @@ class Stepper extends React.Component {
             <StepIndicator
                 customStyles={customStyles}
                 currentPosition={this.props.currentPosition}
-                labels={this.props.labels}
+                stepCount={this.props.stepCount}
             />
         )
     }
