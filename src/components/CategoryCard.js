@@ -9,7 +9,12 @@ class CategoryCard extends React.Component {
 
     }
 
+    state = {
+
+    }
+
     render(){
+        const {} = this.state;
         return (
             null
         )

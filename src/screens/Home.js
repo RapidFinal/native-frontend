@@ -9,7 +9,16 @@ class Home extends React.Component {
 
     }
 
+    state = {
+
+    }
+
+    state = {
+
+    }
+
     render(){
+        const {} = this.state;
         return (
             null
         )
