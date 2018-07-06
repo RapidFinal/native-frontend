@@ -32,8 +32,7 @@ class StatusDropdown extends React.Component {
         const {} = this.state;
         return (
             <View>
-                <Text>Status</Text>
-                <Item picker regular>
+                <Item picker regular style={styles.view}>
                     <Picker mode="dropdown"
                             placeholder="Select your SIM"
                             selectedValue={this.state.selectedStatus}
@@ -60,7 +59,9 @@ class StatusDropdown extends React.Component {
 }
 
 const styles = StyleSheet.create({
-
+    view: {
+        backgroundColor: 'white'
+    }
 });
 
 export default compose() (StatusDropdown)

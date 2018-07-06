@@ -71,6 +71,7 @@ const EmployeeInfo = ({selectedSkill}) => (
         <TextInput text={"1. Add..."}/>
         <TextInput text={"2. Add..."}/>
         <TextInputWithLabel text={"Degree"}/>
+        <Text>Status</Text>
         <StatusDropdown />
     </Form>
 );
