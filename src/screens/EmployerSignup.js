@@ -1,9 +1,14 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import {StyleSheet, Text, View, Button} from "react-native";
+import {StyleSheet, Text, View, Button, ListView} from "react-native";
 import {Stepper} from "../components";
-import {Form, Input, Item, Label} from "native-base";
+import {Body, CheckBox, Form, Input, Item, Label, ListItem} from "native-base";
+
+const catData={
+    "cat1":["s1","s2"],
+    "cat2":["s1","s2"],
+}
 
 const AccountInfo = () => (
     <View>
@@ -40,18 +45,29 @@ const AccountInfo = () => (
     </View>
 );
 
-const SelectCategory = () => (
+const checkboxList=(key)=>(
+    catData[key].map((data, index)=>(
+        <ListItem key={index}>
+            <CheckBox checked={true} />
+            <Body>
+                <Text>{data}</Text>
+            </Body>
+        </ListItem>
+    )));
 
+const categoriesButton=
+    Object.keys(catData).map((key, index) => (
+        <View key={index}>
+            <Button title={key} color={'green'} onPress={()=>{}}/>
+            {checkboxList(key)}
+        </View>
+    ));
+
+
+const SelectCategory = () => (
     <View>
         <Text>Choose the categories that you looking for</Text>
-        {/*Object.keys(catData).map(key => (*/}
-        {/*<Button block info key={key}>*/}
-            {/*<Text>*/}
-                {/*{key}*/}
-            {/*</Text>*/}
-        {/*</Button>*/}
-        {/*));*/}
-
+        {categoriesButton}
     </View>);
 
 class EmployerSignup extends React.Component {
