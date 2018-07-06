@@ -10,6 +10,8 @@ import {
     Item,
     Text,
     H3,
+    Button,
+    Icon
 } from "native-base";
 import {
     Stepper,
@@ -19,9 +21,9 @@ import {
 } from "../components";
 
 const TextInputWithLabel = ({text}) => (
-    <View style={styles.textInput}>
+    <View>
         <Text>{text}</Text>
-        <Item regular>
+        <Item regular style={styles.textInput}>
             <Input placeholder={text} />
         </Item>
     </View>
@@ -35,8 +37,20 @@ const TextInput = ({text}) => (
     </View>
 );
 
+const AddButton = () => (
+    <Button rounded style={[styles.center, styles.marginTop]}>
+        <Icon name='md-add' />
+    </Button>
+);
+
+const SubmitButton = ({submit}) => (
+    <Button onPress={submit}>
+        <Text>Submit</Text>
+    </Button>
+);
+
 const AccountInfo = () => (
-    <Form style={styles.form}>
+    <Form style={styles.marginTop}>
         <TextInputWithLabel text={"First name"} />
         <TextInputWithLabel text={"Last name"} />
         <TextInputWithLabel text={"Email"} />
@@ -51,7 +65,7 @@ const SelectCategory = () => (
     </View>);
 
 const EmployeeInfo = ({selectedSkill}) => (
-    <Form style={styles.form}>
+    <Form style={styles.marginTop}>
         <H3>Your top skills</H3>
         <Text style={styles.text}>Suggestion of popular skills for {selectedSkill}</Text>
         <TextInput text={"1. Add..."}/>
@@ -62,9 +76,11 @@ const EmployeeInfo = ({selectedSkill}) => (
 );
 
 const WorkExp = () => (
-    <View>
-        <Text>Page 4</Text>
-    </View>);
+    <Form style={styles.grayBackground}>
+        <TextInputWithLabel text="Title" />
+        <TextInputWithLabel text="Description" />
+    </Form>
+);
 
 class EmployeeSignup extends React.Component {
 
@@ -103,7 +119,6 @@ class EmployeeSignup extends React.Component {
 
     displayButtons = () => {
         const nextButton = <NextButton onPress={this.nextStep}/>;
-        // const NextButton = <Button title="Next" onPress={this.nextStep}/>;
         const backButton = <BackButton onPress={this.prevStep}/>;
         switch (this.state.currentStep) {
             case 0:
@@ -121,7 +136,15 @@ class EmployeeSignup extends React.Component {
                     </View>
                 );
             case 3:
-                return backButton;
+                return (
+                    <View>
+                        <AddButton/>
+                        <View style={styles.buttons}>
+                            {backButton}
+                            <SubmitButton/>
+                        </View>
+                    </View>
+                );
         }
     };
 
@@ -135,7 +158,7 @@ class EmployeeSignup extends React.Component {
                         currentPosition={this.state.currentStep}
                         stepCount={stepCount}
                     />
-                    <View style={styles.form}>
+                    <View style={styles.marginTop}>
                         {this.displayStep()}
                         {this.displayButtons()}
                     </View>
@@ -151,10 +174,11 @@ const styles = StyleSheet.create({
         marginTop: 25,
         marginHorizontal: 50
     },
-    form: {
+    marginTop: {
         marginTop: 10
     },
     textInput: {
+        backgroundColor: 'white',
         marginBottom: 10
     },
     nextButton: {
@@ -168,6 +192,13 @@ const styles = StyleSheet.create({
     },
     text: {
         marginVertical: 10
+    },
+    center: {
+        alignSelf: "center"
+    },
+    grayBackground: {
+        padding: 20,
+        backgroundColor: "#F0F0F0"
     }
 });
 
