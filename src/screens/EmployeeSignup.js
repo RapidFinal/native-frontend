@@ -1,8 +1,9 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import {StyleSheet, Text, View, Button} from "react-native";
-import {Stepper} from "../components";
+import {StyleSheet, Text, View} from "react-native";
+import {Container, Content} from "native-base";
+import {Stepper, BackButton, NextButton} from "../components";
 
 
 const AccountInfo = () => (
@@ -62,21 +63,22 @@ class EmployeeSignup extends React.Component {
     };
 
     displayButtons = () => {
-        const NextButton = <Button title="Next" onPress={this.nextStep}/>;
-        const BackButton = <Button title="Back" onPress={this.prevStep}/>;
+        const nextButton = <NextButton onPress={this.nextStep}/>;
+        // const NextButton = <Button title="Next" onPress={this.nextStep}/>;
+        const backButton = <BackButton onPress={this.prevStep}/>;
         switch (this.state.currentStep) {
             case 0:
-                return NextButton;
+                return nextButton;
             case 1:
             case 2:
                 return (
                     <View>
-                        {NextButton}
-                        {BackButton}
+                        {backButton}
+                        {nextButton}
                     </View>
                 );
             case 3:
-                return BackButton;
+                return backButton;
         }
     };
 
@@ -84,14 +86,16 @@ class EmployeeSignup extends React.Component {
         const {} = this.state;
         const stepCount = 4;
         return (
-            <View>
-                <Stepper
-                    currentPosition={this.state.currentStep}
-                    stepCount={stepCount}
-                />
-                {this.displayStep()}
-                {this.displayButtons()}
-            </View>
+            <Container>
+                <Content>
+                    <Stepper
+                        currentPosition={this.state.currentStep}
+                        stepCount={stepCount}
+                    />
+                    {this.displayStep()}
+                    {this.displayButtons()}
+                </Content>
+            </Container>
         )
     }
 
