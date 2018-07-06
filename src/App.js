@@ -1,6 +1,7 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
+import EmployerSignup from './screens/EmployerSignup'
 import {StyleSheet} from "react-native";
 
 class App extends React.Component {
@@ -11,7 +12,8 @@ class App extends React.Component {
 
     render(){
         return (
-            null
+            // null
+            <EmployerSignup/>
         )
     }
 
