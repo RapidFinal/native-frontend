@@ -10,20 +10,43 @@ class ViewProfile extends React.Component {
     }
 
     state = {
-
-    }
+        img_url: "https://st2.depositphotos.com/1006318/10458/v/950/depositphotos_104583834-stock-illustration-business-man-profile-icon-male.jpg",
+        fullname: "FULLNAME",
+        description: "DESCRIPTION",
+        experience: [
+            {
+                title: "EXPERIENCE 1",
+                description: "EXPERIENCE DESCRIPTION 1"
+            }
+        ],
+        skill_sets: ["SKILL 1", "SKILL 2"],
+        project: [
+            {
+                name: "PROJECT 1",
+                description: "PROJECT DESCRIPTION 1",
+                date: ""
+            }
+        ]
+    };
 
     render(){
-        // const {} = this.state; // to easily access state put desire variable in the curly brace so it may become const {variable} = this.state;
+        const {img_url} = this.state;
         return (
-            null
+            <image
+                style={{borderBottomLeftRadius: '50%',
+                        borderBottomRightRadius: '50%',
+                        borderTopLeftRadius: '50%',
+                        borderTopRightRadius: '50%'
+                }}
+                source={{uri: img_url}}
+            />
+
         )
     }
 
 }
 
 const styles = StyleSheet.create({
-
 });
 
 export default compose() (ViewProfile)
