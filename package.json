@@ -13,6 +13,7 @@
     "react-native": "0.55.4",
     "react-native-fbsdk": "^0.7.0",
     "react-native-firebase": "^4.2.0",
+    "react-native-modal": "^6.4.0",
     "react-native-step-indicator": "0.0.9",
     "react-navigation": "^2.5.5",
     "recompose": "^0.27.1"
