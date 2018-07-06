@@ -6,17 +6,24 @@ import LikeScreen from "../screens/Like";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {createBottomTabNavigator, createStackNavigator, createSwitchNavigator} from "react-navigation";
 import React from "react";
+import {Button} from "react-native";
 
-/* Example of how to set header style (Must be added to both EmployerMainStack & CandidateMainStack */
-/*const headerStyle = {
-    headerStyle: {
-        backgroundColor: '#f4511e',
-    },
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-        fontWeight: 'bold',
-    },
-};*/
+/* Changes both EmployerMainStack & CandidateMainStack */
+const headerOptions = {
+    headerLeft: (
+        <Button
+            onPress={() => alert('This is a left button!')}
+            title="Left"
+        />
+    ),
+    headerRight: (
+        <Button
+            onPress={() => alert('This is a right button!')}
+            title="Right"
+        />
+    ),
+    headerTitleStyle: {flex: 1, textAlign: 'center'}
+};
 
 const EmployerTabStack = createBottomTabNavigator(
     {
@@ -41,15 +48,6 @@ const EmployerTabStack = createBottomTabNavigator(
                 return <Ionicons name={iconName} size={25} color={tintColor}/>;
             }
         })
-    }
-);
-
-const EmployerMainStack = createStackNavigator(
-    {
-        MainEmployer: EmployerTabStack
-    },
-    {
-        //navigationOptions: headerStyle
     }
 );
 
@@ -79,12 +77,21 @@ const CandidateTabStack = createBottomTabNavigator(
     }
 );
 
+const EmployerMainStack = createStackNavigator(
+    {
+        MainEmployer: EmployerTabStack
+    },
+    {
+        navigationOptions: headerOptions
+    }
+);
+
 const CandidateMainStack = createStackNavigator(
     {
         MainCandidate: CandidateTabStack
     },
     {
-        //navigationOptions: headerStyle
+        navigationOptions:  headerOptions
     }
 );
 
