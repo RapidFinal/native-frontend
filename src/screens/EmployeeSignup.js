@@ -14,10 +14,11 @@ import {
 import {
     Stepper,
     BackButton,
-    NextButton
+    NextButton,
+    StatusDropdown
 } from "../components";
 
-const TextInput = ({text}) => (
+const TextInputWithLabel = ({text}) => (
     <View style={styles.textInput}>
         <Text>{text}</Text>
         <Item regular>
@@ -26,13 +27,21 @@ const TextInput = ({text}) => (
     </View>
 );
 
+const TextInput = ({text}) => (
+    <View style={styles.textInput}>
+        <Item regular>
+            <Input placeholder={text} />
+        </Item>
+    </View>
+);
+
 const AccountInfo = () => (
     <Form style={styles.form}>
-        <TextInput text={"First name"} />
-        <TextInput text={"Last name"} />
-        <TextInput text={"Email"} />
-        <TextInput text={"Password"} />
-        <TextInput text={"Confirm Password"} />
+        <TextInputWithLabel text={"First name"} />
+        <TextInputWithLabel text={"Last name"} />
+        <TextInputWithLabel text={"Email"} />
+        <TextInputWithLabel text={"Password"} />
+        <TextInputWithLabel text={"Confirm Password"} />
     </Form>
 );
 
@@ -42,9 +51,13 @@ const SelectCategory = () => (
     </View>);
 
 const EmployeeInfo = ({selectedSkill}) => (
-    <Form>
+    <Form style={styles.form}>
         <H3>Your top skills</H3>
-        <Text>Suggestion of popular skills for {selectedSkill}</Text>
+        <Text style={styles.text}>Suggestion of popular skills for {selectedSkill}</Text>
+        <TextInput text={"1. Add..."}/>
+        <TextInput text={"2. Add..."}/>
+        <TextInputWithLabel text={"Degree"}/>
+        <StatusDropdown />
     </Form>
 );
 
@@ -149,8 +162,12 @@ const styles = StyleSheet.create({
         marginTop: 10
     },
     buttons: {
+        marginTop: 20,
         flexDirection: 'row',
         justifyContent: 'space-between'
+    },
+    text: {
+        marginVertical: 10
     }
 });
 
