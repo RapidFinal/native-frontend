@@ -138,18 +138,17 @@ android {
 
 dependencies {
     compile project(':react-native-vector-icons')
-    compile(project(':react-native-firebase')) {
-        transitive = false
+    implementation (project(':react-native-snackbar')) {
+        exclude group: "com.android.support"
     }
-    compile project(':react-native-fbsdk')
     implementation project(':react-native-fbsdk')
     implementation(project(':react-native-firebase')) {
         transitive = false
     }
-    implementation project(':react-native-firebase')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     //noinspection GradleCompatible
     implementation "com.android.support:appcompat-v7:27.1.1"
+    implementation "com.android.support:design:27.1.1"
 
     implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation 'com.google.android.gms:play-services-analytics:16.0.1'

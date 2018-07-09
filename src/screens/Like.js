@@ -1,9 +1,10 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import {Alert, Button, StyleSheet, Text, TouchableOpacity} from "react-native";
+import {Alert, Button, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import DraggableFlatList from 'react-native-draggable-flatlist'
 import firebase from 'react-native-firebase';
+import Snackbar from 'react-native-snackbar';
 
 // TODO: Delete test_like & get the correct db.ref()
 const currentUser = "user1";
@@ -32,27 +33,29 @@ class Like extends React.Component {
 
     render(){
         return (
-            <DraggableFlatList
-                data={this.state.profiles}
-                renderItem={({item, index, move, moveEnd}) =>
-                    <TouchableOpacity onPress={this.goToProfile}
-                                      style={styles.horizontalProfileCard}
-                                      onLongPress={move}
-                                      delayLongPress={200}
-                                      onPressOut={moveEnd}
-                    >
-                        <Text style={styles.profileContentPlaceHolder}>{item.content}</Text>
-                        <Button
-                            title="Delete"
-                            onPress={this.removeLike.bind(this,index)}
-                            style={styles.deleteButton}
-                        />
-                    </TouchableOpacity>}
-                keyExtractor={item => item.id}
-                onMoveEnd={
-                    ({ data }) => this.updateOrder(data)
-                }
-            />
+            <View style={{flex: 1}}>
+                <DraggableFlatList
+                    data={this.state.profiles}
+                    renderItem={({item, index, move, moveEnd}) =>
+                        <TouchableOpacity onPress={this.goToProfile}
+                                          style={styles.horizontalProfileCard}
+                                          onLongPress={move}
+                                          delayLongPress={200}
+                                          onPressOut={moveEnd}
+                        >
+                            <Text style={styles.profileContentPlaceHolder}>{item.content}</Text>
+                            <Button
+                                title="Delete"
+                                onPress={this.removeLike.bind(this,index)}
+                                style={styles.deleteButton}
+                            />
+                        </TouchableOpacity>}
+                    keyExtractor={item => item.id}
+                    onMoveEnd={
+                        ({ data }) => this.updateOrder(data)
+                    }
+                />
+            </View>
         );
     }
 
@@ -69,9 +72,10 @@ class Like extends React.Component {
     };
 
     removeLike = (index) => {
+        const profileName = this.state.profiles[index].content;
         Alert.alert(
             'Delete',
-            'Are you sure you want to delete ' + this.state.profiles[index].content + "?",
+            'Are you sure you want to delete ' + profileName + "?",
             [
                 {text: 'Cancel', onPress: () => {}, style: 'cancel'},
                 {text: 'OK', onPress: () => {
@@ -80,6 +84,10 @@ class Like extends React.Component {
                         likeProfilesRef.child(this.state.profiles[index].id).remove();
                         this.setState({
                             profiles: profilesClone
+                        });
+                        Snackbar.show({
+                            title: profileName + ' was deleted',
+                            duration: Snackbar.LENGTH_LONG,
                         });
                     }},
             ]
