@@ -19,6 +19,7 @@ import StatusDropdown from './StatusDropdown'
 import Stepper from './Stepper'
 import Tag from './Tag'
 import TextField from './TextField'
+import TextInput from './TextInput'
 import TextInputWithLabel from './TextInputWithLabel'
 import TimelineProjectCard from './TimelineProjectCard'
 
@@ -45,6 +46,7 @@ export {
     Stepper,
     Tag,
     TextField,
+    TextInput,
     TextInputWithLabel,
     TimelineProjectCard
 }
