@@ -10,6 +10,7 @@ import HomeCard from './HomeCard'
 import NavigationBar from './NavigationBar'
 import NextButton from './NextButton'
 import NormalProjectCard from './NormalProjectCard'
+import PlusButton from './PlusButton'
 import ProjectDetail from './ProjectDetail'
 import ProjectSection from './ProjectSection'
 import SearchCard from './ProjectSection'
@@ -37,6 +38,7 @@ export {
     NavigationBar,
     NextButton,
     NormalProjectCard,
+    PlusButton,
     ProjectSection,
     ProjectDetail,
     SearchCard,
