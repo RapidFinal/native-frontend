@@ -36,17 +36,22 @@ class Like extends React.Component {
     }
 
     componentDidMount() {
+        this._mounted = true;
         this.updateOrder.bind(this);
         likeProfilesRef.orderByChild("orderKey").on('child_added', snapshot => {
             let profile = { id: snapshot.key, content: snapshot.child("name").val(), orderKey: snapshot.child("orderKey").val()};
             if (this.state.undoPressed) {
                 this.insertProfileToIndex(profile);
-                this.setState({undoPressed: false});
+                if (this._mounted) this.setState({undoPressed: false});
             }
             else {
-                this.setState({profiles: this.state.profiles.concat([profile])});
+                if (this._mounted) this.setState({profiles: this.state.profiles.concat([profile])});
             }
         })
+    }
+
+    componentWillUnmount(){
+        this._mounted = false;
     }
 
     render(){
@@ -58,7 +63,7 @@ class Like extends React.Component {
                         <TouchableOpacity onPress={this.goToProfile}
                                           style={styles.horizontalProfileCard}
                                           onLongPress={move}
-                                          delayLongPress={200}
+                                          delayLongPress={400}
                                           onPressOut={moveEnd}
                         >
                             <Text style={styles.profileContentPlaceHolder}>{item.content}</Text>
@@ -74,7 +79,9 @@ class Like extends React.Component {
                     }
                 />
                 <SnackBar visible={this.state.showDeleteSnackbar} textMessage={this.state.deleteSnackbarMessage} accentColor="green" actionHandler={()=>this.restoreProfileToDB()} actionText="Undo"/>
-                <SnackBar visible={this.state.showRestoreSnackbar} textMessage={this.state.restoreSnackbarMessage} accentColor="green" actionHandler={()=>this.setState({showRestoreSnackbar: false})} actionText="Close"/>
+                <SnackBar visible={this.state.showRestoreSnackbar} textMessage={this.state.restoreSnackbarMessage} accentColor="green" actionHandler={
+                    () => {if (this._mounted) this.setState({showRestoreSnackbar: false});}
+                } actionText="Close"/>
             </View>
         );
     }
@@ -89,26 +96,26 @@ class Like extends React.Component {
             likeProfilesRef.child(currentProfile.id).update({"orderKey": i});
             data[i].orderKey = i;
         }
-        this.setState({ profiles : data });
+        if (this._mounted) this.setState({ profiles : data });
     };
 
     insertProfileToIndex = (profile) => {
         const profilesClone = this.state.profiles.slice();
         profilesClone.splice(this.state.lastRemovedIndex, 0, profile);
-        this.setState({profiles: profilesClone});
+        if (this._mounted) this.setState({profiles: profilesClone});
     };
 
     restoreProfileToDB = () => {
         const profileBackup = this.state.profileBackup;
         likeProfilesRef.child(profileBackup.id).set({name: profileBackup.content, orderKey: profileBackup.orderKey});
-        this.setState({
+        if (this._mounted) this.setState({
             undoPressed: true,
             restoreSnackbarMessage: profileBackup.content + " was restored",
             showDeleteSnackbar: false,
             showRestoreSnackbar: true,
         });
         clearTimeout(restoreSnackbarTimer);
-        restoreSnackbarTimer = setTimeout(() => this.setState({showRestoreSnackbar: false}), 2000);
+        restoreSnackbarTimer = setTimeout(() => {if (this._mounted) this.setState({showRestoreSnackbar: false});}, 2000);
     };
 
     removeLike = (index) => {
@@ -117,7 +124,7 @@ class Like extends React.Component {
         const profileName = profileBackup.content;
         profilesClone.splice(index, 1);
         likeProfilesRef.child(this.state.profiles[index].id).remove();
-        this.setState({
+        if (this._mounted) this.setState({
             profiles: profilesClone,
             lastRemovedIndex: index,
             profileBackup: profileBackup,
@@ -126,7 +133,7 @@ class Like extends React.Component {
             showRestoreSnackbar: false
         });
         clearTimeout(deleteSnackbarTimer);
-        deleteSnackbarTimer = setTimeout(() => this.setState({showDeleteSnackbar: false}), 5000);
+        deleteSnackbarTimer = setTimeout(() => {if (this._mounted) this.setState({showDeleteSnackbar: false});}, 5000);
     };
 
     showDeleteAlert = (index) => {
