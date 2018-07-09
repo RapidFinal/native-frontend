@@ -19,15 +19,26 @@ class Like extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            profiles : []
+            profiles : [],
+            undoPressed: false
         };
     }
 
     componentDidMount() {
         this.updateOrder.bind(this);
         likeProfilesRef.orderByChild("orderKey").on('child_added', snapshot => {
-            let profile = { id: snapshot.key, content: snapshot.child("name").val()};
-            this.setState({ profiles: this.state.profiles.concat([profile])});
+            let profile = { id: snapshot.key, content: snapshot.child("name").val(), orderKey: snapshot.child("orderKey").val()};
+            if (this.state.undoPressed) {
+                this.insertProfileToIndex(profile);
+                this.setState({undoPressed: false});
+                Snackbar.show({
+                    title: profile.content + ' was restored',
+                    duration: Snackbar.LENGTH_LONG,
+                });
+            }
+            else {
+                this.setState({profiles: this.state.profiles.concat([profile])});
+            }
         })
     }
 
@@ -46,7 +57,7 @@ class Like extends React.Component {
                             <Text style={styles.profileContentPlaceHolder}>{item.content}</Text>
                             <Button
                                 title="Delete"
-                                onPress={this.removeLike.bind(this,index)}
+                                onPress={this.showDeleteAlert.bind(this,index)}
                                 style={styles.deleteButton}
                             />
                         </TouchableOpacity>}
@@ -66,30 +77,51 @@ class Like extends React.Component {
     updateOrder = (data) => {
         for (let i = 0; i < data.length; i++) {
             let currentProfile = data[i];
-            likeProfilesRef.child(currentProfile.id).update({"orderKey": i})
+            likeProfilesRef.child(currentProfile.id).update({"orderKey": i});
+            data[i].orderKey = i;
         }
         this.setState({ profiles : data });
     };
 
+    insertProfileToIndex = (profile) => {
+        const profilesClone = this.state.profiles.slice();
+        profilesClone.splice(profile.orderKey, 0, profile);
+        this.setState({profiles: profilesClone});
+    };
+
+    restoreProfileToDB = (profileBackup) => {
+        this.setState({undoPressed: true});
+        likeProfilesRef.child(profileBackup.id).set({name: profileBackup.content, orderKey: profileBackup.orderKey});
+    };
+
     removeLike = (index) => {
+        const profilesClone = this.state.profiles.slice();
+        const profileBackup = Object.assign(this.state.profiles[index]);
+        const profileName = profileBackup.content;
+        profilesClone.splice(index, 1);
+        likeProfilesRef.child(this.state.profiles[index].id).remove();
+        this.setState({
+            profiles: profilesClone
+        });
+        Snackbar.show({
+            title: profileName + ' was deleted',
+            duration: Snackbar.LENGTH_INDEFINITE,
+            action: {
+                title: 'UNDO',
+                color: 'green',
+                onPress: () => this.restoreProfileToDB(profileBackup)
+            },
+        });
+    };
+
+    showDeleteAlert = (index) => {
         const profileName = this.state.profiles[index].content;
         Alert.alert(
             'Delete',
             'Are you sure you want to delete ' + profileName + "?",
             [
                 {text: 'Cancel', onPress: () => {}, style: 'cancel'},
-                {text: 'OK', onPress: () => {
-                        const profilesClone = this.state.profiles.slice();
-                        profilesClone.splice(index, 1);
-                        likeProfilesRef.child(this.state.profiles[index].id).remove();
-                        this.setState({
-                            profiles: profilesClone
-                        });
-                        Snackbar.show({
-                            title: profileName + ' was deleted',
-                            duration: Snackbar.LENGTH_LONG,
-                        });
-                    }},
+                {text: 'OK', onPress: () => this.removeLike(index)},
             ]
         )
     };
