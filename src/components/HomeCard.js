@@ -4,30 +4,38 @@ import PropTypes from 'prop-types'
 import { Dimensions, Image, StyleSheet, View, FlatList } from 'react-native';
 import {Container, Text} from "native-base";
 
-class HomeCard extends React.Component {
+const HomeCard = ({name, major, status}) => (
+    <View style={[styles.card, { backgroundColor: 'tomato' }]}>
+        <Text style={styles.text}>{name}</Text>
+        <Text style={styles.text}>{major}</Text>
+        <Text style={styles.text}>{status}</Text>
+    </View>
+)
 
-    static propTypes = {
-
-    }
-
-    state = {
-
-    }
-
-
-
-    render(){
-        const {} = this.state;
-        return (
-            <View style={[styles.card, { backgroundColor: 'tomato' }]}>
-                <Text style={styles.text}>Name</Text>
-                <Text style={styles.text}>Major</Text>
-                <Text style={styles.text}>Status</Text>
-            </View>
-        )
-    }
-
-}
+// class HomeCard extends React.Component {
+//
+//     static propTypes = {
+//
+//     }
+//
+//     state = {
+//
+//     }
+//
+//
+//
+//     render(){
+//         const {} = this.state;
+//         return (
+//             <View style={[styles.card, { backgroundColor: 'tomato' }]}>
+//                 <Text style={styles.text}>this.props.counter</Text>
+//                 <Text style={styles.text}>Major</Text>
+//                 <Text style={styles.text}>Status</Text>
+//             </View>
+//         )
+//     }
+//
+// }
 
 const styles = StyleSheet.create({
     card: {
@@ -43,4 +51,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default compose() (HomeCard)
+export default HomeCard;
