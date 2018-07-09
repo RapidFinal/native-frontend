@@ -7,6 +7,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "lodash": "^4.17.10",
     "native-base": "^2.6.1",
     "prop-types": "^15.6.2",
     "react": "16.3.1",
@@ -15,6 +16,7 @@
     "react-native-firebase": "^4.2.0",
     "react-native-modal": "^6.4.0",
     "react-native-step-indicator": "0.0.9",
+    "react-native-vector-icons": "^4.6.0",
     "react-navigation": "^2.5.5",
     "recompose": "^0.27.1"
   },
