@@ -14,10 +14,12 @@ import ProjectDetail from './ProjectDetail'
 import ProjectSection from './ProjectSection'
 import SearchCard from './ProjectSection'
 import SideMenu from './SideMenu'
+import SignUpForm from './SignUpForm'
 import StatusDropdown from './StatusDropdown'
 import Stepper from './Stepper'
 import Tag from './Tag'
 import TextField from './TextField'
+import TextInputWithLabel from './TextInputWithLabel'
 import TimelineProjectCard from './TimelineProjectCard'
 
 
@@ -38,9 +40,11 @@ export {
     ProjectDetail,
     SearchCard,
     SideMenu,
+    SignUpForm,
     StatusDropdown,
     Stepper,
     Tag,
     TextField,
+    TextInputWithLabel,
     TimelineProjectCard
 }

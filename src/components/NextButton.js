@@ -18,6 +18,7 @@ class NextButton extends React.Component {
         const {} = this.state;
         return (
             <Button
+                style={styles.button}
                 iconRight
                 onPress={this.props.onPress}
             >
@@ -30,7 +31,10 @@ class NextButton extends React.Component {
 }
 
 const styles = StyleSheet.create({
-
+    button: {
+        alignSelf: 'center',
+        marginTop: 10
+    }
 });
 
 export default compose() (NextButton)
