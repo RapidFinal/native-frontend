@@ -28,6 +28,8 @@ class CredentialSignUp extends React.Component {
         this.setState({
             [name]: event.target.value,
         });
+        console.log(name)
+        console.log(event.target.value)
     };
 
 
@@ -45,8 +47,7 @@ class CredentialSignUp extends React.Component {
                         <TextInputWithLabel
                             label="First name"
                             placeholder="First name"
-                            value={firstName}
-                            onChange={this.handleChange("firstName")}
+                            onChange={(value) => this.setState({value})}
                         />
                         <TextInputWithLabel
                             label="Last name"
