@@ -5,6 +5,7 @@ import EmployerSignUpAccountPage from "./EmployerSignUpAccountPage"
 import SelectCategory from "./SelectCategory"
 import Stepper from "../components/Stepper";
 import {StyleSheet, View, Button} from "react-native";
+import {Container, Content} from "native-base";
 
 class EmployerSignup extends React.Component {
 
@@ -59,21 +60,54 @@ class EmployerSignup extends React.Component {
         const {} = this.state;
         const stepCount = 2;
         return (
-            <View>
-                <Stepper
-                    currentPosition={this.state.currentStep}
-                    stepCount={stepCount}
-                />
-                {this.displayStep()}
-                {this.displayButtons()}
-            </View>
+            <Container>
+                <Content style={styles.content}>
+                    <Stepper
+                        currentPosition={this.state.currentStep}
+                        stepCount={stepCount}
+                    />
+                    {/*<View style={styles.marginTop}>*/}
+                        {this.displayStep()}
+                        {this.displayButtons()}
+                    {/*</View>*/}
+                </Content>
+            </Container>
         )
     }
 
 }
 
 const styles = StyleSheet.create({
-
+    content: {
+        marginTop: 25,
+        marginHorizontal: 50
+    },
+    marginTop: {
+        marginTop: 10
+    },
+    textInput: {
+        backgroundColor: 'white',
+        marginBottom: 10
+    },
+    nextButton: {
+        alignSelf: 'flex-end',
+        marginTop: 10
+    },
+    buttons: {
+        marginTop: 20,
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+    text: {
+        marginVertical: 10
+    },
+    center: {
+        alignSelf: "center"
+    },
+    grayBackground: {
+        padding: 20,
+        backgroundColor: "#F0F0F0"
+    }
 });
 
 export default compose() (EmployerSignup)

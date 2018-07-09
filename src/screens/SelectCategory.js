@@ -1,8 +1,8 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import {StyleSheet, Text, View, Button, TouchableOpacity} from "react-native";
-import {Body, CheckBox, ListItem} from "native-base";
+import {StyleSheet, Text, View, ScrollView} from "react-native";
+import {Body, CheckBox, ListItem, Button} from "native-base";
 import Modal from "react-native-modal";
 
 class SelectCategory extends React.Component {
@@ -61,7 +61,18 @@ class SelectCategory extends React.Component {
         let cloneData = this.state.catData;
         cloneData[categoryKey][subKey] = !cloneData[categoryKey][subKey]
         this.setState({catData:cloneData})
+    };
 
+    _handleOnScroll = event => {
+        this.setState({
+            scrollOffset: event.nativeEvent.contentOffset.y
+        });
+    };
+
+    _handleScrollTo = p => {
+        if (this.scrollViewRef) {
+            this.scrollViewRef.scrollTo(p);
+        }
     };
 
     displaySubCategoriesCheckbox =()=> {
@@ -86,11 +97,7 @@ class SelectCategory extends React.Component {
         let key = this.state.modalPageKey;
         if (key && this.state.isModalVisible){
             return (
-
                 <View style={styles.modalContent}>
-                    <TouchableOpacity onPress={this._toggleModal}>
-                        <Text>Hide me!</Text>
-                    </TouchableOpacity>
                     {this.displaySubCategoriesCheckbox()}
                 </View>
             );
@@ -103,33 +110,48 @@ class SelectCategory extends React.Component {
     displayCategoriesButton= () => {
         let catList = this.state.catData;
         return Object.keys(catList).map((key, index) => (
-            <View key={index}>
-                <Button
-                    title={key}
-                    color={'green'}
-                    onPress={()=>{
-                        this.setState({
-                            modalPageKey : key
-                        });
-                        this._toggleModal();
-                    }}/>
-
-            </View>
+            <Button success large
+                key={index}
+                style={styles.categoryButton}
+                onPress={()=>{
+                    this.setState({
+                        modalPageKey : key
+                    });
+                    this._toggleModal();}}>
+                <Text style={styles.categoryTitle}>
+                    {key}
+                </Text>
+            </Button>
         ));
     }
 
 
     render(){
         return (
-            <View>
-                <Text>Choose the categories and sub-categories that you looking for</Text>
-                {this.displayCategoriesButton()}
+            <View style={{flex:1}}>
+                <View style={
+                   styles.categoryContainer}>
+                    {this.displayCategoriesButton()}
+                </View>
                 <Modal
                     isVisible={this.state.isModalVisible}
                     onBackdropPress={this._toggleModal}
-                    styles={styles.bottomModal}>
-
-                    {this.displayModalContent()}
+                    scrollTo={this._handleScrollTo}
+                    scrollOffset={this.state.scrollOffset}
+                    // scrollOffsetMax={400 - 300} // content height - ScrollView height
+                    style={styles.bottomModal}
+                >
+                    <View style={styles.scrollableModal}>
+                        <ScrollView
+                            ref={ref => (this.scrollViewRef = ref)}
+                            onScroll={this._handleOnScroll}
+                            scrollEventThrottle={16}
+                        >
+                            <View>
+                                {this.displayModalContent()}
+                            </View>
+                        </ScrollView>
+                    </View>
 
                 </Modal>
             </View>
@@ -141,14 +163,37 @@ const styles = StyleSheet.create({
     modalContent: {
         backgroundColor: "white",
         padding: 22,
-        borderColor: "rgba(0, 0, 0, 0.1)",
-        width : "100%",
 
     },
     bottomModal: {
         justifyContent: "flex-end",
-        margin: 0
+        margin: 0,
     },
+    scrollableModal: {
+        height: '60%',
+        backgroundColor: "white",
+    },
+
+    categoryContainer:{
+        flex: 1,
+        flexDirection: "row",
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        alignItems: 'flex-start',
+    },
+
+    categoryButton: {
+        width:'40%',
+        padding:5,
+        margin:5,
+        justifyContent:'center',
+    },
+
+    categoryTitle:{
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 15,
+    }
 });
 
 export default compose() (SelectCategory)
