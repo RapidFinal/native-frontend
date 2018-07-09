@@ -3,6 +3,7 @@ import Edit_Test from "../screens/Edit_Test";
 import Login_Test from "../screens/Login_Test";
 import View_Test from "../screens/View_Test";
 import LikeScreen from "../screens/Like";
+import Signup from "../screens/Signup"
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {createBottomTabNavigator, createStackNavigator, createSwitchNavigator} from "react-navigation";
 import React from "react";
@@ -13,6 +14,10 @@ import {
     EmployeeInfo,
     WorkExp
 } from "../screens/employeeSignUp";
+import {
+    EmployerCategorySelect,
+    EmployerCredentialSignUp,
+} from "../screens/employerSignUp"
 
 /* Changes both EmployerMainStack & CandidateMainStack */
 const headerOptions = {
@@ -107,11 +112,31 @@ const AuthStack = createStackNavigator(
         credentialSignUp: CredentialSignUp,
         employeeInfo: EmployeeInfo,
         workExp: WorkExp,
+        employerCredentialSignUp : EmployerCredentialSignUp,
+        employerCategorySelect : EmployerCategorySelect,
+        signUp:Signup
     },
     {
-        initialRouteName: 'credentialSignUp'
+        initialRouteName: 'signUp',
+        headerMode: "none"
+
     }
 );
+
+const ModalStack = createStackNavigator(
+    {
+        Main: {
+            screen: AuthStack,
+        },
+        signUpModal: {
+            screen: Signup,
+        },
+    },
+    {
+        mode: "modal",
+        headerMode: "none",
+    },
+)
 
 EmployerTabStack.navigationOptions = ({ navigation }) => {
     return setHeaderToRouteName(navigation);

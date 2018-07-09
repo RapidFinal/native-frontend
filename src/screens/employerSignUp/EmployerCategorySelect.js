@@ -2,10 +2,12 @@ import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
 import {StyleSheet, Text, View, ScrollView} from "react-native";
-import {Body, CheckBox, ListItem, Button} from "native-base";
+import {Body, CheckBox, ListItem, Button, Container} from "native-base";
 import Modal from "react-native-modal";
+import NextButton from "../../components/NextButton";
+import Stepper from "../../components/Stepper";
 
-class SelectCategory extends React.Component {
+class EmployerCategorySelect extends React.Component {
 
     static propTypes = {
 
@@ -110,7 +112,9 @@ class SelectCategory extends React.Component {
     displayCategoriesButton= () => {
         let catList = this.state.catData;
         return Object.keys(catList).map((key, index) => (
-            <Button success large
+            <Button
+                info
+                large
                 key={index}
                 style={styles.categoryButton}
                 onPress={()=>{
@@ -127,12 +131,41 @@ class SelectCategory extends React.Component {
 
 
     render(){
+        const {navigation} = this.props;
         return (
-            <View style={{flex:1}}>
+            <Container style={{flex:1}} >
+
+                <Button
+                    block
+                    info
+                    onPress={()=>navigation.goBack()}>
+                    <Text>
+                        Go back
+                    </Text>
+                </Button>
+                <Text
+                    style={styles.title}>
+                    Employer Sign Up
+                </Text>
+                <Stepper
+                    currentPosition={1}
+                    stepCount={2}
+                />
                 <View style={
                    styles.categoryContainer}>
                     {this.displayCategoriesButton()}
                 </View>
+                <Button
+                    info
+                    style={styles.centerButton}
+                    onPress={() => {}} //function for sign up
+                >
+                    <Text
+                        style={styles.categoryTitle}>
+                        Submit
+                    </Text>
+                </Button>
+
                 <Modal
                     isVisible={this.state.isModalVisible}
                     onBackdropPress={this._toggleModal}
@@ -154,7 +187,8 @@ class SelectCategory extends React.Component {
                     </View>
 
                 </Modal>
-            </View>
+
+            </Container>
         )
     }
 }
@@ -193,7 +227,19 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: 'bold',
         fontSize: 15,
-    }
+    },
+    centerButton:{
+        alignSelf:'center',
+        padding:20,
+        margin:5
+    },
+    title:{
+        color: 'black',
+        fontWeight: 'bold',
+        fontSize: 25,
+        alignSelf:'center',
+    },
+
 });
 
-export default compose() (SelectCategory)
+export default compose() (EmployerCategorySelect)

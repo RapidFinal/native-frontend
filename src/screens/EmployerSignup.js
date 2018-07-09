@@ -1,8 +1,8 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import EmployerSignUpAccountPage from "./EmployerSignUpAccountPage"
-import SelectCategory from "./SelectCategory"
+import EmployerSignUpAccountPage from "./employerSignUp/EmployerCredentialSignUp"
+import SelectCategory from "./employerSignUp/EmployerCategorySelect"
 import Stepper from "../components/Stepper";
 import {StyleSheet, View, Button} from "react-native";
 import {Container, Content} from "native-base";
