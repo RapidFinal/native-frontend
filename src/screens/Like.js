@@ -26,6 +26,7 @@ class Like extends React.Component {
 
             // Undo related
             undoPressed: false,
+            lastRemovedIndex: -1,
             profileBackup: null,
             deleteSnackbarMessage: "",
             restoreSnackbarMessage: "",
@@ -93,7 +94,7 @@ class Like extends React.Component {
 
     insertProfileToIndex = (profile) => {
         const profilesClone = this.state.profiles.slice();
-        profilesClone.splice(profile.orderKey, 0, profile);
+        profilesClone.splice(this.state.lastRemovedIndex, 0, profile);
         this.setState({profiles: profilesClone});
     };
 
@@ -118,6 +119,7 @@ class Like extends React.Component {
         likeProfilesRef.child(this.state.profiles[index].id).remove();
         this.setState({
             profiles: profilesClone,
+            lastRemovedIndex: index,
             profileBackup: profileBackup,
             deleteSnackbarMessage: profileName + " was deleted",
             showDeleteSnackbar: true,
