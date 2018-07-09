@@ -20,35 +20,11 @@ class Home extends React.Component {
 
     }
 
-    renderCard() {
-        const userInfo = [{
-            name: "blue",
-            major: "text1",
-            status: "looking for job"
-        }, {
-            name: "karn",
-            major: "cssss",
-            status: "looking"
-        }];
-
-        cardListArr = userInfo.map((item) => {
-            <TouchableHighlight
-                style={styles.button}
-                onPress={this.onPress}
-                underlayColor="white"
-            >
-                <HomeCard name={item.name} major={item.major} status={item.status}></HomeCard>
-            </TouchableHighlight>
-        });
-
-        return "hi";
-    }
-
     render(){
         const { } = this.state;
         const userInfo = [
             {
-                name: "blue",
+                name: "Pan",
                 major: "text1",
                 status: "looking for job"
             },
@@ -89,8 +65,9 @@ class Home extends React.Component {
                                     style={styles.button}
                                     onPress={this.onPress}
                                     underlayColor="white"
+                                    key={key}
                                         >
-                                        <HomeCard name={prop.name} major={prop.major} status={prop.status}/>
+                                    <HomeCard name={prop.name} major={prop.major} status={prop.status}/>
                                 </TouchableHighlight>
                             );
                         })}
@@ -114,7 +91,6 @@ class Home extends React.Component {
                                 </TouchableHighlight>
                             );
                         })}
-
                     </SwiperFlatList>
                 </Container>
             </ScrollView>
@@ -139,9 +115,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFFFFF',
         padding: 10
     },
-    countText: {
-        color: '#FF00FF'
-    }
 });
 
 export default compose() (Home)
