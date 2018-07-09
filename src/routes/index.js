@@ -12,7 +12,7 @@ import {
     CredentialSignUp,
     EmployeeInfo,
     WorkExp
-} from "../screens/employerSignUp";
+} from "../screens/employeeSignUp";
 
 /* Changes both EmployerMainStack & CandidateMainStack */
 const headerOptions = {
