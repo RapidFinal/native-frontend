@@ -1,7 +1,8 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import {Button, FlatList, StyleSheet, Text, TouchableOpacity} from "react-native";
+import {Button, StyleSheet, Text, TouchableOpacity} from "react-native";
+import DraggableFlatList from 'react-native-draggable-flatlist'
 import firebase from 'react-native-firebase';
 
 // TODO: Delete test_like & get the correct db.ref()
@@ -12,7 +13,7 @@ class Like extends React.Component {
 
     static propTypes = {
 
-    }
+    };
 
     constructor(props) {
         super(props);
@@ -22,18 +23,24 @@ class Like extends React.Component {
     }
 
     componentDidMount() {
-        likeProfilesRef.on('child_added', snapshot => {
-            let profile = { id: snapshot.key, content: snapshot.val()};
+        this.updateOrder.bind(this);
+        likeProfilesRef.orderByChild("orderKey").on('child_added', snapshot => {
+            let profile = { id: snapshot.key, content: snapshot.child("name").val()};
             this.setState({ profiles: this.state.profiles.concat([profile])});
         })
     }
 
     render(){
         return (
-            <FlatList
+            <DraggableFlatList
                 data={this.state.profiles}
-                renderItem={({item, index}) =>
-                    <TouchableOpacity onPress={this.goToProfile} style={styles.horizontalProfileCard}>
+                renderItem={({item, index, move, moveEnd}) =>
+                    <TouchableOpacity onPress={this.goToProfile}
+                                      style={styles.horizontalProfileCard}
+                                      onLongPress={move}
+                                      delayLongPress={200}
+                                      onPressOut={moveEnd}
+                    >
                         <Text style={styles.profileContentPlaceHolder}>{item.content}</Text>
                         <Button
                             title="Delete"
@@ -42,12 +49,23 @@ class Like extends React.Component {
                         />
                     </TouchableOpacity>}
                 keyExtractor={item => item.id}
+                onMoveEnd={
+                    ({ data }) => this.updateOrder(data)
+                }
             />
         );
     }
 
     goToProfile = () => {
         this.props.navigation.navigate("View");
+    };
+
+    updateOrder = (data) => {
+        for (let i = 0; i < data.length; i++) {
+            let currentProfile = data[i];
+            likeProfilesRef.child(currentProfile.id).update({"orderKey": i})
+        }
+        this.setState({ profiles : data });
     };
 
     removeLike = (index) => {
