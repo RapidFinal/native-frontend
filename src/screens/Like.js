@@ -1,7 +1,7 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import {Button, StyleSheet, Text, TouchableOpacity} from "react-native";
+import {Alert, Button, StyleSheet, Text, TouchableOpacity} from "react-native";
 import DraggableFlatList from 'react-native-draggable-flatlist'
 import firebase from 'react-native-firebase';
 
@@ -69,12 +69,21 @@ class Like extends React.Component {
     };
 
     removeLike = (index) => {
-        const profilesClone = this.state.profiles.slice();
-        profilesClone.splice(index, 1);
-        likeProfilesRef.child(this.state.profiles[index].id).remove();
-        this.setState({
-            profiles: profilesClone
-        });
+        Alert.alert(
+            'Delete',
+            'Are you sure you want to delete ' + this.state.profiles[index].content + "?",
+            [
+                {text: 'Cancel', onPress: () => {}, style: 'cancel'},
+                {text: 'OK', onPress: () => {
+                        const profilesClone = this.state.profiles.slice();
+                        profilesClone.splice(index, 1);
+                        likeProfilesRef.child(this.state.profiles[index].id).remove();
+                        this.setState({
+                            profiles: profilesClone
+                        });
+                    }},
+            ]
+        )
     };
 
 }
