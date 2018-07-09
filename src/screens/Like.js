@@ -5,6 +5,7 @@ import {Alert, Button, StyleSheet, Text, TouchableOpacity, View} from "react-nat
 import DraggableFlatList from 'react-native-draggable-flatlist'
 import firebase from 'react-native-firebase';
 import SnackBar from 'react-native-snackbar-component'
+import ActionSheet from 'react-native-actionsheet'
 
 // TODO: Delete test_like & get the correct db.ref()
 const currentUser = "user1";
@@ -33,6 +34,7 @@ class Like extends React.Component {
             showDeleteSnackbar: false,
             showRestoreSnackbar: false
         };
+        this.actionSheetRefs = {};
     }
 
     componentDidMount() {
@@ -60,7 +62,7 @@ class Like extends React.Component {
                 <DraggableFlatList
                     data={this.state.profiles}
                     renderItem={({item, index, move, moveEnd}) =>
-                        <TouchableOpacity onPress={this.goToProfile}
+                        <TouchableOpacity onPress={this.showActionSheet.bind(this, index)}
                                           style={styles.horizontalProfileCard}
                                           onLongPress={move}
                                           delayLongPress={400}
@@ -71,6 +73,17 @@ class Like extends React.Component {
                                 title="Delete"
                                 onPress={this.showDeleteAlert.bind(this,index)}
                                 style={styles.deleteButton}
+                            />
+                            <ActionSheet
+                                ref={o => this.actionSheetRefs[index] = o}
+                                options={['Cancel', 'Go to profile', 'Move up', 'Move down']}
+                                title= {item.content}
+                                cancelButtonIndex={0}
+                                onPress={(buttonIndex) => {
+                                    if (buttonIndex === 1) this.goToProfile();
+                                    if (buttonIndex === 2) this.moveItem("up", index);
+                                    if (buttonIndex === 3) this.moveItem("down", index);
+                                }}
                             />
                         </TouchableOpacity>}
                     keyExtractor={item => item.id}
@@ -86,8 +99,33 @@ class Like extends React.Component {
         );
     }
 
+    showActionSheet = (index) => {
+        this.actionSheetRefs[index].show()
+    };
+
     goToProfile = () => {
         this.props.navigation.navigate("View");
+    };
+
+    moveItem = (direction, index) => {
+        if (direction === "up" && index === 0) return;
+        if (direction === "down" && index === this.state.profiles.length - 1) return;
+
+        const currentItem = this.state.profiles[index];
+        let nextItem;
+        if (direction === "up") nextItem = this.state.profiles[index-1];
+        else /*direction === "down"*/ nextItem = this.state.profiles[index+1];
+
+        let temp = currentItem.orderKey;
+        currentItem.orderKey = nextItem.orderKey;
+        nextItem.orderKey = temp;
+
+        if (direction === "up") this.state.profiles[index-1] = currentItem;
+        else /*direction === "down"*/ this.state.profiles[index+1] = currentItem;
+        this.state.profiles[index] = nextItem;
+        likeProfilesRef.child(currentItem.id).update({"orderKey": currentItem.orderKey});
+        likeProfilesRef.child(nextItem.id).update({"orderKey": nextItem.orderKey});
+        this.forceUpdate();
     };
 
     updateOrder = (data) => {
