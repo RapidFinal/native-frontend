@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import {Alert, Button, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import DraggableFlatList from 'react-native-draggable-flatlist'
 import firebase from 'react-native-firebase';
-import Snackbar from 'react-native-snackbar';
+import SnackBar from 'react-native-snackbar-component'
 
 // TODO: Delete test_like & get the correct db.ref()
 const currentUser = "user1";
@@ -20,7 +20,14 @@ class Like extends React.Component {
         super(props);
         this.state = {
             profiles : [],
-            undoPressed: false
+
+            // Undo related
+            undoPressed: false,
+            profileBackup: null,
+            deleteSnackbarMessage: "",
+            restoreSnackbarMessage: "",
+            showDeleteSnackbar: false,
+            showRestoreSnackbar: false
         };
     }
 
@@ -31,10 +38,6 @@ class Like extends React.Component {
             if (this.state.undoPressed) {
                 this.insertProfileToIndex(profile);
                 this.setState({undoPressed: false});
-                Snackbar.show({
-                    title: profile.content + ' was restored',
-                    duration: Snackbar.LENGTH_LONG,
-                });
             }
             else {
                 this.setState({profiles: this.state.profiles.concat([profile])});
@@ -66,6 +69,8 @@ class Like extends React.Component {
                         ({ data }) => this.updateOrder(data)
                     }
                 />
+                <SnackBar visible={this.state.showDeleteSnackbar} textMessage={this.state.deleteSnackbarMessage} accentColor="green" actionHandler={()=>this.restoreProfileToDB()} actionText="Undo"/>
+                <SnackBar visible={this.state.showRestoreSnackbar} textMessage={this.state.restoreSnackbarMessage} accentColor="green" actionHandler={()=>this.setState({showRestoreSnackbar: false})} actionText="Close"/>
             </View>
         );
     }
@@ -89,9 +94,16 @@ class Like extends React.Component {
         this.setState({profiles: profilesClone});
     };
 
-    restoreProfileToDB = (profileBackup) => {
-        this.setState({undoPressed: true});
+    restoreProfileToDB = () => {
+        const profileBackup = this.state.profileBackup;
         likeProfilesRef.child(profileBackup.id).set({name: profileBackup.content, orderKey: profileBackup.orderKey});
+        this.setState({
+            undoPressed: true,
+            restoreSnackbarMessage: profileBackup.content + " was restored",
+            showDeleteSnackbar: false,
+            showRestoreSnackbar: true,
+        });
+        setTimeout(() => this.setState({showRestoreSnackbar: false}), 2000);
     };
 
     removeLike = (index) => {
@@ -101,16 +113,11 @@ class Like extends React.Component {
         profilesClone.splice(index, 1);
         likeProfilesRef.child(this.state.profiles[index].id).remove();
         this.setState({
-            profiles: profilesClone
-        });
-        Snackbar.show({
-            title: profileName + ' was deleted',
-            duration: Snackbar.LENGTH_INDEFINITE,
-            action: {
-                title: 'UNDO',
-                color: 'green',
-                onPress: () => this.restoreProfileToDB(profileBackup)
-            },
+            profiles: profilesClone,
+            profileBackup: profileBackup,
+            deleteSnackbarMessage: profileName + " was deleted",
+            showDeleteSnackbar: true,
+            showRestoreSnackbar: false
         });
     };
 
