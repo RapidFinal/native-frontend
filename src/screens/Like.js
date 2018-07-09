@@ -119,6 +119,7 @@ class Like extends React.Component {
             showDeleteSnackbar: true,
             showRestoreSnackbar: false
         });
+        setTimeout(() => this.setState({showDeleteSnackbar: false}), 5000);
     };
 
     showDeleteAlert = (index) => {
