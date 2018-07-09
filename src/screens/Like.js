@@ -10,6 +10,9 @@ import SnackBar from 'react-native-snackbar-component'
 const currentUser = "user1";
 const likeProfilesRef = firebase.database().ref('test_like/profile/' + currentUser + "/like_profiles");
 
+let deleteSnackbarTimer;
+let restoreSnackbarTimer;
+
 class Like extends React.Component {
 
     static propTypes = {
@@ -103,7 +106,8 @@ class Like extends React.Component {
             showDeleteSnackbar: false,
             showRestoreSnackbar: true,
         });
-        setTimeout(() => this.setState({showRestoreSnackbar: false}), 2000);
+        clearTimeout(restoreSnackbarTimer);
+        restoreSnackbarTimer = setTimeout(() => this.setState({showRestoreSnackbar: false}), 2000);
     };
 
     removeLike = (index) => {
@@ -119,7 +123,8 @@ class Like extends React.Component {
             showDeleteSnackbar: true,
             showRestoreSnackbar: false
         });
-        setTimeout(() => this.setState({showDeleteSnackbar: false}), 5000);
+        clearTimeout(deleteSnackbarTimer);
+        deleteSnackbarTimer = setTimeout(() => this.setState({showDeleteSnackbar: false}), 5000);
     };
 
     showDeleteAlert = (index) => {
