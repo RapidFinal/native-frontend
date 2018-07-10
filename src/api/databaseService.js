@@ -148,19 +148,31 @@ class DatabaseService {
 
   updateEmployeeTags(uid, tags) {
     this.getAllTags().then((allTags) => {
-      let tagIds = [];
-      tags.forEach(tag => {
-        if ( allTags[tag] !== null) {
-          console.log("tag exist");
-          tagIds.push(allTags[tag])
-        } else {
-          console.log("tag not exist");
-          let tagId = firebase.database().ref("tags/").push().key;
-          tagIds.push(allTags[tag]);
-          firebase.database().ref("tags/" + tagId + "/").set({tagName: tag});
-        }
-      });
-      firebase.database().ref("employeeInfo/" + uid + "/tagIds/").set(tagIds);
+      this.getEmployeeTags(uid).then((oldTagIds) => {
+        let tagIds = []
+        tags.forEach(tag => {
+
+          if ( allTags[tag] !== null) {
+            console.log("tag exist");
+            let tagId = allTags[tag];
+            tagIds.push(tagId);
+            this.addUidToTag(uid, tagId)
+          } else {
+            console.log("tag not exist");
+            let tagId = firebase.database().ref("tags/").push().key;
+            tagIds.push(allTags[tag]);
+            firebase.database().ref("tags/" + tagId + "/").set({tagName: tag});
+            this.addUidToTag(uid, tagId)
+          }
+        });
+
+        oldTagIds.filter((tagId) => {
+          if(!tagIds.includes(tagId)) {
+            firebase.database().ref("tags/" + tagId + "/employeeIds/" + uid + "/").remove();
+          }
+        });
+        firebase.database().ref("employeeInfo/" + uid + "/tagIds/").set(tagIds);
+      })
     });
   }
 
@@ -367,8 +379,8 @@ class DatabaseService {
 
   addUidToTag(uid, tagId) {
     this.getEmployeeFromTag(tagId).then(employeeIds => {
-      if (!employeeIds.includes(uid)) {
-        employeeIds.push(uid);
+      if (typeof(employeeIds[uid]) === 'undefined'){
+        employeeIds[uid] = true;
         firebase.database().ref("tags/" + tagId + "/employeeIds/").set(employeeIds);
       }
     })
@@ -378,11 +390,10 @@ class DatabaseService {
   getEmployeeFromTag(tagId) {
     return new Promise((resolve, reject) => {
       firebase.database().ref("tags/" + tagId + "/").once('value').then(function(snapshot) {
-        let ret = [];
         if (snapshot.hasChild("employeeIds")){
           resolve(snapshot.val().employeeIds);
         } else {
-          resolve([]);
+          resolve({});
         }
       });
     });
