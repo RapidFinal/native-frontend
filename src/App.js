@@ -20,7 +20,8 @@ class App extends React.Component {
     state = {
         authenticated: false,
         loading: true,
-        currentUser: null
+        currentUser: null,
+        employerInfo:{},
     };
 
 

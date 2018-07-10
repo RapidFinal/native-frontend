@@ -9,6 +9,8 @@ import {
     TextInputWithLabel
 } from "../../components";
 
+import {withContext} from "../../context/withContext";
+
 class EmployerCredentialSignUp extends React.Component {
 
     static propTypes = {
@@ -16,22 +18,48 @@ class EmployerCredentialSignUp extends React.Component {
     }
 
     state = {
+        firstName:"",
+        lastName:"",
         email: "",
         companyName:"",
         password: "",
-        confirmPassword: ""
+        confirmPassword: "",
+        error : '',
     };
 
-    handleChange = name => event => {
+    handleChange = (name, event) => {
         this.setState({
-            [name]: event.target.value,
+            [name]: event.nativeEvent.text,
         });
-        console.log(name)
-        console.log(event.target.value)
+    };
+
+    attemptSignUp = () => {
+        console.log(this.state)
+        console.log(this.props.context)
+        const {confirmPassword, password} = this.state;
+        Object.keys(this.state).forEach(key => {
+            if (key!== "error" && this.state[key] === '') {
+                console.log("Every field should not be empty")
+            }
+        });
+        if (confirmPassword !== password) {
+            console.log("Password and confirmed password are mismatch")
+        }
+        else if (password.length < 6) {
+            console.log("The length of password is too short")
+        }
+        else {
+            let employerInfo = {
+                email : this.state.email,
+                companyName: this.state.companyName,
+                password : this.state.password,
+            }
+            this.props.setContext({employerInfo: employerInfo})
+            this.props.navigation.navigate("employerCategorySelect")
+        }
     };
 
     render(){
-        const {navigation} = this.props;
         return (
             <Container>
 
@@ -44,27 +72,42 @@ class EmployerCredentialSignUp extends React.Component {
                     stepCount={2}
                 />
                 <ScrollView>
+                    <Text></Text>
                     <SignUpForm>
+                        <TextInputWithLabel
+                            label="First name"
+                            placeholder="First name"
+                            onChange={(event) => this.handleChange("firstName", event)}
+                        />
+                        <TextInputWithLabel
+                            label="Last name"
+                            placeholder="Last name"
+                            onChange={(event) => this.handleChange("lastName", event)}
+                        />
                         <TextInputWithLabel
                             label="Email"
                             placeholder="Email"
+                            onChange={(event) => this.handleChange("Email", event)}
                         />
                         <TextInputWithLabel
                             label="Company Name"
                             placeholder="Company Name"
+                            onChange={(event) => this.handleChange("CompanyName", event)}
                         />
                         <TextInputWithLabel
                             label="Password"
                             placeholder="Password"
                             type="password"
+                            onChange={(event) => this.handleChange("Password", event)}
                         />
                         <TextInputWithLabel
                             label="Confirm Password"
                             placeholder="Confirm Password"
                             type="password"
+                            onChange={(event) => this.handleChange("confirmedPassword", event)}
                         />
                         <NextButton
-                            onPress={() => navigation.push('employerCategorySelect')}
+                            onPress={()=>this.attemptSignUp()}
                         />
                     </SignUpForm>
                 </ScrollView>
@@ -91,4 +134,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default compose() (EmployerCredentialSignUp)
+export default compose(withContext) (EmployerCredentialSignUp)
