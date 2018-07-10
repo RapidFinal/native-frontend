@@ -118,7 +118,6 @@ class EmployeeCredentialSignUp extends React.Component {
         }
     };
 
-
     render(){
         const {firstName, lastName, email, password, confirmPassword} = this.state.credential; // to easily access state put desire variable in the curly brace so it may become const {variable} = this.state;
         const {
@@ -133,7 +132,6 @@ class EmployeeCredentialSignUp extends React.Component {
             errorMessagePassword,
             errorMessageConfirmPassword,
         } = this.state.error;
-        const requiredError = "Required";
         return (
             <Container>
                 <Stepper
