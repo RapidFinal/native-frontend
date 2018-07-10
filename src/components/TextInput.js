@@ -16,14 +16,11 @@ class TextInput extends React.Component {
 
     render(){
         // const {} = this.state; // to easily access state put desire variable in the curly brace so it may become const {variable} = this.state;
-        const {onChange, placeholder, value} = this.props;
         return (
             <View>
                 <Item regular style={styles.input}>
                     <Input
-                        placeholder={placeholder}
-                        value={value}
-                        onChange={onChange}
+                        {...this.props}
                     />
                 </Item>
             </View>
