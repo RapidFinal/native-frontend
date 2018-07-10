@@ -9,6 +9,7 @@ import {
     Stepper,
     TextInputWithLabel
 } from "../../components";
+import {withContext} from "../../context/withContext";
 
 class CredentialSignUp extends React.Component {
 
@@ -24,18 +25,36 @@ class CredentialSignUp extends React.Component {
         confirmPassword: ""
     };
 
-    handleChange = name => event => {
+    handleChange = (name, event) => {
         this.setState({
-            [name]: event.target.value,
+            [name]: event.nativeEvent.text,
         });
-        console.log(name)
-        console.log(event.target.value)
+    };
+
+    attemptSignUp = () => {
+        console.log(this.state)
+        console.log(this.props.context)
+        const {confirmPassword, password} = this.state;
+        Object.keys(this.state).forEach(key => {
+            if (this.state[key] === '') {
+                console.log("bad")
+            }
+        });
+        if (confirmPassword !== password) {
+            console.log("Bad")
+        }
+        else if (password.length < 6) {
+            console.log("Bad")
+        }
+        else {
+            console.log("pass");
+            this.props.navigation.navigate("categorySelect")
+        }
     };
 
 
     render(){
-        const {firstName} = this.state; // to easily access state put desire variable in the curly brace so it may become const {variable} = this.state;
-        const {navigation} = this.props;
+        const {} = this.state; // to easily access state put desire variable in the curly brace so it may become const {variable} = this.state;
         return (
             <Container>
                 <Stepper
@@ -47,28 +66,32 @@ class CredentialSignUp extends React.Component {
                         <TextInputWithLabel
                             label="First name"
                             placeholder="First name"
-                            onChange={(value) => this.setState({value})}
+                            onChange={(event) => this.handleChange("firstName", event)}
                         />
                         <TextInputWithLabel
                             label="Last name"
                             placeholder="Last name"
+                            onChange={(event) => this.handleChange("lastName", event)}
                         />
                         <TextInputWithLabel
                             label="Email"
                             placeholder="Email"
+                            onChange={(event) => this.handleChange("email", event)}
                         />
                         <TextInputWithLabel
                             label="Password"
                             placeholder="Password"
                             type="password"
+                            onChange={(event) => this.handleChange("password", event)}
                         />
                         <TextInputWithLabel
                             label="Confirm Password"
                             placeholder="Confirm Password"
                             type="password"
+                            onChange={(event) => this.handleChange("confirmPassword", event)}
                         />
                         <NextButton
-                            onPress={() => navigation.push('categorySelect')}
+                            onPress={this.attemptSignUp}
                         />
                     </SignUpForm>
                 </ScrollView>
@@ -82,4 +105,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default compose() (CredentialSignUp)
+export default compose(withContext) (CredentialSignUp)
