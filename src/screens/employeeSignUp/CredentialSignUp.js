@@ -10,6 +10,12 @@ import {
     TextInputWithLabel
 } from "../../components";
 import {withContext} from "../../context/withContext";
+import {CredentialAuthentication} from "../../api/authentication"
+
+// To set context:
+// this.props.setContext({authenticated: false});
+// To get context state:
+// this.props.context.authenticated
 
 class CredentialSignUp extends React.Component {
 
@@ -25,31 +31,40 @@ class CredentialSignUp extends React.Component {
         confirmPassword: ""
     };
 
-    handleChange = (name, event) => {
+    handleChange = (name) => (event) => {
         this.setState({
             [name]: event.nativeEvent.text,
         });
     };
 
-    attemptSignUp = () => {
-        console.log(this.state)
-        console.log(this.props.context)
-        const {confirmPassword, password} = this.state;
-        Object.keys(this.state).forEach(key => {
-            if (this.state[key] === '') {
-                console.log("bad")
-            }
-        });
-        if (confirmPassword !== password) {
-            console.log("Bad")
+    attemptSignUp = async () => {
+        // console.log(this.state)
+        // console.log(this.props.context)
+        // const {confirmPassword, password} = this.state;
+        // Object.keys(this.state).forEach(key => {
+        //     if (this.state[key] === '') {
+        //         console.log("bad")
+        //     }
+        // });
+        // if (confirmPassword !== password) {
+        //     console.log("Bad")
+        // }
+        // else if (password.length < 6) {
+        //     console.log("Bad")
+        // }
+        // else {
+        //     console.log("pass");
+
+        const {email, password} = this.state
+        try {
+
+            const signup = CredentialAuthentication.signup({email, password})
+            // this.props.navigation.navigate("categorySelect")
+        } catch (e) {
+            console.log(e.message)
         }
-        else if (password.length < 6) {
-            console.log("Bad")
-        }
-        else {
-            console.log("pass");
-            this.props.navigation.navigate("categorySelect")
-        }
+
+        // }
     };
 
 
@@ -66,29 +81,29 @@ class CredentialSignUp extends React.Component {
                         <TextInputWithLabel
                             label="First name"
                             placeholder="First name"
-                            onChange={(event) => this.handleChange("firstName", event)}
+                            onChange={this.handleChange("firstName")}
                         />
                         <TextInputWithLabel
                             label="Last name"
                             placeholder="Last name"
-                            onChange={(event) => this.handleChange("lastName", event)}
+                            onChange={this.handleChange("lastName")}
                         />
                         <TextInputWithLabel
                             label="Email"
                             placeholder="Email"
-                            onChange={(event) => this.handleChange("email", event)}
+                            onChange={this.handleChange("email")}
                         />
                         <TextInputWithLabel
                             label="Password"
                             placeholder="Password"
                             type="password"
-                            onChange={(event) => this.handleChange("password", event)}
+                            onChange={this.handleChange("password")}
                         />
                         <TextInputWithLabel
                             label="Confirm Password"
                             placeholder="Confirm Password"
                             type="password"
-                            onChange={(event) => this.handleChange("confirmPassword", event)}
+                            onChange={this.handleChange("confirmPassword")}
                         />
                         <NextButton
                             onPress={this.attemptSignUp}
