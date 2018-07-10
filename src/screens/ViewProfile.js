@@ -5,6 +5,7 @@ import {StyleSheet, Image, View, Text, ScrollView} from "react-native";
 import StatusText from '../components/StatusText';
 import ExperiencesCard from '../components/ExperiencesCard';
 import SkillSetsCard from '../components/SkillSetsCard';
+import CircularProfilePhoto from '../components/CircularProfilePhoto';
 
 class ViewProfile extends React.Component {
 
@@ -46,10 +47,8 @@ class ViewProfile extends React.Component {
 
         return (
             <ScrollView contentContainerStyle={styles.ScrollContainer}>
-                <View  style={styles.MainContainer}>
-                    <Image source={{uri: imgUrl}}
-                           style={{width: 150, height: 150, borderRadius: 150 / 2}}
-                    />
+                <View style={styles.MainContainer}>
+                    <CircularProfilePhoto url={imgUrl} diameter={150}/>
 
                     <Text style={styles.ProfileName}>
                         {fullname}
