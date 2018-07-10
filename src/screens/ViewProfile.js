@@ -1,9 +1,10 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import {StyleSheet, Image, View, Text} from "react-native";
+import {StyleSheet, Image, View, Text, ScrollView} from "react-native";
 import StatusText from '../components/StatusText';
 import ExperiencesCard from '../components/ExperiencesCard';
+import SkillSetsCard from '../components/SkillSetsCard';
 
 class ViewProfile extends React.Component {
 
@@ -36,39 +37,44 @@ class ViewProfile extends React.Component {
     };
 
     render() {
-        const {imgUrl, fullname, status, description, experiences} = this.state;
+        const {imgUrl, fullname, status, description, experiences, skillSets} = this.state;
 
         return (
-            <View style={styles.MainContainer}>
+            <ScrollView contentContainerStyle={styles.ScrollContainer}>
+                <View  style={styles.MainContainer}>
+                    <Image source={{uri: imgUrl}}
+                           style={{width: 150, height: 150, borderRadius: 150 / 2}}
+                    />
 
-                <Image source={{uri: imgUrl}}
-                       style={{width: 150, height: 150, borderRadius: 150 / 2}}
-                />
+                    <Text style={styles.ProfileName}>
+                        {fullname}
+                    </Text>
 
-                <Text style={styles.ProfileName}>
-                    {fullname}
-                </Text>
+                    <StatusText status={status}/>
 
-                <StatusText status={status}/>
+                    <Text style={styles.Description}>
+                        {description}
+                    </Text>
 
-                <Text style={styles.Description}>
-                    {description}
-                </Text>
+                    <ExperiencesCard experiences={experiences}/>
 
-                <ExperiencesCard experiences={experiences}/>
-
-            </View>
+                    <SkillSetsCard skills={skillSets}/>
+                </View>
+            </ScrollView>
         )
     }
 
 }
 
 const styles = StyleSheet.create({
+    ScrollContainer: {
+        paddingVertical: 20,
+    },
+
     MainContainer: {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-
     },
 
     ProfileName: {
