@@ -45,6 +45,7 @@ const styles = StyleSheet.create({
     MainContainer: {
         marginTop: 15,
         maxWidth: '90%',
+        width: '90%',
         backgroundColor: '#F3F3F3',
         paddingTop: 10,
         paddingBottom: 10,

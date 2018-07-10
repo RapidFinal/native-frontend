@@ -17,13 +17,17 @@ class SkillSetsCard extends React.Component {
                 {this.props.skills.map((value, index) => {
                     if (index === this.props.skills.length -1) {
                         return (
-                            <Text style={styles.Item}>
+                            <Text
+                                style={styles.Item}
+                            >
                                 {value}
                             </Text>
                         )
                     } else {
                         return (
-                            <Text style={[styles.Item, styles.DividerLine]}>
+                            <Text
+                                style={[styles.Item, styles.DividerLine]}
+                            >
                                 {value}
                             </Text>
                         )
