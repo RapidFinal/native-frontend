@@ -17,13 +17,14 @@ class DatabaseService {
       let tagIds = [];
       tags.forEach(tag => {
         if ( allTags[tag] !== null) {
-          console.log("tag exist");
-          tagIds.push(allTags[tag])
+          let tagId = allTags[tag];
+          tagIds.push(tagId);
+          this.addUidToTag(uid, tagId);
         } else {
-          console.log("tag not exist");
           let tagId = firebase.database().ref("tags/").push().key;
-          tagIds.push(allTags[tag])
+          tagIds.push(allTags[tag]);
           firebase.database().ref("tags/" + tagId + "/").set({tagName: tag});
+          this.addUidToTag(uid, tagId)
         }
       });
 
@@ -66,11 +67,14 @@ class DatabaseService {
       let tagIds = [];
       tags.forEach(tag => {
         if ( allTags[tag] !== null) {
-          tagIds.push(allTags[tag])
+          let tagId = allTags[tag];
+          tagIds.push(tagId);
+          this.addUidToTag(uid, tagId);
         } else {
           let tagId = firebase.database().ref("tags/").push().key;
           tagIds.push(allTags[tag]);
           firebase.database().ref("tags/" + tagId + "/").set({tagName: tag});
+          this.addUidToTag(uid, tagId)
         }
       });
 
@@ -192,13 +196,6 @@ class DatabaseService {
   updateEmployeeImgUrl(uid, url) {
     firebase.database().ref("employeeInfo/" + uid + "/imgUrl/").set(url);
   }
-  
-  // look for field name and type of value in doc
-  updateEmployeeInfoAt(uid, field, value) {
-
-  }
-
-
 
   // assume you want to get at projects filed
   // getEmployeeInfoAt("uid", "projects") -> array of object
@@ -240,27 +237,27 @@ class DatabaseService {
 
   getEmployerInfo(uid) {
     let ret = {firstName: "Alice", lastName:"Smith", companyName: "MUIC",
-              categories: [
-                {
-                  categoryId: "cat1",
-                  categoryName: "Graphic and Design",
-                  subCategory: [
-                    {subCategoryId: "subCat1", subCategoryName: "Logo"},
-                    {subCategoryId: "subCat2", subCategoryName: "Character Design"},
-                    {subCategoryId: "subCat3", subCategoryName: "Advertising Banner"}
-                  ]
-                },
-                {
-                  categoryId: "cat2",
-                  categoryName: "Web and Programming",
-                  subCategory: [
-                    {subCategoryId: "subCat1", subCategoryName: "HTML / CSS"},
-                    {subCategoryId: "subCat2", subCategoryName: "Web Development"},
-                    {subCategoryId: "subCat3", subCategoryName: "Mobile Application"}
-                  ]
-                }
-              ]
-              };
+      categories: [
+        {
+          categoryId: "cat1",
+          categoryName: "Graphic and Design",
+          subCategory: [
+            {subCategoryId: "subCat1", subCategoryName: "Logo"},
+            {subCategoryId: "subCat2", subCategoryName: "Character Design"},
+            {subCategoryId: "subCat3", subCategoryName: "Advertising Banner"}
+          ]
+        },
+        {
+          categoryId: "cat2",
+          categoryName: "Web and Programming",
+          subCategory: [
+            {subCategoryId: "subCat1", subCategoryName: "HTML / CSS"},
+            {subCategoryId: "subCat2", subCategoryName: "Web Development"},
+            {subCategoryId: "subCat3", subCategoryName: "Mobile Application"}
+          ]
+        }
+      ]
+    };
     return ret;
   }
 
@@ -359,12 +356,36 @@ class DatabaseService {
   // Tags
 
   // If there is no projectId, sent null
-  createTag(uid, tagName, projectId) {
-
+  createTag(tagName){
+    firebase.database().ref("tags/").push({tagName: tagName});
   }
 
-  getTagName(tagId) {
-    return "java";
+  // array of tags: ["java", "python"]
+  createSuggestedTag(catId, tags) {
+    firebase.database().ref("employeeInfo/" + uid + "/").set(value);
+  }
+
+  addUidToTag(uid, tagId) {
+    this.getEmployeeFromTag(tagId).then(employeeIds => {
+      if (!employeeIds.includes(uid)) {
+        employeeIds.push(uid);
+        firebase.database().ref("tags/" + tagId + "/employeeIds/").set(employeeIds);
+      }
+    })
+  }
+
+  // return array of uid
+  getEmployeeFromTag(tagId) {
+    return new Promise((resolve, reject) => {
+      firebase.database().ref("tags/" + tagId + "/").once('value').then(function(snapshot) {
+        let ret = [];
+        if (snapshot.hasChild("employeeIds")){
+          resolve(snapshot.val().employeeIds);
+        } else {
+          resolve([]);
+        }
+      });
+    });
   }
 
   // categoryId that employee pick
@@ -373,26 +394,7 @@ class DatabaseService {
     return ["java", "react", "vue", "python"];
   }
 
-  // return array of object
-  // suppose tagName = java
-  getEmployeeFromTag(tagName) {
-    let ret = [{
-      firstName: "Sam",
-      lastName: "Smith",
-      description: "I am a programmer",
-      status: "Looking for job",
-      liked: 15,
-      tags: ["java", "python", "react"],
-      experiences: [{title: "Work at MUIC", description: "Be a TA for programming 1"},
-        {title: "Intern at v-bit", description: "doing front-end"}],
-      projects: [{
-        name: "Note Sharing", description: "a web application to share and comment notes",
-        date: "01/06/2018", tags: ["firebase", "vue", "cordova"]
-      }]
-    }];
-  }
-
-  getTag(tagId) {
+  getTagName(tagId) {
     return new Promise((resolve, reject) => {
       firebase.database().ref("tags/" + tagId + "/").once('value').then(function(snapshot) {
         const ret = "";
