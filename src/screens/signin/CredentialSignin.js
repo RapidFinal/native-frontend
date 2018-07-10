@@ -1,12 +1,16 @@
 import React from 'react';
 import compose from 'recompose/compose'
+import hoistStatics from 'recompose/hoistStatics'
 import PropTypes from 'prop-types'
 import {StyleSheet} from "react-native";
 import {Container, Content, Form, Input, Spinner} from "native-base";
-import Item from "native-base/src/theme/components/Item";
-import {Authentication} from "../api"
+import {Item} from "native-base";
+import {Authentication} from "../../api"
+import IonIcons from 'react-native-vector-icons/Ionicons'
+import {withContext} from "../../context/withContext";
+import {hoistStatics} from "recompose";
 
-class Signin extends React.Component {
+class CredentialSignin extends React.Component {
 
     static propTypes = {
 
@@ -19,9 +23,19 @@ class Signin extends React.Component {
 
     handleStateChange = (name) => (e) => {
         this.setState({
-            [name]: ""
+            [name]: e.nativeEvent.text
         })
     }
+
+    static navigationOptions = ({navigation}) => {
+        return ({
+            title: 'Signin',
+            headerLeft: (
+                <IonIcons.Button name="ios-arrow-back" backgroundColor="transparent" color={"black"} onPress={() => navigation.pop()} />
+            ),
+        })
+
+    };
 
     render(){
         const {email, password} = this.state;
@@ -47,4 +61,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default compose() (Signin)
+export default hoistStatics(compose(withContext)) (CredentialSignin)

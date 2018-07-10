@@ -3,33 +3,31 @@ import Edit_Test from "../screens/Edit_Test";
 import Login_Test from "../screens/Login_Test";
 import View_Test from "../screens/View_Test";
 import LikeScreen from "../screens/Like";
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {createBottomTabNavigator, createStackNavigator, createSwitchNavigator} from "react-navigation";
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import Home from '../screens/Home';
+import {createBottomTabNavigator, createStackNavigator, createSwitchNavigator, createDrawerNavigator} from "react-navigation";
 import React from "react";
-import {Button} from "react-native";
+import { Signin, CredentialSignin } from '../screens/signin'
+import SideMenu from "../components/SideMenu";
 
 /* Changes both EmployerMainStack & CandidateMainStack */
-const headerOptions = {
+const headerOptions = ({navigation}) => ({
     headerLeft: (
-        <Button
-            onPress={() => alert('This is a left button!')}
-            title="Left"
-        />
+        <FontAwesome.Button name="navicon" backgroundColor="transparent" color={"black"} onPress={() => navigation.navigate('DrawerOpen')} />
     ),
     headerRight: (
-        <Button
-            onPress={() => alert('This is a right button!')}
-            title="Right"
-        />
+        <MaterialCommunityIcons.Button name="account" backgroundColor="transparent" color="black" onPress={() => navigation.push("Signin")}/>
     ),
     headerTitleStyle: {flex: 1, textAlign: 'center'}
-};
+});
 
 const EmployerTabStack = createBottomTabNavigator(
     {
         View: View_Test,
-        Home: Home_Test,
-        Like: LikeScreen
+        Home: Home,
+        Like: LikeScreen,
     },
     {
         navigationOptions: ({ navigation }) => ({
@@ -54,7 +52,7 @@ const EmployerTabStack = createBottomTabNavigator(
 const CandidateTabStack = createBottomTabNavigator(
     {
         View: View_Test,
-        Home: Home_Test,
+        Home: Home,
         Edit: Edit_Test,
     },
     {
@@ -77,6 +75,16 @@ const CandidateTabStack = createBottomTabNavigator(
     }
 );
 
+const HomeStack = createStackNavigator(
+    {
+        Home: Home
+    },
+    {
+        headerTitle: "Test",
+        navigationOptions: headerOptions
+    }
+)
+
 const EmployerMainStack = createStackNavigator(
     {
         MainEmployer: EmployerTabStack
@@ -91,7 +99,20 @@ const CandidateMainStack = createStackNavigator(
         MainCandidate: CandidateTabStack
     },
     {
-        navigationOptions:  headerOptions
+        navigationOptions:  headerOptions,
+
+    }
+);
+
+const AuthenticationMainStack = createStackNavigator(
+    {
+        Home: Home,
+        Signin: Signin,
+        CredentialSignin: CredentialSignin
+    },
+    {
+        navigationOptions: headerOptions,
+        initialRouteName: 'Home',
     }
 );
 
@@ -111,15 +132,24 @@ function setHeaderToRouteName(navigation) {
     };
 }
 
-MainNavigator = createSwitchNavigator(
+MainStackNavigator = createSwitchNavigator(
     {
         MainEmployer: EmployerMainStack,
         MainCandidate: CandidateMainStack,
-        Auth: Login_Test, // Should probably be a stack consisting of login, signup, forgot password etc.
+        Auth: AuthenticationMainStack, // Should probably be a stack consisting of login, signup, forgot password etc.
     },
     {
         initialRouteName: 'Auth',
     }
 );
 
-export default MainNavigator
+/*MainNavigator = createDrawerNavigator(
+    {
+        MainStackNavigator
+    },
+    {
+        contentComponent: props => <SideMenu {...props} />,
+    }
+)*/
+
+export default MainStackNavigator
