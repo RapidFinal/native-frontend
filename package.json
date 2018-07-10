@@ -7,20 +7,26 @@
     "test": "jest"
   },
   "dependencies": {
+    "@babel/preset-react": "^7.0.0-beta.52",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
     "lodash": "^4.17.10",
-    "native-base": "^2.6.1",
+    "native-base": "^2.7.0",
     "prop-types": "^15.6.2",
-    "react": "16.3.1",
-    "react-native": "0.55.4",
+    "react": "16.4.1",
+    "react-native": "0.56.0",
     "react-native-fbsdk": "^0.7.0",
     "react-native-firebase": "^4.2.0",
+    "react-native-material-design": "^0.3.7",
     "react-native-vector-icons": "^4.6.0",
     "react-navigation": "^2.5.5",
     "recompose": "^0.27.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.0.0-beta.52",
+    "@babel/preset-env": "^7.0.0-beta.52",
     "babel-jest": "23.2.0",
-    "babel-preset-react-native": "4.0.0",
+    "babel-preset-react-native": "5.0.0",
     "jest": "23.2.0",
     "react-test-renderer": "16.3.1"
   },
