@@ -6,6 +6,12 @@ import ProjectCard from './ProjectCard';
 
 class ProjectSection extends React.Component {
 
+    static propTypes = {
+        name: PropTypes.string,
+        description: PropTypes.string,
+        date: PropTypes.string,
+    }
+
     render() {
         return (
             <View style={styles.MainContainer}>
@@ -24,7 +30,6 @@ class ProjectSection extends React.Component {
             </View>
         )
     }
-
 }
 
 const styles = StyleSheet.create({

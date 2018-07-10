@@ -6,10 +6,12 @@ import ExperienceItem from '../components/ExperienceItem';
 
 class ExperiencesCard extends React.Component {
 
-    static propTypes = {}
+    static propTypes = {
+        title: PropTypes.string,
+        description: PropTypes.string,
+    }
 
     render() {
-        // const {} = this.state; // to easily access state put desire variable in the curly brace so it may become const {variable} = this.state;
         return (
             <View style={styles.MainContainer}>
                 <Text style={styles.Title}>Experiences</Text>
@@ -38,7 +40,6 @@ class ExperiencesCard extends React.Component {
             </View>
         );
     }
-
 }
 
 const styles = StyleSheet.create({

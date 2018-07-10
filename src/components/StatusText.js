@@ -6,15 +6,10 @@ import {StyleSheet, Image, View, Text} from "react-native";
 class StatusText extends React.Component {
 
     static propTypes = {
-
-    }
-
-    state = {
-
+        status: PropTypes.string,
     }
 
     render(){
-        // const {} = this.state; // to easily access state put desire variable in the curly brace so it may become const {variable} = this.state;
         return (
             <View style={styles.StatusBox}>
                 <Text style={styles.StatusText}>{this.props.status}</Text>
@@ -22,7 +17,6 @@ class StatusText extends React.Component {
             </View>
         )
     }
-
 }
 
 const styles = StyleSheet.create({

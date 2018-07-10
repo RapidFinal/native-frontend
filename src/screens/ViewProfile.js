@@ -10,7 +10,9 @@ import ProjectSection from '../components/ProjectSection';
 
 class ViewProfile extends React.Component {
 
-    static propTypes = {}
+    static propTypes = {
+
+    }
 
     state = {
         imgUrl: "https://st2.depositphotos.com/1006318/10458/v/950/depositphotos_104583834-stock-illustration-business-man-profile-icon-male.jpg",
@@ -50,27 +52,20 @@ class ViewProfile extends React.Component {
             <ScrollView contentContainerStyle={styles.ScrollContainer}>
                 <View style={styles.MainContainer}>
                     <CircularProfilePhoto url={imgUrl} diameter={150}/>
-
                     <Text style={styles.ProfileName}>
                         {fullname}
                     </Text>
-
                     <StatusText status={status}/>
-
                     <Text style={styles.Description}>
                         {description}
                     </Text>
-
                     <ExperiencesCard experiences={experiences}/>
-
                     <SkillSetsCard skills={skillSets}/>
-
                     <ProjectSection projects={projects}/>
                 </View>
             </ScrollView>
         )
     }
-
 }
 
 const styles = StyleSheet.create({

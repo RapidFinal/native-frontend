@@ -6,11 +6,9 @@ import {StyleSheet, View, Text, TouchableOpacity} from "react-native";
 class ProjectDetail extends React.Component {
 
     static propTypes = {
-
-    }
-
-    state = {
-
+        title: PropTypes.string,
+        description: PropTypes.string,
+        date: PropTypes.string
     }
 
     onPress = () => {
@@ -18,7 +16,6 @@ class ProjectDetail extends React.Component {
     }
 
     render(){
-        // const {} = this.state; // to easily access state put desire variable in the curly brace so it may become const {variable} = this.state;
         return (
             <TouchableOpacity
                 style={styles.MainContainer}
@@ -28,11 +25,8 @@ class ProjectDetail extends React.Component {
                 <Text style={styles.Description}>{this.props.description}</Text>
                 <Text style={styles.Date}>{this.props.date}</Text>
             </TouchableOpacity>
-
-
         )
     }
-
 }
 
 const styles = StyleSheet.create({
