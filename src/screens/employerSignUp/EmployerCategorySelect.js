@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 import {StyleSheet, Text, View, ScrollView} from "react-native";
 import {Body, CheckBox, ListItem, Button, Container} from "native-base";
 import Modal from "react-native-modal";
-import NextButton from "../../components/NextButton";
 import Stepper from "../../components/Stepper";
 
 class EmployerCategorySelect extends React.Component {
@@ -16,53 +15,52 @@ class EmployerCategorySelect extends React.Component {
     state = {
         modalPageKey :'',
         isModalVisible:false,
-        catData:{
-            "cat1":{
-                "s1":true,
-                "s2":false,
-                "s3":true,
-                "s4":false,
-                "s5":true,
-                "s6":false,
-                "s7":true,
-                "s8":false,
-                "s9":true,
-                "s10":false,
-            },
-            "cat2":{
-                "s3":false,
-                "s4":false
-            },
-            "cat3":{
-                "s5":false,
-                "s6":false
-            },
-            "cat4":{
-                "s7":false,
-                "s8":false
-            },
-            "cat5":{
-                "s9":false,
-                "s10":false
-            },
-            "cat6":{
-                "s11":false,
-                "s122":false
-            },
-            "cat7":{
-                "s13":false,
-                "s14":false
+
+        categoryDataMockUp : {
+            cateKey1 : {
+                categoryName: "cate1",
+                subCategories: {
+                    subKey1: {
+                        subCategoryName: "subCate1",
+                        checked: false
+                    },
+                    subKey2: {
+                        subCategoryName: "subCate2",
+                        checked: false
+                    },
+                    subKey3: {
+                        subCategoryName: "subCate3",
+                        checked: false
+                    },
+                }
+            },cateKey2 : {
+                categoryName: "cate2",
+                subCategories: {
+                    subKey1: {
+                        subCategoryName: "subCate1",
+                        checked: false
+                    },
+                    subKey2: {
+                        subCategoryName: "subCate2",
+                        checked: false
+                    },
+                    subKey3: {
+                        subCategoryName: "subCate3",
+                        checked: false
+                    },
+                }
             }
         }
+
     };
 
     _toggleModal = () =>
         this.setState({ isModalVisible: !this.state.isModalVisible });
 
-    _toggleCheckbox = (categoryKey, subKey) =>{
-        let cloneData = this.state.catData;
-        cloneData[categoryKey][subKey] = !cloneData[categoryKey][subKey]
-        this.setState({catData:cloneData})
+    _toggleCheckbox2 = (categoryKey, subKey) =>{
+        let cloneData = this.state.categoryDataMockUp;
+        cloneData[categoryKey].subCategories[subKey].checked = !cloneData[categoryKey].subCategories[subKey].checked
+        this.setState({categoryDataMockUp:cloneData})
     };
 
     _handleOnScroll = event => {
@@ -79,21 +77,22 @@ class EmployerCategorySelect extends React.Component {
 
     displaySubCategoriesCheckbox =()=> {
         let key = this.state.modalPageKey;
-        let subData = this.state.catData[key];
+        let subData = this.state.categoryDataMockUp[key].subCategories;
         // return Object;
-        return Object.keys(subData).map((data, index)=>(
+        return Object.keys(subData).map((subKey, index)=>(
             <ListItem key={index}>
                 <CheckBox
-                    checked={subData[data]}
-                    onPress={()=>{this._toggleCheckbox(key,data)}}
+                    checked={subData[subKey].checked}
+                    onPress={()=>{this._toggleCheckbox2(key,subKey)}}
                 />
                 <Body>
-                <Text>{data}</Text>
+                <Text>{subData[subKey].subCategoryName}</Text>
                 </Body>
             </ListItem>
 
         ));
     };
+
 
     displayModalContent = () =>{
         let key = this.state.modalPageKey;
@@ -109,9 +108,9 @@ class EmployerCategorySelect extends React.Component {
         );
     };
 
-    displayCategoriesButton= () => {
-        let catList = this.state.catData;
-        return Object.keys(catList).map((key, index) => (
+    displayCategoriesButton= ()=>{
+        let categoriesData = this.state.categoryDataMockUp;
+        return Object.keys(categoriesData).map((key, index)=>(
             <Button
                 info
                 large
@@ -123,26 +122,15 @@ class EmployerCategorySelect extends React.Component {
                     });
                     this._toggleModal();}}>
                 <Text style={styles.categoryTitle}>
-                    {key}
+                    {categoriesData[key].categoryName}
                 </Text>
             </Button>
         ));
     }
 
-
     render(){
-        const {navigation} = this.props;
         return (
             <Container style={{flex:1}} >
-
-                <Button
-                    block
-                    info
-                    onPress={()=>navigation.goBack()}>
-                    <Text>
-                        Go back
-                    </Text>
-                </Button>
                 <Text
                     style={styles.title}>
                     Employer Sign Up
@@ -171,7 +159,6 @@ class EmployerCategorySelect extends React.Component {
                     onBackdropPress={this._toggleModal}
                     scrollTo={this._handleScrollTo}
                     scrollOffset={this.state.scrollOffset}
-                    // scrollOffsetMax={400 - 300} // content height - ScrollView height
                     style={styles.bottomModal}
                 >
                     <View style={styles.scrollableModal}>

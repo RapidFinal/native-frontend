@@ -114,11 +114,10 @@ const AuthStack = createStackNavigator(
         workExp: WorkExp,
         employerCredentialSignUp : EmployerCredentialSignUp,
         employerCategorySelect : EmployerCategorySelect,
-        signUp:Signup
+        signUp: Signup
     },
     {
         initialRouteName: 'signUp',
-        headerMode: "none"
 
     }
 );
@@ -159,6 +158,7 @@ MainNavigator = createSwitchNavigator(
         MainEmployer: EmployerMainStack,
         MainCandidate: CandidateMainStack,
         Auth: AuthStack, // Should probably be a stack consisting of login, signup, forgot password etc.
+        Modal : ModalStack
     },
     {
         initialRouteName: 'Auth',

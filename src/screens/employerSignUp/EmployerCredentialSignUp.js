@@ -30,19 +30,10 @@ class EmployerCredentialSignUp extends React.Component {
         console.log(event.target.value)
     };
 
-
     render(){
         const {navigation} = this.props;
         return (
             <Container>
-                <Button
-                    block
-                    info
-                    onPress={()=>navigation.goBack()}>
-                    <Text>
-                        Go back
-                    </Text>
-                </Button>
 
                 <Text
                     style={styles.title}>
