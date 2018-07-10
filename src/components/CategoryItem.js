@@ -15,7 +15,7 @@ class CategoryItem extends React.Component {
                 <Text style={styles.Title}>{this.props.title}</Text>
                 {this.props.subCategory.map((value,index)=>{
                     return (
-                        <Text style={styles.Description} key={index}>- {value.subCategoryName}</Text>
+                        <Text style={styles.Description} key={index}> {'\t\u2022'} {value.subCategoryName}</Text>
                     );
                 })}
             </View>
