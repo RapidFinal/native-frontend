@@ -1,5 +1,6 @@
 import Home_Test from "../screens/Home_Test";
 import Edit_Test from "../screens/Edit_Test";
+import Home from "../screens/Home";
 import Login_Test from "../screens/Login_Test";
 import View_Test from "../screens/View_Test";
 import Like_Test from "../screens/Like_Test";

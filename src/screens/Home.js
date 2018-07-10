@@ -3,7 +3,8 @@ import compose from 'recompose/compose'
 import HomeCard from '../components/HomeCard'
 import SwiperFlatList from 'react-native-swiper-flatlist';
 import PropTypes from 'prop-types'
-import { Dimensions, Image, StyleSheet, View, FlatList, ScrollView, TouchableHighlight } from 'react-native';
+import { SearchBar } from 'react-native-elements'
+import { StyleSheet, ScrollView, TouchableHighlight } from 'react-native';
 import {Container, Text} from "native-base";
 
 class Home extends React.Component {
@@ -17,6 +18,14 @@ class Home extends React.Component {
     }
 
     onPress = () => {
+
+    }
+
+    onClear = () => {
+
+    }
+
+    onChangeText = () => {
 
     }
 
@@ -51,6 +60,12 @@ class Home extends React.Component {
         ];
         return (
             <ScrollView>
+                <SearchBar
+                    lightTheme
+                    onChangeText={this.onChangeText()}
+                    onClear={this.onClear()}
+                    searchIcon={{ size: 24 }}
+                    placeholder='Search' />
                 <Container style={styles.container}>
                     <Text>
                         Recommended
@@ -86,6 +101,7 @@ class Home extends React.Component {
                                     style={styles.button}
                                     onPress={this.onPress}
                                     underlayColor="white"
+                                    key={key}
                                 >
                                     <HomeCard name={prop.name} major={prop.major} status={prop.status}/>
                                 </TouchableHighlight>
@@ -105,7 +121,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     container: {
-        marginTop: 70,
+        marginTop: 20,
         marginLeft: 20,
         marginRight: 20,
         flex: 1,
