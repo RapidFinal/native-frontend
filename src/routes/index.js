@@ -8,6 +8,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {createBottomTabNavigator, createStackNavigator, createSwitchNavigator} from "react-navigation";
 import React from "react";
 import {Button} from "react-native";
+import ViewEmployerProfile from "../screens/ViewEmployerProfile";
 
 /* Changes both EmployerMainStack & CandidateMainStack */
 const headerOptions = {
@@ -118,6 +119,7 @@ MainNavigator = createSwitchNavigator(
         MainCandidate: CandidateMainStack,
         Auth: Login_Test, // Should probably be a stack consisting of login, signup, forgot password etc.
         ViewProfile: ViewProfile,
+        ViewEmployerProfile: ViewEmployerProfile
     },
     {
         initialRouteName: 'Auth',

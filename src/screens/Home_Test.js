@@ -19,6 +19,11 @@ class Home_Test extends React.Component {
                     title="Profile"
                     color="#841584"
                 />
+                <Button
+                    onPress={() => this.props.navigation.navigate('ViewEmployerProfile')}
+                    title="Employer Profile"
+                    color="#841584"
+                />
             </View>
         );
     }
