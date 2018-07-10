@@ -3,95 +3,213 @@ import firebase from 'react-native-firebase'
 class DatabaseService {
 
   // Employee
-  createEmployeeInfo(uid, firstName, lastName, desc, statusId, tagIds, subCatIds, experience, project) {
-    var value = {
-      firstName: firstName,
-      lastName: lastName,
-      description: desc,
-      statusId: statusId,
-      tagIds: tagIds,
-      subCategoryIds: subCatIds
-    };
-    firebase.database().ref("employeeInfo/" + uid + "/").set(value);
-    this.createEmployeeExperiences(uid, experience.title, experience.desc);
-    this.createEmployeeProjects(uid, project.name, project.desc, project.date, project.tagIds)
+
+  // tags = ["java", "python"]
+  // subCatIds = ["id1", "id2"]
+  // experiences = [{title: "title2", desc: "defefefefefefer"}, {title: "title3", desc: "defefefefefefer"}]
+  // if user do not fill in, experiences = null
+  createEmployeeInfo(uid, firstName, lastName, desc, statusId, tags, subCatIds, experience) {
+
   }
 
 
   createEmployeeExperiences(uid, title, desc) {
-    var value = {
+    let value = {
       experience_title: title,
       experience_description: desc
     };
     firebase.database().ref("employeeInfo/" + uid + "/experiences/").push(value)
   }
 
-  createEmployeeProjects(uid, progName, progDesc, date, tagIds) {
-    var value = {
+  // tags = ["java", "python"]
+  createEmployeeProjects(uid, progName, progDesc, date, tags) {
+    let value = {
       projectName: progName,
       projectDescription: progDesc,
       date: date,
-      tagIds: tagIds
+      tagIds: tags
     };
     firebase.database().ref("employeeInfo/" + uid + "/projects/").push(value);
-
   }
+
 
 
   getEmployeeInfo(uid) {
-    firebase.database().ref("employeeInfo/" + uid + "/").once('value').then(function(snapshot) {
-      console.log(snapshot.val());
-    });
+    // firebase.database().ref("employeeInfo/" + uid + "/").once('value').then(function(snapshot) {
+    //   console.log(snapshot.val());
+    // })
+    let ret = {
+      firstName: "Sam",
+      lastName: "Smith",
+      description: "I am a programmer",
+      status: "Looking for job",
+      liked: 15,
+      tags: ["java", "python", "react"],
+      experiences: [{title: "Work at MUIC", description: "Be a TA for programming 1"},
+        {title: "Intern at v-bit", description: "doing front-end"}],
+      projects: [{
+        name: "Note Sharing", description: "a web application to share and comment notes",
+        date: "01/06/2018", tags: ["firebase", "Vue", "Cordova"]
+      }]
+    };
 
+    return ret;
   }
 
 
-  // If field does not exist in db, the snapshot will be null
-
+  // look for field name and type of value in doc
   updateEmployeeInfoAt(uid, field, value) {
 
   }
 
-  getEmployeeInfoAt(uid, field) {
 
+
+  // assume you want to get at projects filed
+  // getEmployeeInfoAt("uid", "projects") -> array of object
+  //                                      -> [{},{}]
+  getEmployeeInfoAt(uid, field) {
+    let ret = [{
+      name: "Note Sharing", description: "a web application to share and comment notes",
+      date: "01/06/2018", tags: ["firebase", "Vue", "Cordova"]
+    }];
+    return ret;
   }
 
   // Employer
 
-  createEmployerInfo(uid, value) {
+  // categories = map of categoey-subcategory that selected
+  // {
+  //   "Web and Programming": ["HTML / CSS", "Web Development", "Mobile Application"],
+  //   "Graphic and Design": ["Logo", "Character Design", "Advertising Banner"]
+  // }
+  createEmployerInfo(uid, firstName, lastName, companyName, categories) {
 
   }
 
+  // look for field name and type of value in doc
   updateEmployerInfoAt(uid, field, value) {
 
   }
 
   getEmployerInfo(uid) {
-
+    let ret = {firstName: "Alice", lastName:"Smith", companyName: "MUIC",
+              categories: [
+                {
+                  categoryId: "cat1",
+                  categoryName: "Graphic and Design",
+                  subCategory: [
+                    {subCategoryId: "subCat1", subCategoryName: "Logo"},
+                    {subCategoryId: "subCat2", subCategoryName: "Character Design"},
+                    {subCategoryId: "subCat3", subCategoryName: "Advertising Banner"}
+                  ]
+                },
+                {
+                  categoryId: "cat2",
+                  categoryName: "Web and Programming",
+                  subCategory: [
+                    {subCategoryId: "subCat1", subCategoryName: "HTML / CSS"},
+                    {subCategoryId: "subCat2", subCategoryName: "Web Development"},
+                    {subCategoryId: "subCat3", subCategoryName: "Mobile Application"}
+                  ]
+                }
+              ]
+              };
+    return ret;
   }
 
+  // suppose you get categories
   getEmployerInfoAt(uid, field) {
-
+    let ret = [
+      {
+        categoryId: "cat1",
+        categoryName: "Graphic and Design",
+        subCategory: [
+          {subCategoryId: "subCat1", subCategoryName: "Logo"},
+          {subCategoryId: "subCat2", subCategoryName: "Character Design"},
+          {subCategoryId: "subCat3", subCategoryName: "Advertising Banner"}
+        ]
+      },
+      {
+        categoryId: "cat2",
+        categoryName: "Web and Programming",
+        subCategory: [
+          {subCategoryId: "subCat1", subCategoryName: "HTML / CSS"},
+          {subCategoryId: "subCat2", subCategoryName: "Web Development"},
+          {subCategoryId: "subCat3", subCategoryName: "Mobile Application"}
+        ]
+      }
+    ];
+    return ret;
   }
 
   // Categories
-
   getCategories() {
-
+    let ret = [
+      {
+        categoryId: "cat1",
+        categoryName: "Graphic and Design",
+        subCategory: [
+          {subCategoryId: "subCat1", subCategoryName: "Logo"},
+          {subCategoryId: "subCat2", subCategoryName: "Character Design"},
+          {subCategoryId: "subCat3", subCategoryName: "Advertising Banner"}
+        ]
+      },
+      {
+        categoryId: "cat2",
+        categoryName: "Web and Programming",
+        subCategory: [
+          {subCategoryId: "subCat1", subCategoryName: "HTML / CSS"},
+          {subCategoryId: "subCat2", subCategoryName: "Web Development"},
+          {subCategoryId: "subCat3", subCategoryName: "Mobile Application"}
+        ]
+      }
+    ];
+    return ret;
   }
 
+  // suppose the category is Web and Programming
   getSubCategories(categoryId) {
-
+    let ret = [
+      {subCategoryId: "subCat1", subCategoryName: "HTML / CSS"},
+      {subCategoryId: "subCat2", subCategoryName: "Web Development"},
+      {subCategoryId: "subCat3", subCategoryName: "Mobile Application"}
+    ]
   }
 
   // Tags
 
-  getSuggestedTagsFrom(categoryId) {
+  // If there is no projectId, sent null
+  createTag(uid, tagName, projectId) {
 
   }
 
-  getEmployeeFromTag(tagId) {
+  getTagName(tagId) {
+    return "java";
+  }
 
+  // categoryId that employee pick
+  // suppose that employee pick web and programming
+  getSuggestedTagsFrom(categoryId) {
+    return ["java", "react", "vue", "python"];
+  }
+
+  // return array of object
+  // suppose tagName = java
+  getEmployeeFromTag(tagName) {
+    let ret = [{
+      firstName: "Sam",
+      lastName: "Smith",
+      description: "I am a programmer",
+      status: "Looking for job",
+      liked: 15,
+      tags: ["java", "python", "react"],
+      experiences: [{title: "Work at MUIC", description: "Be a TA for programming 1"},
+        {title: "Intern at v-bit", description: "doing front-end"}],
+      projects: [{
+        name: "Note Sharing", description: "a web application to share and comment notes",
+        date: "01/06/2018", tags: ["firebase", "vue", "cordova"]
+      }]
+    }];
   }
 
 }
