@@ -125,6 +125,69 @@ class DatabaseService {
     });
   }
 
+  updateEmployeeFirstName(uid, firstName) {
+    firebase.database().ref("employeeInfo/" + uid + "/firstName").set(firstName);
+  }
+
+  updateEmployeeLastName(uid, lastName) {
+    firebase.database().ref("employeeInfo/" + uid + "/lastName").set(lastName);
+  }
+
+  updateEmployeeDescription(uid, desc) {
+    firebase.database().ref("employeeInfo/" + uid + "/description").set(desc);
+  }
+
+  updateEmployeeStatus(uid, statusId) {
+    firebase.database().ref("employeeInfo/" + uid + "/statusId").set(statusId);
+  }
+
+  updateEmployeeTags(uid, tags) {
+    this.getAllTags().then((allTags) => {
+      let tagIds = [];
+      tags.forEach(tag => {
+        if ( allTags[tag] !== null) {
+          console.log("tag exist");
+          tagIds.push(allTags[tag])
+        } else {
+          console.log("tag not exist");
+          let tagId = firebase.database().ref("tags/").push().key;
+          tagIds.push(allTags[tag]);
+          firebase.database().ref("tags/" + tagId + "/").set({tagName: tag});
+        }
+      });
+      firebase.database().ref("employeeInfo/" + uid + "/tagIds/").set(tagIds);
+    });
+  }
+
+  // exp = {title: "title2", desc: "defefefefefefer"}, {title: "title3", desc: "defefefefefefer"}
+  // need to talk with sky on the the process of edit
+  updateEmployeeExperience(uid, exp) {
+
+  }
+
+  updateEmployeeProject(uid, projectId, progName, progDesc, date, tags) {
+    this.getAllTags().then((allTags) => {
+      let tagIds = [];
+      tags.forEach(tag => {
+        if ( allTags[tag] !== null) {
+          tagIds.push(allTags[tag])
+        } else {
+          var tagId = firebase.database().ref("tags/").push().key;
+          tagIds.push(allTags[tag]);
+          firebase.database().ref("tags/" + tagId + "/").set({tagName: tag});
+        }
+      });
+
+      let value = {
+        projectName: progName,
+        projectDescription: progDesc,
+        date: date,
+        tagIds: tagIds
+      };
+      firebase.database().ref("employeeInfo/" + uid + "/projects/" + projectId + "/").set(value);
+    });
+  }
+
 
   // look for field name and type of value in doc
   updateEmployeeInfoAt(uid, field, value) {
