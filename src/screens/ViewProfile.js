@@ -7,53 +7,58 @@ import ExperiencesCard from '../components/ExperiencesCard';
 import SkillSetsCard from '../components/SkillSetsCard';
 import CircularProfilePhoto from '../components/CircularProfilePhoto';
 import ProjectSection from '../components/ProjectSection';
+import DatabaseService from '../api/databaseService';
 
 class ViewProfile extends React.Component {
 
     static propTypes = {
-
+        imgUrl: PropTypes.string,
+        fullName: PropTypes.string,
+        description: PropTypes.string,
+        status: PropTypes.string,
+        experiences: PropTypes.array,
+        skillSets: PropTypes.array,
+        projects: PropTypes.array,
+        tags: PropTypes.array,
     }
 
     state = {
         imgUrl: "https://st2.depositphotos.com/1006318/10458/v/950/depositphotos_104583834-stock-illustration-business-man-profile-icon-male.jpg",
-        fullname: "FULLNAME",
-        description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-        status: "Looking for job",
-        experiences: [
-            {
-                title: "Web Development",
-                description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
-            },
-            {
-                title: "System Development",
-                description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
-            }
-        ],
+        fullName: "",
+        description: "",
+        status: "",
+        experiences: [],
         skillSets: ["Python", "Java"],
-        projects: [
-            {
-                name: "Notey",
-                description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries",
-                date: "15/07/2018"
-            },
-            {
-                name: "Tracker",
-                description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries",
-                date: "20/07/2018"
-            }
-        ],
+        projects: [],
+        tags: []
 
     };
 
+    componentWillMount() {
+        let db = new DatabaseService
+        db.getEmployeeInfo('uid3').then((result) => {
+            console.log(result)
+            this.setState({
+                fullName: result.firstName + ' ' + result.lastName,
+                description: result.description,
+                status: result.status,
+                experiences: result.experiences,
+                projects: result.projects
+            })
+        }).catch((error) => {
+            console.log(error)
+        })
+    }
+
     render() {
-        const {imgUrl, fullname, status, description, experiences, skillSets, projects} = this.state;
+        const {imgUrl, fullName, status, description, experiences, skillSets, projects} = this.state;
 
         return (
             <ScrollView contentContainerStyle={styles.ScrollContainer}>
                 <View style={styles.MainContainer}>
                     <CircularProfilePhoto url={imgUrl} diameter={150}/>
                     <Text style={styles.ProfileName}>
-                        {fullname}
+                        {fullName}
                     </Text>
                     <StatusText status={status}/>
                     <Text style={styles.Description}>
