@@ -23,7 +23,7 @@ class ViewProfile extends React.Component {
     }
 
     state = {
-        imgUrl: "https://st2.depositphotos.com/1006318/10458/v/950/depositphotos_104583834-stock-illustration-business-man-profile-icon-male.jpg",
+        imgUrl: "",
         fullName: "",
         description: "",
         status: "",
@@ -39,6 +39,7 @@ class ViewProfile extends React.Component {
         db.getEmployeeInfo('uid3').then((result) => {
             console.log(result)
             this.setState({
+                imgUrl: result.imgUrl,
                 fullName: result.firstName + ' ' + result.lastName,
                 description: result.description,
                 status: result.status,
