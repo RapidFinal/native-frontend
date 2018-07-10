@@ -113,6 +113,7 @@ class DatabaseService {
           ret.firstName = val.firstName;
           ret.lastName = val.lastName;
           ret.description = val.description;
+          ret.imgUrl = val.imgUrl;
           ret.status = status;
           ret.experiences = ex;
           ret.tagIds = val.tagIds;
@@ -172,7 +173,7 @@ class DatabaseService {
         if ( allTags[tag] !== null) {
           tagIds.push(allTags[tag])
         } else {
-          var tagId = firebase.database().ref("tags/").push().key;
+          let tagId = firebase.database().ref("tags/").push().key;
           tagIds.push(allTags[tag]);
           firebase.database().ref("tags/" + tagId + "/").set({tagName: tag});
         }
@@ -188,7 +189,10 @@ class DatabaseService {
     });
   }
 
-
+  updateEmployeeImgUrl(uid, url) {
+    firebase.database().ref("employeeInfo/" + uid + "/imgUrl/").set(url);
+  }
+  
   // look for field name and type of value in doc
   updateEmployeeInfoAt(uid, field, value) {
 
