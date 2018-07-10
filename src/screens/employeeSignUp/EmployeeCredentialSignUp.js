@@ -17,7 +17,7 @@ import {CredentialAuthentication} from "../../api/authentication"
 // To get context state:
 // this.props.context.authenticated
 
-class CredentialSignUp extends React.Component {
+class EmployeeCredentialSignUp extends React.Component {
 
     static propTypes = {
 
@@ -69,7 +69,7 @@ class CredentialSignUp extends React.Component {
                     password: password
                 }
                 this.props.setContext({employee: employee})
-                navigation.navigate("categorySelect")
+                navigation.navigate("employeeCategorySelect")
             } catch (e) {
                 console.log(e.code)
             }
@@ -134,4 +134,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default compose(withContext) (CredentialSignUp)
+export default compose(withContext) (EmployeeCredentialSignUp)

@@ -1,11 +1,11 @@
-import CategorySelect from './CategorySelect';
-import CredentialSignUp from './CredentialSignUp';
+import EmployeeCategorySelect from './EmployeeCategorySelect';
+import EmployeeCredentialSignUp from './EmployeeCredentialSignUp';
 import EmployeeInfo from './EmployeeInfo';
 import WorkExp from './WorkExp';
 
 export {
-    CategorySelect,
-    CredentialSignUp,
+    EmployeeCategorySelect,
+    EmployeeCredentialSignUp,
     EmployeeInfo,
     WorkExp,
 }
