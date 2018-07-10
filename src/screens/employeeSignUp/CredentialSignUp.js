@@ -39,7 +39,14 @@ class CredentialSignUp extends React.Component {
 
     attemptSignUp = async () => {
 
-        const {email, confirmPassword, password} = this.state;
+        const {
+            confirmPassword,
+            firstName,
+            email,
+            lastName,
+            password
+        } = this.state;
+        const {navigation, context} = this.props;
         Object.keys(this.state).forEach(key => {
             if (this.state[key] === '') {
                 console.log("bad")
@@ -55,7 +62,14 @@ class CredentialSignUp extends React.Component {
             console.log("pass");
             try {
                 const signup = await CredentialAuthentication.signup({email, password})
-                this.props.navigation.navigate("categorySelect")
+                const employee = {
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: email,
+                    password: password
+                }
+                this.props.setContext({employee: employee})
+                navigation.navigate("categorySelect")
             } catch (e) {
                 console.log(e.code)
             }
@@ -64,7 +78,7 @@ class CredentialSignUp extends React.Component {
 
 
     render(){
-        const {} = this.state; // to easily access state put desire variable in the curly brace so it may become const {variable} = this.state;
+        const {firstName, lastName, email, password, confirmPassword} = this.state; // to easily access state put desire variable in the curly brace so it may become const {variable} = this.state;
         return (
             <Container>
                 <Stepper
@@ -76,28 +90,33 @@ class CredentialSignUp extends React.Component {
                         <TextInputWithLabel
                             label="First name"
                             placeholder="First name"
+                            value={firstName}
                             onChange={this.handleChange("firstName")}
                         />
                         <TextInputWithLabel
                             label="Last name"
                             placeholder="Last name"
+                            value={lastName}
                             onChange={this.handleChange("lastName")}
                         />
                         <TextInputWithLabel
                             label="Email"
                             placeholder="Email"
+                            value={email}
                             onChange={this.handleChange("email")}
                         />
                         <TextInputWithLabel
                             label="Password"
                             placeholder="Password"
                             type="password"
+                            value={password}
                             onChange={this.handleChange("password")}
                         />
                         <TextInputWithLabel
                             label="Confirm Password"
                             placeholder="Confirm Password"
                             type="password"
+                            value={confirmPassword}
                             onChange={this.handleChange("confirmPassword")}
                         />
                         <NextButton
