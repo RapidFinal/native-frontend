@@ -9,8 +9,8 @@ class DatabaseService {
   // if user do not fill in, experiences = null
   // categories = map of categoey-subcategory that selected
   // {
-  //   "Web and Programming": ["HTML / CSS", "Web Development", "Mobile Application"],
-  //   "Graphic and Design": ["Logo", "Character Design", "Advertising Banner"]
+  //   "categoryId1": ["subcategoryId1", "subcategoryId2", "subcategoryId3"],
+  //   "categoryId2": ["subcategoryId1", "subcategoryId2", "subcategoryId3"]
   // }
   createEmployeeInfo(uid, firstName, lastName, desc, statusId, tags, categories, experience) {
 
@@ -83,8 +83,8 @@ class DatabaseService {
 
   // categories = map of categoey-subcategory that selected
   // {
-  //   "Web and Programming": ["HTML / CSS", "Web Development", "Mobile Application"],
-  //   "Graphic and Design": ["Logo", "Character Design", "Advertising Banner"]
+  //   "categoryId1": ["subcategoryId1", "subcategoryId2", "subcategoryId3"],
+  //   "categoryId2": ["subcategoryId1", "subcategoryId2", "subcategoryId3"]
   // }
   createEmployerInfo(uid, firstName, lastName, companyName, categories) {
 
