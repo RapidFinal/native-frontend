@@ -5,10 +5,14 @@ class DatabaseService {
   // Employee
 
   // tags = ["java", "python"]
-  // subCatIds = ["id1", "id2"]
   // experiences = [{title: "title2", desc: "defefefefefefer"}, {title: "title3", desc: "defefefefefefer"}]
   // if user do not fill in, experiences = null
-  createEmployeeInfo(uid, firstName, lastName, desc, statusId, tags, subCatIds, experience) {
+  // categories = map of categoey-subcategory that selected
+  // {
+  //   "categoryId1": ["subcategoryId1", "subcategoryId2", "subcategoryId3"],
+  //   "categoryId2": ["subcategoryId1", "subcategoryId2", "subcategoryId3"]
+  // }
+  createEmployeeInfo(uid, firstName, lastName, desc, statusId, tags, categories, experience) {
 
   }
 
@@ -79,8 +83,8 @@ class DatabaseService {
 
   // categories = map of categoey-subcategory that selected
   // {
-  //   "Web and Programming": ["HTML / CSS", "Web Development", "Mobile Application"],
-  //   "Graphic and Design": ["Logo", "Character Design", "Advertising Banner"]
+  //   "categoryId1": ["subcategoryId1", "subcategoryId2", "subcategoryId3"],
+  //   "categoryId2": ["subcategoryId1", "subcategoryId2", "subcategoryId3"]
   // }
   createEmployerInfo(uid, firstName, lastName, companyName, categories) {
 
