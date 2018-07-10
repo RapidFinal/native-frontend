@@ -12,7 +12,7 @@ class DatabaseService {
   //   "categoryId1": ["subcategoryId1", "subcategoryId2", "subcategoryId3"],
   //   "categoryId2": ["subcategoryId1", "subcategoryId2", "subcategoryId3"]
   // }
-  createEmployeeInfo(uid, firstName, lastName, desc, statusId, tags, categories, experiences) {
+  createEmployeeInfo(uid, firstName, lastName, desc, statusId, tags, imgUrl, categories, experiences) {
     this.getAllTags().then((allTags) => {
       let tagIds = [];
       tags.forEach(tag => {
@@ -21,7 +21,7 @@ class DatabaseService {
           tagIds.push(allTags[tag])
         } else {
           console.log("tag not exist");
-          var tagId = firebase.database().ref("tags/").push().key;
+          let tagId = firebase.database().ref("tags/").push().key;
           tagIds.push(allTags[tag])
           firebase.database().ref("tags/" + tagId + "/").set({tagName: tag});
         }
@@ -33,6 +33,7 @@ class DatabaseService {
         description: desc,
         statusId: statusId,
         tagIds: tagIds,
+        imgUrl: imgUrl
       };
       firebase.database().ref("employeeInfo/" + uid + "/").set(value);
 
@@ -118,6 +119,8 @@ class DatabaseService {
           ret.projects = prog;
           resolve(ret)
         })
+      }).catch((error) => {
+        reject(error);
       });
     });
   }
@@ -231,6 +234,8 @@ class DatabaseService {
         let ret = "";
         ret = snapshot.val().status
         resolve(ret)
+      }).catch((error) => {
+        reject(error)
       });
     })
   }
