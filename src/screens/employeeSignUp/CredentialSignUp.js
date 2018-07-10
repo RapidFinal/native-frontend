@@ -38,33 +38,28 @@ class CredentialSignUp extends React.Component {
     };
 
     attemptSignUp = async () => {
-        // console.log(this.state)
-        // console.log(this.props.context)
-        // const {confirmPassword, password} = this.state;
-        // Object.keys(this.state).forEach(key => {
-        //     if (this.state[key] === '') {
-        //         console.log("bad")
-        //     }
-        // });
-        // if (confirmPassword !== password) {
-        //     console.log("Bad")
-        // }
-        // else if (password.length < 6) {
-        //     console.log("Bad")
-        // }
-        // else {
-        //     console.log("pass");
 
-        const {email, password} = this.state
-        try {
-
-            const signup = CredentialAuthentication.signup({email, password})
-            // this.props.navigation.navigate("categorySelect")
-        } catch (e) {
-            console.log(e.message)
+        const {email, confirmPassword, password} = this.state;
+        Object.keys(this.state).forEach(key => {
+            if (this.state[key] === '') {
+                console.log("bad")
+            }
+        });
+        if (confirmPassword !== password) {
+            console.log("Bad")
         }
-
-        // }
+        else if (password.length < 6) {
+            console.log("Bad")
+        }
+        else {
+            console.log("pass");
+            try {
+                const signup = await CredentialAuthentication.signup({email, password})
+                this.props.navigation.navigate("categorySelect")
+            } catch (e) {
+                console.log(e.code)
+            }
+        }
     };
 
 

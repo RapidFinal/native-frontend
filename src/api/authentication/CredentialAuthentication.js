@@ -9,6 +9,6 @@ export const signout = async () => {
     return RNFirebase.auth().signOut();
 };
 
-export const signup = (email, password) => {
+export const signup = async ({email, password}) => {
     return RNFirebase.auth().createUserAndRetrieveDataWithEmailAndPassword(email, password);
 };
