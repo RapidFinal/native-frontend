@@ -6,6 +6,7 @@ import StatusText from '../components/StatusText';
 import ExperiencesCard from '../components/ExperiencesCard';
 import SkillSetsCard from '../components/SkillSetsCard';
 import CircularProfilePhoto from '../components/CircularProfilePhoto';
+import ProjectSection from '../components/ProjectSection';
 
 class ViewProfile extends React.Component {
 
@@ -18,24 +19,24 @@ class ViewProfile extends React.Component {
         status: "Looking for job",
         experiences: [
             {
-                title: "Python",
+                title: "Web Development",
                 description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
             },
             {
-                title: "Java",
+                title: "System Development",
                 description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
             }
         ],
-        skillSets: ["SKILL 1", "SKILL 2"],
+        skillSets: ["Python", "Java"],
         projects: [
             {
-                name: "PROJECT 1",
-                description: "PROJECT DESCRIPTION 1",
+                name: "Notey",
+                description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries",
                 date: "15/07/2018"
             },
             {
-                name: "PROJECT 2",
-                description: "PROJECT DESCRIPTION 2",
+                name: "Tracker",
+                description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries",
                 date: "20/07/2018"
             }
         ],
@@ -43,7 +44,7 @@ class ViewProfile extends React.Component {
     };
 
     render() {
-        const {imgUrl, fullname, status, description, experiences, skillSets} = this.state;
+        const {imgUrl, fullname, status, description, experiences, skillSets, projects} = this.state;
 
         return (
             <ScrollView contentContainerStyle={styles.ScrollContainer}>
@@ -64,7 +65,7 @@ class ViewProfile extends React.Component {
 
                     <SkillSetsCard skills={skillSets}/>
 
-
+                    <ProjectSection projects={projects}/>
                 </View>
             </ScrollView>
         )
