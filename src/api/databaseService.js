@@ -336,7 +336,7 @@ class DatabaseService {
         const ret = {};
         snapshot.forEach(tag => {
           ret[tag.val().tagName] = tag.key
-        })
+        });
         // console.log(ret);
         resolve(ret)
       });
@@ -344,3 +344,4 @@ class DatabaseService {
   }
 
 }
+export default DatabaseService
