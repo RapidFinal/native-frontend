@@ -66,7 +66,7 @@ class ViewProfile extends React.Component {
                     </Text>
                     <ExperiencesCard experiences={experiences}/>
                     <SkillSetsCard skills={skillSets}/>
-                    <ProjectSection projects={projects}/>
+                    <ProjectSection projects={projects} navigation={this.props.navigation}/>
                 </View>
             </ScrollView>
         )

@@ -11,15 +11,11 @@ class ProjectDetail extends React.Component {
         date: PropTypes.string
     }
 
-    onPress = () => {
-
-    }
-
     render(){
         return (
             <TouchableOpacity
                 style={styles.MainContainer}
-                onPress={this.onPress}
+                onPress={() => this.props.navigation.navigate('ProjectDetail', {projectId: this.props.projectId})}
             >
                 <Text style={styles.Title}>{this.props.title}</Text>
                 <Text style={styles.Description}>{this.props.description}</Text>
