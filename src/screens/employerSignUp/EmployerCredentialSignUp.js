@@ -34,29 +34,29 @@ class EmployerCredentialSignUp extends React.Component {
     };
 
     attemptSignUp = () => {
-        console.log(this.state)
-        console.log(this.props.context)
-        const {confirmPassword, password} = this.state;
-        Object.keys(this.state).forEach(key => {
-            if (key!== "error" && this.state[key] === '') {
-                console.log("Every field should not be empty")
-            }
-        });
-        if (confirmPassword !== password) {
-            console.log("Password and confirmed password are mismatch")
-        }
-        else if (password.length < 6) {
-            console.log("The length of password is too short")
-        }
-        else {
-            let employerInfo = {
-                email : this.state.email,
-                companyName: this.state.companyName,
-                password : this.state.password,
-            }
-            this.props.setContext({employerInfo: employerInfo})
+        // console.log(this.state)
+        // console.log(this.props.context)
+        // const {confirmPassword, password} = this.state;
+        // Object.keys(this.state).forEach(key => {
+        //     if (key!== "error" && this.state[key] === '') {
+        //         console.log("Every field should not be empty")
+        //     }
+        // });
+        // if (confirmPassword !== password) {
+        //     console.log("Password and confirmed password are mismatch")
+        // }
+        // else if (password.length < 6) {
+        //     console.log("The length of password is too short")
+        // }
+        // else {
+        //     let employerInfo = {
+        //         email : this.state.email,
+        //         companyName: this.state.companyName,
+        //         password : this.state.password,
+        //     }
+        //     this.props.setContext({employerInfo: employerInfo})
             this.props.navigation.navigate("employerCategorySelect")
-        }
+        // }
     };
 
     render(){

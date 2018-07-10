@@ -21,7 +21,14 @@ class App extends React.Component {
         authenticated: false,
         loading: true,
         currentUser: null,
-        employerInfo:{},
+        employer: {
+            firstName: "",
+            lastName: "",
+            email: "",
+            companyName:'',
+            password: "",
+            categories:{}
+        }
     };
 
 
