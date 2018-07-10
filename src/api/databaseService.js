@@ -12,8 +12,42 @@ class DatabaseService {
   //   "categoryId1": ["subcategoryId1", "subcategoryId2", "subcategoryId3"],
   //   "categoryId2": ["subcategoryId1", "subcategoryId2", "subcategoryId3"]
   // }
-  createEmployeeInfo(uid, firstName, lastName, desc, statusId, tags, categories, experience) {
+  createEmployeeInfo(uid, firstName, lastName, desc, statusId, tags, categories, experiences) {
+    this.getAllTags().then((allTags) => {
+      let tagIds = [];
+      tags.forEach(tag => {
+        if ( allTags[tag] !== null) {
+          console.log("tag exist");
+          tagIds.push(allTags[tag])
+        } else {
+          console.log("tag not exist");
+          let tagId = firebase.database().ref("tags/").push().key;
+          tagIds.push(allTags[tag]);
+          firebase.database().ref("tags/" + tagId + "/").set({tagName: tag});
+        }
+      });
 
+      Object.entries(categories).forEach(
+        ([categoryId, subCatIds]) => {
+          firebase.database().ref("employeeInfo/" + uid + "/categories/" + categoryId + "/").set({subCategoryIds: subCatIds});
+        }
+      );
+
+      let value = {
+        firstName: firstName,
+        lastName: lastName,
+        description: desc,
+        statusId: statusId,
+        tagIds: tagIds,
+      };
+
+      firebase.database().ref("employeeInfo/" + uid + "/").set(value);
+      if (experiences !== null) {
+        experiences.forEach(exp => {
+          this.createEmployeeExperiences(uid, exp);
+        })
+      }
+    })
   }
 
 
@@ -214,6 +248,18 @@ class DatabaseService {
         date: "01/06/2018", tags: ["firebase", "vue", "cordova"]
       }]
     }];
+  }
+
+  getAllTags() {
+    return new Promise((resolve, reject) => {
+      firebase.database().ref("tags/").once('value').then(function(snapshot) {
+        const ret = {};
+        snapshot.forEach(tag => {
+          ret[tag.val().tagName] = tag.key
+        });
+        resolve(ret)
+      });
+    })
   }
 
 }
