@@ -33,7 +33,7 @@ class NextButton extends React.Component {
 const styles = StyleSheet.create({
     button: {
         alignSelf: 'center',
-        marginTop: 10
+        marginVertical: 40,
     }
 });
 

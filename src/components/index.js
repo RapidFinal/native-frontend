@@ -10,6 +10,7 @@ import HomeCard from './HomeCard'
 import NavigationBar from './NavigationBar'
 import NextButton from './NextButton'
 import NormalProjectCard from './NormalProjectCard'
+import PlusButton from './PlusButton'
 import ProjectDetail from './ProjectDetail'
 import ProjectSection from './ProjectSection'
 import SearchCard from './ProjectSection'
@@ -19,6 +20,7 @@ import StatusDropdown from './StatusDropdown'
 import Stepper from './Stepper'
 import Tag from './Tag'
 import TextField from './TextField'
+import TextInput from './TextInput'
 import TextInputWithLabel from './TextInputWithLabel'
 import TimelineProjectCard from './TimelineProjectCard'
 
@@ -36,6 +38,7 @@ export {
     NavigationBar,
     NextButton,
     NormalProjectCard,
+    PlusButton,
     ProjectSection,
     ProjectDetail,
     SearchCard,
@@ -45,6 +48,7 @@ export {
     Stepper,
     Tag,
     TextField,
+    TextInput,
     TextInputWithLabel,
     TimelineProjectCard
 }

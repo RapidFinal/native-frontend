@@ -1,10 +1,13 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import {StyleSheet} from "react-native";
-import {Container, Text} from "native-base";
+import {StyleSheet, View} from "react-native";
+import {Button, Container, H3, Text} from "native-base";
 import {
-    Stepper
+    PlusButton,
+    SignUpForm,
+    Stepper,
+    TextInputWithLabel
 } from "../../components";
 
 class WorkExp extends React.Component {
@@ -26,7 +29,25 @@ class WorkExp extends React.Component {
                     currentPosition={3}
                     stepCount={4}
                 />
-                <Text>Work Exp</Text>
+                <SignUpForm>
+                    <H3>Work Experience (Optional)</H3>
+                    <View style={styles.box}>
+                        <TextInputWithLabel
+                            label="Degree"
+                            placeholder="Degree"
+                        />
+                        <TextInputWithLabel
+                            label="Description"
+                            placeholder="Description"
+                        />
+                    </View>
+                </SignUpForm>
+                <PlusButton
+                    style={[styles.plusButton, styles.center]}
+                />
+                <Button style={[styles.submitButton, styles.center]}>
+                    <Text>Submit</Text>
+                </Button>
             </Container>
         )
     }
@@ -34,7 +55,23 @@ class WorkExp extends React.Component {
 }
 
 const styles = StyleSheet.create({
-
+    box: {
+        marginTop: 10,
+        padding: 20,
+        backgroundColor: '#f1f1f1',
+        borderRadius: 5,
+        borderWidth: StyleSheet.hairlineWidth,
+        borderColor: 'black',
+    },
+    plusButton: {
+        marginVertical: 30,
+    },
+    center: {
+        alignSelf: "center",
+    },
+    submitButton: {
+        marginVertical: 60,
+    }
 });
 
 export default compose() (WorkExp)

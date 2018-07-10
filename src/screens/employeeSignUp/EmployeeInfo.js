@@ -1,11 +1,21 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import {StyleSheet} from "react-native";
-import {Container, Text} from "native-base";
+import {StyleSheet, View} from "react-native";
+import {
+    Container,
+    H3,
+    Input,
+    Item,
+    Text,
+} from "native-base";
 import {
     NextButton,
-    Stepper
+    SignUpForm,
+    StatusDropdown,
+    Stepper,
+    TextInput,
+    TextInputWithLabel
 } from "../../components/";
 
 class EmployeeInfo extends React.Component {
@@ -20,16 +30,33 @@ class EmployeeInfo extends React.Component {
 
     render(){
         // const {} = this.state; // to easily access state put desire variable in the curly brace so it may become const {variable} = this.state;
+        const {navigate} = this.props.navigation;
         return (
             <Container>
                 <Stepper
                     currentPosition={2}
                     stepCount={4}
                 />
-                <Text>Employee Info</Text>
-                <NextButton
-                    onPress={() => this.props.navigation.push('workExp')}
-                />
+                <SignUpForm>
+                    <H3>Your top skills</H3>
+                    <Text style={styles.text}>Suggestion of popular skills for </Text>
+                    <TextInput
+                        placeholder={"1. Add ..."}
+                    />
+                    <TextInput
+                        placeholder={"2. Add ..."}
+                    />
+                    <View style={styles.marginVertical}>
+                        <TextInputWithLabel
+                            style={styles.text}
+                            label={"Degree"}
+                            placeholder={"Degree"}
+                        />
+                    </View>
+                    <Text>Status</Text>
+                    <StatusDropdown />
+                    <NextButton onPress={() => navigate("workExp")}/>
+                </SignUpForm>
             </Container>
         )
     }
@@ -37,7 +64,12 @@ class EmployeeInfo extends React.Component {
 }
 
 const styles = StyleSheet.create({
-
+    text: {
+        marginVertical: 10
+    },
+    marginVertical: {
+        marginVertical: 20
+    }
 });
 
 export default compose() (EmployeeInfo)
