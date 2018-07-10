@@ -3,6 +3,7 @@ import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
 import {StyleSheet, Image, View, Text} from "react-native";
 import StatusText from '../components/StatusText';
+import ExperiencesCard from '../components/ExperiencesCard';
 
 class ViewProfile extends React.Component {
 
@@ -13,10 +14,14 @@ class ViewProfile extends React.Component {
         fullname: "FULLNAME",
         description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
         status: "Looking for job",
-        experience: [
+        experiences: [
             {
-                title: "EXPERIENCE 1",
-                description: "EXPERIENCE DESCRIPTION 1"
+                title: "Python",
+                description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+            },
+            {
+                title: "Java",
+                description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
             }
         ],
         skillSets: ["SKILL 1", "SKILL 2"],
@@ -31,7 +36,7 @@ class ViewProfile extends React.Component {
     };
 
     render() {
-        const {imgUrl, fullname, status, description} = this.state;
+        const {imgUrl, fullname, status, description, experiences} = this.state;
 
         return (
             <View style={styles.MainContainer}>
@@ -49,6 +54,8 @@ class ViewProfile extends React.Component {
                 <Text style={styles.Description}>
                     {description}
                 </Text>
+
+                <ExperiencesCard experiences={experiences}/>
 
             </View>
         )
