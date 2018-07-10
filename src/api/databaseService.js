@@ -17,19 +17,15 @@ class DatabaseService {
       let tagIds = [];
       tags.forEach(tag => {
         if ( allTags[tag] !== null) {
+          console.log("tag exist");
           tagIds.push(allTags[tag])
         } else {
-          let tagId = firebase.database().ref("tags/").push().key;
-          tagIds.push(allTags[tag]);
+          console.log("tag not exist");
+          var tagId = firebase.database().ref("tags/").push().key;
+          tagIds.push(allTags[tag])
           firebase.database().ref("tags/" + tagId + "/").set({tagName: tag});
         }
       });
-
-      Object.entries(categories).forEach(
-        ([categoryId, subCatIds]) => {
-          firebase.database().ref("employeeInfo/" + uid + "/categories/" + categoryId + "/").set({subCategoryIds: subCatIds});
-        }
-      );
 
       let value = {
         firstName: firstName,
@@ -38,14 +34,20 @@ class DatabaseService {
         statusId: statusId,
         tagIds: tagIds,
       };
-
       firebase.database().ref("employeeInfo/" + uid + "/").set(value);
+
+      Object.entries(categories).forEach(
+        ([categoryId, subCatIds]) => {
+          firebase.database().ref("employeeInfo/" + uid + "/categories/" + categoryId + "/").set({subCategoryIds: subCatIds});
+        }
+      );
+
       if (experiences !== null) {
         experiences.forEach(exp => {
           this.createEmployeeExperiences(uid, exp);
         })
       }
-    })
+    });
   }
 
 
@@ -147,7 +149,18 @@ class DatabaseService {
   //   "categoryId2": ["subcategoryId1", "subcategoryId2", "subcategoryId3"]
   // }
   createEmployerInfo(uid, firstName, lastName, companyName, categories) {
+    let value = {
+      firstName: firstName,
+      lastName: lastName,
+      companyName: companyName
+    };
+    firebase.database().ref("employerInfo/" + uid + "/").set(value);
 
+    Object.entries(categories).forEach(
+      ([categoryId, subCatIds]) => {
+        firebase.database().ref("employerInfo/" + uid + "/categories/" + categoryId + "/").set({subCategoryIds: subCatIds});
+      }
+    );
   }
 
   // look for field name and type of value in doc
