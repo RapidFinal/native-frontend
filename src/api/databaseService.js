@@ -108,7 +108,7 @@ class DatabaseService {
           let prog = []
           if (val.projects !== null){
             Object.entries(val.projects).forEach( ([id, info]) => {
-              prog.push({name: info.projectName, description: info.projectDescription,
+              prog.push({progId: id, name: info.projectName, description: info.projectDescription,
                 date: info.date, tags: info.tagIds});
             });
           } else {
@@ -254,6 +254,22 @@ class DatabaseService {
 
   // look for field name and type of value in doc
   updateEmployerInfoAt(uid, field, value) {
+
+  }
+
+  updateEmployerFirstName(uid, firstName) {
+    firebase.database().ref("employerInfo/" + uid + "/firstName").set(firstName);
+  }
+
+  updateEmployerLastName(uid, lastName) {
+    firebase.database().ref("employerInfo/" + uid + "/lastName").set(lastName);
+  }
+
+  updateEmployerDescription(uid, desc) {
+    firebase.database().ref("employerInfo/" + uid + "/deacription").set(desc);
+  }
+
+  updateEmployerCategories(uid, cat) {
 
   }
 
@@ -432,6 +448,7 @@ class DatabaseService {
 
   // categoryId that employee pick
   // suppose that employee pick web and programming
+  // get predefined data from sunny
   getSuggestedTagsFrom(categoryId) {
     return ["java", "react", "vue", "python"];
   }
