@@ -26,11 +26,16 @@ class ViewProfile extends React.Component {
             }
         ],
         skillSets: ["SKILL 1", "SKILL 2"],
-        project: [
+        projects: [
             {
                 name: "PROJECT 1",
                 description: "PROJECT DESCRIPTION 1",
-                date: ""
+                date: "15/07/2018"
+            },
+            {
+                name: "PROJECT 2",
+                description: "PROJECT DESCRIPTION 2",
+                date: "20/07/2018"
             }
         ],
 
@@ -59,6 +64,8 @@ class ViewProfile extends React.Component {
                     <ExperiencesCard experiences={experiences}/>
 
                     <SkillSetsCard skills={skillSets}/>
+
+
                 </View>
             </ScrollView>
         )
