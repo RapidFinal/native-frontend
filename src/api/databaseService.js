@@ -64,17 +64,18 @@ class DatabaseService {
   // tags = ["java", "python"]
   createEmployeeProjects(uid, progName, progDesc, date, tags) {
     this.getAllTags().then((allTags) => {
+      let progId = firebase.database().ref("employeeInfo/" + uid + "/projects/").push().key;
       let tagIds = [];
       tags.forEach(tag => {
         if ( allTags[tag] !== null) {
           let tagId = allTags[tag];
           tagIds.push(tagId);
-          this.addUidToTag(uid, tagId);
+          this.addProjectIdToTag(uid, progId, tagId);
         } else {
           let tagId = firebase.database().ref("tags/").push().key;
           tagIds.push(allTags[tag]);
           firebase.database().ref("tags/" + tagId + "/").set({tagName: tag});
-          this.addUidToTag(uid, tagId)
+          this.addProjectIdToTag(uid, progId, tagId)
         }
       });
 
@@ -84,7 +85,7 @@ class DatabaseService {
         date: date,
         tagIds: tagIds
       };
-      firebase.database().ref("employeeInfo/" + uid + "/projects/").push(value);
+      firebase.database().ref("employeeInfo/" + uid + "/projects/" + progId +"/").set(value);
     });
   }
 
@@ -149,16 +150,14 @@ class DatabaseService {
   updateEmployeeTags(uid, tags) {
     this.getAllTags().then((allTags) => {
       this.getEmployeeTags(uid).then((oldTagIds) => {
-        let tagIds = []
+        let tagIds = [];
         tags.forEach(tag => {
 
           if ( allTags[tag] !== null) {
-            console.log("tag exist");
             let tagId = allTags[tag];
             tagIds.push(tagId);
             this.addUidToTag(uid, tagId)
           } else {
-            console.log("tag not exist");
             let tagId = firebase.database().ref("tags/").push().key;
             tagIds.push(allTags[tag]);
             firebase.database().ref("tags/" + tagId + "/").set({tagName: tag});
@@ -184,24 +183,35 @@ class DatabaseService {
 
   updateEmployeeProject(uid, projectId, progName, progDesc, date, tags) {
     this.getAllTags().then((allTags) => {
-      let tagIds = [];
-      tags.forEach(tag => {
-        if ( allTags[tag] !== null) {
-          tagIds.push(allTags[tag])
-        } else {
-          let tagId = firebase.database().ref("tags/").push().key;
-          tagIds.push(allTags[tag]);
-          firebase.database().ref("tags/" + tagId + "/").set({tagName: tag});
-        }
-      });
+      this.getEmployeeTags(uid).then((oldTagIds) => {
+        let tagIds = [];
+        tags.forEach(tag => {
+          let tagId = allTags[tag];
+          if ( tagId !== null) {
+            tagIds.push(tagId);
+            this.addProjectIdToTag(uid, projectId, tagId)
+          } else {
+            let tagId = firebase.database().ref("tags/").push().key;
+            tagIds.push(tagId);
+            firebase.database().ref("tags/" + tagId + "/").set({tagName: tag});
+            this.addProjectIdToTag(uid, projectId, tagId)
+          }
+        });
 
-      let value = {
-        projectName: progName,
-        projectDescription: progDesc,
-        date: date,
-        tagIds: tagIds
-      };
-      firebase.database().ref("employeeInfo/" + uid + "/projects/" + projectId + "/").set(value);
+        oldTagIds.filter((tagId) => {
+          if(!tagIds.includes(tagId)) {
+            firebase.database().ref("tags/" + tagId + "/projectIds/" + projectId + "/").remove();
+          }
+        });
+
+        let value = {
+          projectName: progName,
+          projectDescription: progDesc,
+          date: date,
+          tagIds: tagIds
+        };
+        firebase.database().ref("employeeInfo/" + uid + "/projects/" + projectId + "/").set(value);
+      });
     });
   }
 
@@ -383,6 +393,15 @@ class DatabaseService {
         employeeIds[uid] = true;
         firebase.database().ref("tags/" + tagId + "/employeeIds/").set(employeeIds);
       }
+    });
+  }
+
+  addProjectIdToTag(uid, progId, tagId) {
+    this.getProjectIdFromTag(tagId).then(projectIds => {
+      if (typeof(projectIds[progId]) === 'undefined'){
+        projectIds[progId] = true;
+        firebase.database().ref("tags/" + tagId + "/projectIds/").set(projectIds);
+      }
     })
   }
 
@@ -392,6 +411,18 @@ class DatabaseService {
       firebase.database().ref("tags/" + tagId + "/").once('value').then(function(snapshot) {
         if (snapshot.hasChild("employeeIds")){
           resolve(snapshot.val().employeeIds);
+        } else {
+          resolve({});
+        }
+      });
+    });
+  }
+
+  getProjectIdFromTag(tagId) {
+    return new Promise((resolve, reject) => {
+      firebase.database().ref("tags/" + tagId + "/").once('value').then(function(snapshot) {
+        if (snapshot.hasChild("projectIds")){
+          resolve(snapshot.val().projectIds);
         } else {
           resolve({});
         }
