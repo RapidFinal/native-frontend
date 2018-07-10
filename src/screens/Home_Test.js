@@ -10,6 +10,7 @@ class Home_Test extends React.Component {
     }
 
     render(){
+        // const {} = this.state; // to easily access state put desire variable in the curly brace so it may become const {variable} = this.state;
         return (
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                 <Text>Home Screen</Text>
