@@ -16,19 +16,21 @@ class TextInputWithLabel extends React.Component {
 
     render(){
         // const {} = this.state; // to easily access state put desire variable in the curly brace so it may become const {variable} = this.state;
-        const {label, onChange, placeholder, type, value} = this.props;
-        const isPassword = type === 'password';
+        const {
+            errorMessage,
+            hasError,
+            label,
+            ...other
+        } = this.props;
         return (
-            <View>
+            <View style={styles.marginBottom}>
                 <Text style={styles.label}>{label}</Text>
-                <Item regular style={styles.input}>
+                <Item regular style={styles.whiteBackground} error={hasError}>
                     <Input
-                        placeholder={placeholder}
-                        secureTextEntry={isPassword}
-                        value={value}
-                        onChange={onChange}
+                        {...other}
                     />
                 </Item>
+                {hasError ? <Text style={styles.error}>{errorMessage}</Text> : null}
             </View>
         )
     }
@@ -36,12 +38,20 @@ class TextInputWithLabel extends React.Component {
 }
 
 const styles = StyleSheet.create({
-    input: {
-        backgroundColor: 'white',
+    marginBottom: {
         marginBottom: 10
     },
     label: {
         fontSize: 18
+    },
+    whiteBackground: {
+        backgroundColor: 'white',
+    },
+    error: {
+        paddingVertical: 0,
+        marginVertical: 0,
+        color: 'red',
+        fontSize: 14
     }
 });
 
