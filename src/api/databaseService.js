@@ -355,6 +355,11 @@ class DatabaseService {
     });
   }
 
+  // return map of id and boolean
+  // {
+  //  "uid": true,
+  //  "uid2": true
+  // }
   getLikedEmployee(uid) {
     return new Promise((resolve, reject) => {
       firebase.database().ref("employerInfo/" + uid + "/").once('value').then(function(snapshot) {
