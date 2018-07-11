@@ -5,10 +5,11 @@ import PropTypes from 'prop-types'
 import {StyleSheet} from "react-native";
 import {Container, Content, Form, Input, Spinner} from "native-base";
 import {Item} from "native-base";
-import {Authentication} from "../../api"
+import {CredentialAuthentication} from "../../api/authentication"
 import IonIcons from 'react-native-vector-icons/Ionicons'
 import {withContext} from "../../context/withContext";
 import {hoistStatics} from "recompose";
+import ClickButton from "../../components/ClickButton";
 
 class CredentialSignin extends React.Component {
 
@@ -37,6 +38,19 @@ class CredentialSignin extends React.Component {
 
     };
 
+    handleSigin = async () => {
+        const {email, password} = this.state
+        try {
+            const auth = await CredentialAuthentication.signin({email, password})
+
+            if (auth !== null){
+                this.props.setContext({
+                    authProvider: "CREDENTIAL"
+                })
+            }
+        }
+    }
+
     render(){
         const {email, password} = this.state;
         return (
@@ -50,6 +64,7 @@ class CredentialSignin extends React.Component {
                             <Input placeholder="Password" value={password} onChange={this.handleStateChange("password")} />
                         </Item>
                     </Form>
+                    <ClickButton onPress={this.handleSigin}>Signin</ClickButton>
                 </Content>
             </Container>
         )

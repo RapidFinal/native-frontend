@@ -28,7 +28,8 @@ class Signin extends React.Component {
         try {
             const currentUser = await FacebookAuthentication.facebookLogin();
             this.props.setContext({
-                currentUser
+                currentUser,
+                authProvider: "FACEBOOK"
             })
         } catch (e) {
             // TODO: Handle error

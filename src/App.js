@@ -30,8 +30,7 @@ class App extends React.Component {
             if (!!currentUser){
                 this.setState({
                    authenticated: true,
-                   loading: false,
-                   currentUser
+                   loading: false
                 })
             } else {
                 this.setState({
