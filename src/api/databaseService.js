@@ -229,6 +229,18 @@ class DatabaseService {
     return ret;
   }
 
+  updateEmployeeLiked(uid, val){
+    firebase.database().ref("employeeInfo/" + uid + "/liked/").set(val);
+  }
+
+  getEmployeeLiked(uid) {
+    return new Promise((resolve, reject) => {
+      firebase.database().ref("employeeInfo/" + uid + "/liked/").once('value').then(function(snapshot) {
+        resolve(snapshot.val())
+      });
+    });
+  }
+
   // Employer
 
   // categories = map of categoey-subcategory that selected
