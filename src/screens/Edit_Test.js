@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import { View, StyleSheet, Text, ScrollView, TouchableOpacity, TextInput } from "react-native";
 import { TextField } from 'react-native-material-textfield';
 import { Button, Divider } from 'react-native-elements';
+import Tags from "react-native-tags";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import DatePicker from 'react-native-datepicker';
 
@@ -96,6 +97,16 @@ class Edit_Test extends React.Component {
                 autoCapitalize = "none"
                 onChangeText = {this.handleVideoUrlChange}/>
             </View>
+            <View style = {styles.inputContainer}>
+              <Text style = {styles.inputTitle}> #Tags </Text>
+              <Tags
+                initialText="C++"
+                initialTags={["Java","Python","NodeJs"]}
+                containerStyle={{justifyContent: "center"}}
+                onChangeTags={this.handleTagsChange}
+                onTagPress={(index, tagLabel, event) => this.removeTag(index)}
+              />
+            </View>
 
             <ScrollView contentContainerStyle = {styles.buttonContainer}>
               <TouchableOpacity
@@ -108,7 +119,8 @@ class Edit_Test extends React.Component {
                               "Project Description: " + this.state.projectDescription + "\n" +
                               "Project Date: " + this.state.projectDate + "\n" +
                               "Project Git: " + this.state.projectGit + "\n" +
-                              "Project Youtube: " + this.state.projectVideo)
+                              "Project Youtube: " + this.state.projectVideo + "\n" +
+                              "Project Tags: " + this.state.projectTags)
                 }>
                 <Icon name={"edit"} size={30} />
               </TouchableOpacity>
@@ -121,6 +133,12 @@ class Edit_Test extends React.Component {
     goToProfile = () => {
       this.props.navigation.navigate("View");
     };
+
+    removeTag = (tagIndex) => {
+      var tagList = this.state.projectTags;
+      if (tagIndex !== -1) tagList.splice(tagIndex, 1);
+      this.handleTagsChange(tagList);
+    }
 
 }
 
