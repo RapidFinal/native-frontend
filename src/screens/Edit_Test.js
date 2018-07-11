@@ -100,6 +100,9 @@ class Edit_Test extends React.Component {
             <ScrollView contentContainerStyle = {styles.buttonContainer}>
               <TouchableOpacity
                 style = {styles.button}
+                /**
+                 * Placeholder for database function call
+                 */
                 onPress = {
                   () => alert("Project Name: " + this.state.projectName + "\n" +
                               "Project Description: " + this.state.projectDescription + "\n" +

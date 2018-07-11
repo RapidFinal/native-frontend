@@ -100,6 +100,9 @@ class Edit_Test extends React.Component {
             <ScrollView contentContainerStyle = {styles.buttonContainer}>
               <TouchableOpacity
                 style = {styles.button}
+                /**
+                 * Placeholder for database function call
+                 */
                 onPress = {
                   () => alert("Project Name: " + this.state.projectName + "\n" +
                               "Project Description: " + this.state.projectDescription + "\n" +
@@ -107,7 +110,7 @@ class Edit_Test extends React.Component {
                               "Project Git: " + this.state.projectGit + "\n" +
                               "Project Youtube: " + this.state.projectVideo)
                 }>
-                <Icon name={"plus"} size={40} />
+                <Icon name={"plus"} size={4 0} />
               </TouchableOpacity>
             </ScrollView>
 
