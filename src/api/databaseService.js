@@ -248,7 +248,7 @@ class DatabaseService {
   //   "categoryId1": ["subcategoryId1", "subcategoryId2", "subcategoryId3"],
   //   "categoryId2": ["subcategoryId1", "subcategoryId2", "subcategoryId3"]
   // }
-  createEmployerInfo(uid, firstName, lastName, companyName, categories) {
+  static createEmployerInfo(uid, firstName, lastName, companyName, categories) {
     let value = {
       firstName: firstName,
       lastName: lastName,

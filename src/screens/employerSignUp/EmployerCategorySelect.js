@@ -8,6 +8,8 @@ import Stepper from "../../components/Stepper";
 import CategoriesSelection from "../../components/CategoriesSelection";
 import {withContext} from "../../context/withContext";
 
+import DatabaseService from "../../api/databaseService";
+
 class EmployerCategorySelect extends React.Component {
 
     static propTypes = {
@@ -15,8 +17,11 @@ class EmployerCategorySelect extends React.Component {
     };
 
     submit(){
-        const {employer} = this.props.context.employer
-
+        const employer = this.props.context.employer;
+        const uid = this.props.context.currentUser.uid;
+        const selectedCategories = this.props.context.selectedCategories;
+        DatabaseService.createEmployerInfo(uid,employer.firstName,employer.lastName,employer.companyName,selectedCategories);
+        this.props.navigation.navigate("signUp");
     }
 
     render(){

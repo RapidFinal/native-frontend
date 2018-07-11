@@ -54,6 +54,7 @@ class CategoriesSelection extends React.Component {
                 ]
             }
         ], //wait to use db later
+
         selectedCategories:this.props.context.selectedCategories
     };
 
