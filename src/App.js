@@ -26,8 +26,10 @@ class App extends React.Component {
             lastName: "",
             email: "",
             password: "",
-
-        }
+            tags: [],
+            degree: "",
+        },
+        status: ""
     };
 
 

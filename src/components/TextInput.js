@@ -16,12 +16,14 @@ class TextInput extends React.Component {
 
     render(){
         // const {} = this.state; // to easily access state put desire variable in the curly brace so it may become const {variable} = this.state;
+        const {hasError, errorMessage} = this.props;
         return (
             <View>
-                <Item regular style={styles.input}>
+                <Item regular style={styles.input} error={hasError}>
                     <Input
                         {...this.props}
                     />
+                    {hasError ? <Text style={styles.error}>{errorMessage}</Text> : null}
                 </Item>
             </View>
         )
@@ -33,6 +35,11 @@ const styles = StyleSheet.create({
     input: {
         backgroundColor: 'white',
         marginBottom: 10
+    },
+    error: {
+        paddingRight: 10,
+        color: 'red',
+        fontSize: 14
     }
 });
 

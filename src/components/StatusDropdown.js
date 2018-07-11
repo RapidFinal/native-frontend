@@ -3,6 +3,7 @@ import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
 import {StyleSheet, View} from "react-native";
 import {Item, Picker, Text} from "native-base";
+import {withContext} from "../context/withContext";
 
 const status = [
     "Looking for job",
@@ -20,23 +21,24 @@ class StatusDropdown extends React.Component {
         selectedStatus: undefined
     }
 
-    changeStatus = (status)=>{
+    changeStatus = (status) => {
         if (status !== null) {
             this.setState({
                 selectedStatus : status
             });
+            this.props.func(status)
         }
     }
 
     render(){
-        // const {} = this.state; // to easily access state put desire variable in the curly brace so it may become const {variable} = this.state;
+        const {selectedStatus} = this.state; // to easily access state put desire variable in the curly brace so it may become const {variable} = this.state;
+        const {hasError} = this.props;
         return (
             <View>
-                <Item picker regular style={styles.view}>
+                <Item picker regular style={styles.view} error={hasError}>
                     <Picker mode="dropdown"
-                            placeholder="Select your SIM"
-                            selectedValue={this.state.selectedStatus}
-                            onValueChange={this.changeStatus.bind(this)}
+                            selectedValue={selectedStatus}
+                            onValueChange={this.changeStatus}
                     >
                         <Picker.Item
                             label="Select Status..."
@@ -64,4 +66,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default compose() (StatusDropdown)
+export default compose(withContext) (StatusDropdown)
