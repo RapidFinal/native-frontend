@@ -14,6 +14,11 @@ class EmployerCategorySelect extends React.Component {
 
     };
 
+    submit(){
+        const {employer} = this.props.context.employer
+
+    }
+
     render(){
         return (
             <Container style={{flex:1}} >
@@ -27,6 +32,7 @@ class EmployerCategorySelect extends React.Component {
                 />
                 <CategoriesSelection/>
                 <Button
+                    onPress={()=>this.submit()}
                     info
                     style={styles.submitButton}>
                     <Text

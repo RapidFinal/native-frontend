@@ -33,7 +33,7 @@ class Signup extends React.Component {
                 <Button
                     info
                     style={styles.centerButton}
-                    onPress={()=>navigation.navigate('credentialSignUp')}>
+                    onPress={()=>navigation.navigate('employeeCredentialSignUp')}>
                     <Text>
                         Employee
                     </Text>
