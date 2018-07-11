@@ -20,7 +20,8 @@ class App extends React.Component {
     state = {
         authenticated: false,
         loading: true,
-        currentUser: null
+        currentUser: null,
+        authProvider: null
     };
 
 
@@ -36,7 +37,8 @@ class App extends React.Component {
                 this.setState({
                     authenticated: false,
                     loading: false,
-                    currentUser: null
+                    currentUser: null,
+                    authProvider: null
                 })
 
             }
