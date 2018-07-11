@@ -25,7 +25,7 @@ class EmployeeCredentialSignUp extends React.Component {
 
     static propTypes = {
 
-    }
+    };
 
     state = {
         credential: {
@@ -36,11 +36,13 @@ class EmployeeCredentialSignUp extends React.Component {
             confirmPassword: ""
         },
         error: {
-            errorFirstName: false,
-            errorLastName: false,
-            errorEmail: false,
-            errorPassword: false,
-            errorConfirmPassword: false,
+            flags: {
+                firstName: false,
+                lastName: false,
+                email: false,
+                password: false,
+                confirmPassword: false,
+            },
             errorMessageFirstName: "Required",
             errorMessageLastName: "Required",
             errorMessageEmail: "Required",
@@ -58,15 +60,15 @@ class EmployeeCredentialSignUp extends React.Component {
     setError = (errorField, message) => {
         const {error} = this.state;
         const capErrorField = String(errorField).capitalize();
-        const errorKey = "error".concat(capErrorField)
+        // const errorKey = "error".concat(capErrorField);
         if (message !== null) {
-            error[errorKey] = true
-            const errorMessage = "errorMessage".concat(capErrorField)
-            error[errorMessage] = message
+            error.flags[errorField] = true;
+            const errorMessage = "errorMessage".concat(capErrorField);
+            error[errorMessage] = message;
             this.setState({error})
         }
         else {
-            error[errorKey] = false
+            error.flags[errorField] = false;
             this.setError({error})
         }
     };
@@ -88,6 +90,18 @@ class EmployeeCredentialSignUp extends React.Component {
         }
     };
 
+    passAllFlags = () => {
+        const {credential, error} = this.state;
+        let flag = true;
+        Object.keys(error.flags).forEach(errorField => {
+            if (credential[errorField] === '') {
+                this.validate(errorField);
+                flag = false;
+            }
+        });
+        return flag;
+    }
+
     attemptSignUp = async () => {
         const {
             firstName,
@@ -96,24 +110,26 @@ class EmployeeCredentialSignUp extends React.Component {
             password
         } = this.state.credential;
 
-        const {navigation, context} = this.props;
+        const {navigation} = this.props;
 
-        try {
-            const signup = await CredentialAuthentication.signup({email, password})
-            const employee = {
-                firstName: firstName,
-                lastName: lastName,
-                email: email,
-                password: password
-            }
-            this.props.setContext({employee: employee})
-            navigation.navigate("employeeCategorySelect")
-        } catch (error) {
-            if (error.code === "auth/invalid-email") {
-                this.setError("email", "Email is not valid")
-            }
-            else if (error.code === "auth/email-already-in-use") {
-                this.setError("email", "Email already in use")
+        if (this.passAllFlags()) {
+            try {
+                const signup = await CredentialAuthentication.signup({email, password});
+                const employee = {
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: email,
+                    password: password
+                };
+                this.props.setContext({employee: employee});
+                navigation.navigate("employeeCategorySelect")
+            } catch (error) {
+                if (error.code === "auth/invalid-email") {
+                    this.setError("email", "Email is not valid")
+                }
+                else if (error.code === "auth/email-already-in-use") {
+                    this.setError("email", "Email already in use")
+                }
             }
         }
     };
@@ -121,16 +137,12 @@ class EmployeeCredentialSignUp extends React.Component {
     render(){
         const {firstName, lastName, email, password, confirmPassword} = this.state.credential; // to easily access state put desire variable in the curly brace so it may become const {variable} = this.state;
         const {
-            errorFirstName,
-            errorLastName,
-            errorEmail,
-            errorPassword,
-            errorConfirmPassword,
             errorMessageFirstName,
             errorMessageLastName,
             errorMessageEmail,
             errorMessagePassword,
             errorMessageConfirmPassword,
+            flags
         } = this.state.error;
         return (
             <Container>
@@ -144,7 +156,7 @@ class EmployeeCredentialSignUp extends React.Component {
                             label="First name"
                             placeholder="First name"
                             value={firstName}
-                            hasError={errorFirstName}
+                            hasError={flags.firstName}
                             onBlur={() => this.validate("firstName")}
                             onChange={this.handleChange("firstName")}
                             errorMessage={errorMessageFirstName}
@@ -153,7 +165,7 @@ class EmployeeCredentialSignUp extends React.Component {
                             label="Last name"
                             placeholder="Last name"
                             value={lastName}
-                            hasError={errorLastName}
+                            hasError={flags.lastName}
                             onBlur={() => this.validate("lastName")}
                             onChange={this.handleChange("lastName")}
                             errorMessage={errorMessageLastName}
@@ -162,7 +174,7 @@ class EmployeeCredentialSignUp extends React.Component {
                             label="Email"
                             placeholder="Email"
                             value={email}
-                            hasError={errorEmail}
+                            hasError={flags.email}
                             onBlur={() => this.validate("email")}
                             onChange={this.handleChange("email")}
                             errorMessage={errorMessageEmail}
@@ -172,7 +184,7 @@ class EmployeeCredentialSignUp extends React.Component {
                             placeholder="Password"
                             secureTextEntry={true}
                             value={password}
-                            hasError={errorPassword}
+                            hasError={flags.password}
                             onBlur={() => this.validate("password")}
                             onChange={this.handleChange("password")}
                             errorMessage={errorMessagePassword}
@@ -182,7 +194,7 @@ class EmployeeCredentialSignUp extends React.Component {
                             placeholder="Confirm Password"
                             secureTextEntry={true}
                             value={confirmPassword}
-                            hasError={errorConfirmPassword}
+                            hasError={flags.confirmPassword}
                             onBlur={() => this.validate("confirmPassword")}
                             onChange={this.handleChange("confirmPassword")}
                             errorMessage={errorMessageConfirmPassword}
