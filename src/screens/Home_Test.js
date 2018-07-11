@@ -1,7 +1,7 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import {StyleSheet, Text, View, Button} from "react-native";
+import {StyleSheet, Text, View} from "react-native";
 
 class Home_Test extends React.Component {
 
@@ -14,11 +14,6 @@ class Home_Test extends React.Component {
         return (
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                 <Text>Home Screen</Text>
-                <Button
-                    onPress={() => this.props.navigation.navigate('ViewProfile')}
-                    title="Profile"
-                    color="#841584"
-                />
             </View>
         );
     }
