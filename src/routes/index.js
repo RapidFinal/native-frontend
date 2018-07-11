@@ -1,4 +1,3 @@
-import Home_Test from "../screens/Home_Test";
 import Edit_Test from "../screens/Edit_Test";
 import Home from "../screens/Home";
 import Login_Test from "../screens/Login_Test";
@@ -29,7 +28,7 @@ const headerOptions = {
 const EmployerTabStack = createBottomTabNavigator(
     {
         View: View_Test,
-        Home: Home_Test,
+        Home: Home,
         Like: LikeScreen
     },
     {
@@ -55,7 +54,7 @@ const EmployerTabStack = createBottomTabNavigator(
 const CandidateTabStack = createBottomTabNavigator(
     {
         View: View_Test,
-        Home: Home_Test,
+        Home: Home,
         Edit: Edit_Test,
     },
     {
