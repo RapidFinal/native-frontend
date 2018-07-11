@@ -275,11 +275,12 @@ class DatabaseService {
   //   "categoryId1": ["subcategoryId1", "subcategoryId2", "subcategoryId3"],
   //   "categoryId2": ["subcategoryId1", "subcategoryId2", "subcategoryId3"]
   // }
-  createEmployerInfo(uid, firstName, lastName, companyName, categories) {
+  createEmployerInfo(uid, firstName, lastName, companyName, categories, imgUrl) {
     let value = {
       firstName: firstName,
       lastName: lastName,
-      companyName: companyName
+      companyName: companyName,
+      imgUrl: imgUrl
     };
     firebase.database().ref("employerInfo/" + uid + "/").set(value);
 
@@ -293,6 +294,10 @@ class DatabaseService {
   // look for field name and type of value in doc
   updateEmployerInfoAt(uid, field, value) {
 
+  }
+
+  updateEmployerImgUrl(uid, url) {
+    firebase.database().ref("employerInfo/" + uid + "/imgUrl/").set(url);
   }
 
   updateEmployerFirstName(uid, firstName) {
@@ -361,6 +366,7 @@ class DatabaseService {
           ret.lastName = val.lastName;
           ret.companyName = val.companyName;
           ret.categories = cat;
+          ret.imgUrl = val.imgUrl;
           resolve(ret);
         });
       });
@@ -520,11 +526,6 @@ class DatabaseService {
   // If there is no projectId, sent null
   createTag(tagName){
     firebase.database().ref("tags/").push({tagName: tagName});
-  }
-
-  // array of tags: ["java", "python"]
-  createSuggestedTag(catId, tags) {
-    firebase.database().ref("employeeInfo/" + uid + "/").set(value);
   }
 
   addUidToTag(uid, tagId) {
