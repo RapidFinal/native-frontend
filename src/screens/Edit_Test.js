@@ -5,6 +5,7 @@ import { View, StyleSheet, Text, ScrollView, TouchableOpacity, TextInput } from 
 import { TextField } from 'react-native-material-textfield';
 import { Button, Divider } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import DatePicker from 'react-native-datepicker';
 
 class Edit_Test extends React.Component {
 
@@ -62,9 +63,17 @@ class Edit_Test extends React.Component {
             </View>
             <View style = {styles.inputContainer}>
               <Text style = {styles.inputTitle}> Date </Text>
-              <TextInput style = {styles.input}
-                autoCapitalize = "none"
-                onChangeText = {this.handleDateChange}/>
+              <DatePicker
+                style = {styles.dateInput}
+                date = {this.state.projectDate}
+                mode="date"
+                placeholder="select date"
+                format="DD-MM-YYYY"
+                confirmBtnText="Confirm"
+                cancelBtnText="Cancel"
+                showIcon={false}
+                onDateChange = {this.handleDateChange}
+                />
             </View>
 
             <Divider style = {{marginTop: 15, marginBottom: 15, backgroundColor: 'rgba(0,0,0,0.2)'}}/>
@@ -92,7 +101,11 @@ class Edit_Test extends React.Component {
               <TouchableOpacity
                 style = {styles.button}
                 onPress = {
-                  () => console.log("Hello")
+                  () => alert("Project Name: " + this.state.projectName + "\n" +
+                              "Project Description: " + this.state.projectDescription + "\n" +
+                              "Project Date: " + this.state.projectDate + "\n" +
+                              "Project Git: " + this.state.projectGit + "\n" +
+                              "Project Youtube: " + this.state.projectVideo)
                 }>
                 <Icon name={"edit"} size={30} />
               </TouchableOpacity>
@@ -146,6 +159,12 @@ const styles = StyleSheet.create({
     },
     titleWithIconContainer: {
       flexDirection: 'row'
+    },
+    dateInput: {
+      margin: 15,
+      height: 40,
+      borderColor: 'rgba(0,0,0,0.2)',
+      backgroundColor:'#fff'
     },
     button: {
       borderWidth:1,
