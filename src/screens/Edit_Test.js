@@ -47,49 +47,45 @@ class Edit_Test extends React.Component {
     render(){
         return (
           <ScrollView contentContainerStyle = {styles.container}>
-            // Project Name
             <View style = {styles.inputContainer}>
               <Text style = {styles.inputTitle}> Project Name </Text>
               <TextInput style = {styles.input}
-               autoCapitalize = "none"
-               onChangeText = {this.handleNameChange}/>
+                autoCapitalize = "none"
+                onChangeText = {this.handleNameChange}/>
             </View>
-            // Project Description
             <View style = {styles.inputContainer}>
               <Text style = {styles.inputTitle}> Project Description </Text>
               <TextInput style = {styles.inputLong}
-               autoCapitalize = "none"
-               onChangeText = {this.handleDescriptionChange}/>
+                autoCapitalize = "none"
+                multiline = {true}
+                onChangeText = {this.handleDescriptionChange}/>
             </View>
-            // Project Date
             <View style = {styles.inputContainer}>
               <Text style = {styles.inputTitle}> Date </Text>
               <TextInput style = {styles.input}
-               autoCapitalize = "none"
-               onChangeText = {this.handleDateChange}/>
+                autoCapitalize = "none"
+                onChangeText = {this.handleDateChange}/>
             </View>
 
             <Divider style = {{marginTop: 15, marginBottom: 15, backgroundColor: 'rgba(0,0,0,0.2)'}}/>
 
-            // Github URL
             <View style = {styles.inputContainer}>
               <View style = {styles.titleWithIconContainer}>
                 <Text style = {styles.inputTitle}> Github </Text>
                 <Icon name={"github"} size={20}/>
               </View>
               <TextInput style = {styles.input}
-               autoCapitalize = "none"
-               onChangeText = {this.handleGitUrlChange}/>
+                autoCapitalize = "none"
+                onChangeText = {this.handleGitUrlChange}/>
             </View>
-            // Video URL
             <View style = {styles.inputContainer}>
               <View style = {styles.titleWithIconContainer}>
                 <Text style = {styles.inputTitle}> Video </Text>
                 <Icon name={"youtube"} size={20}/>
               </View>
               <TextInput style = {styles.input}
-               autoCapitalize = "none"
-               onChangeText = {this.handleVideoUrlChange}/>
+                autoCapitalize = "none"
+                onChangeText = {this.handleVideoUrlChange}/>
             </View>
 
             <ScrollView contentContainerStyle = {styles.buttonContainer}>
@@ -124,7 +120,7 @@ const styles = StyleSheet.create({
       marginLeft: 20,
       marginRight: 20,
       marginTop: 30,
-      marginBottom: 30,
+      marginBottom: 80,
     },
     inputContainer: {
       marginTop: 10
@@ -138,7 +134,8 @@ const styles = StyleSheet.create({
     },
     inputLong: {
       margin: 15,
-      height: 120,
+      minHeight: 40,
+      height: 'auto',
       borderColor: 'rgba(0,0,0,0.2)',
       backgroundColor:'#fff',
       borderWidth: 1
