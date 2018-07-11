@@ -2,6 +2,14 @@ import firebase from 'react-native-firebase'
 
 class DatabaseService {
 
+  getUserRole(uid) {
+    return new Promise((resolve, reject) => {
+      firebase.database().ref("userRole/" + uid + "/role/").once('value').then((snapshot) => {
+        resolve(snapshot.val());
+      });
+    });
+  }
+
   // Employee
 
   // tags = ["java", "python"]
@@ -35,9 +43,11 @@ class DatabaseService {
         statusId: statusId,
         tagIds: tagIds,
         imgUrl: imgUrl,
-        degree: degree
+        degree: degree,
+        role: "employee"
       };
       firebase.database().ref("employeeInfo/" + uid + "/").set(value);
+      firebase.database().ref("userRole/" + uid + "/").set({role: "employee"});
 
       Object.entries(categories).forEach(
         ([categoryId, subCatIds]) => {
@@ -294,9 +304,11 @@ class DatabaseService {
       firstName: firstName,
       lastName: lastName,
       companyName: companyName,
-      imgUrl: imgUrl
+      imgUrl: imgUrl,
+      role: "employer"
     };
     firebase.database().ref("employerInfo/" + uid + "/").set(value);
+    firebase.database().ref("userRole/" + uid + "/").set({role: "employer"});
 
     Object.entries(categories).forEach(
       ([categoryId, subCatIds]) => {
