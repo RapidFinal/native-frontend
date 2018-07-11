@@ -48,6 +48,8 @@ class CredentialSignin extends React.Component {
                     authProvider: "CREDENTIAL"
                 })
             }
+        } catch (e) {
+            
         }
     }
 
