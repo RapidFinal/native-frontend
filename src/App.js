@@ -27,7 +27,12 @@ class App extends React.Component {
             email: "",
             companyName:'',
             password: "",
-            categories:{}
+        },
+        employee: {
+            firstName: "",
+            lastName: "",
+            email: "",
+            password: "",
         }
     };
 

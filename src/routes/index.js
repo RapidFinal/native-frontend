@@ -9,8 +9,8 @@ import {createBottomTabNavigator, createStackNavigator, createSwitchNavigator} f
 import React from "react";
 import {Button} from "react-native";
 import {
-    CategorySelect,
-    CredentialSignUp,
+    EmployeeCategorySelect,
+    EmployeeCredentialSignUp,
     EmployeeInfo,
     WorkExp
 } from "../screens/employeeSignUp";
@@ -108,8 +108,8 @@ const CandidateMainStack = createStackNavigator(
 
 const AuthStack = createStackNavigator(
     {
-        categorySelect: CategorySelect,
-        credentialSignUp: CredentialSignUp,
+        employeeCategorySelect: EmployeeCategorySelect,
+        employeeCredentialSignUp: EmployeeCredentialSignUp,
         employeeInfo: EmployeeInfo,
         workExp: WorkExp,
         employerCredentialSignUp : EmployerCredentialSignUp,

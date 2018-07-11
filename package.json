@@ -16,9 +16,8 @@
     "react-native-draggable-flatlist": "^1.1.1",
     "react-native-fbsdk": "^0.7.0",
     "react-native-firebase": "^4.2.0",
-    "react-native-modal": "^6.4.0",
-    "react-native-snackbar-component": "^1.0.9",
     "react-native-step-indicator": "0.0.9",
+    "react-native-snackbar-component": "^1.0.9",
     "react-native-vector-icons": "^4.6.0",
     "react-navigation": "^2.5.5",
     "recompose": "^0.27.1"

@@ -8,7 +8,7 @@ import {
     Stepper
 } from "../../components";
 
-class CategorySelect extends React.Component {
+class EmployeeCategorySelect extends React.Component {
 
     static propTypes = {
 
@@ -20,6 +20,7 @@ class CategorySelect extends React.Component {
 
     render(){
         // const {} = this.state; // to easily access state put desire variable in the curly brace so it may become const {variable} = this.state;
+        const {navigation} = this.props;
         return (
             <Container>
                 <Stepper
@@ -28,7 +29,7 @@ class CategorySelect extends React.Component {
                 />
                 <Text>Category Select</Text>
                 <NextButton
-                    onPress={() => this.props.navigation.push('employeeInfo')}
+                    onPress={() => navigation.navigate('employeeInfo')}
                 />
             </Container>
         )
@@ -40,4 +41,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default compose() (CategorySelect)
+export default compose() (EmployeeCategorySelect)
