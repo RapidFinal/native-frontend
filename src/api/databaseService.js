@@ -329,6 +329,44 @@ class DatabaseService {
     });
   }
 
+  likedEmployee(employerUid, employeeUid){
+    this.getLikedEmployee(employerUid).then((list) => {
+      this.getEmployeeLiked(employeeUid).then((liked) => {
+        this.updateEmployeeLiked(employeeUid, liked+1)
+      });
+      if (typeof(list[employeeUid]) === 'undefined'){
+        list[employeeUid] = true;
+        firebase.database().ref("employerInfo/" + employerUid + "/likedEmployee/").set(list);
+      }
+    });
+
+  }
+
+  unLikedEmployee(employerUid, employeeUid){
+    this.getLikedEmployee(employerUid).then((list) => {
+      this.getEmployeeLiked(employeeUid).then((liked) => {
+        this.updateEmployeeLiked(employeeUid, liked-1)
+      });
+      firebase.database().ref("employerInfo/" + employerUid + "/likedEmployee/" + employeeUid + "/").remove();
+    });
+
+    this.getEmployeeLiked(employeeUid).then((liked) => {
+      this.updateEmployeeLiked(uid, liked-1)
+    });
+  }
+
+  getLikedEmployee(uid) {
+    return new Promise((resolve, reject) => {
+      firebase.database().ref("employerInfo/" + uid + "/").once('value').then(function(snapshot) {
+        if (snapshot.hasChild("likedEmployee")){
+          resolve(snapshot.val().likedEmployee);
+        } else {
+          resolve({});
+        }
+      });
+    });
+  }
+
   // Status
 
   createStatus(status) {
