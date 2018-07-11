@@ -21,6 +21,13 @@ class App extends React.Component {
         authenticated: false,
         loading: true,
         currentUser: null,
+        employer: {
+            firstName: "",
+            lastName: "",
+            email: "",
+            companyName:'',
+            password: "",
+        },
         employee: {
             firstName: "",
             lastName: "",
@@ -29,7 +36,8 @@ class App extends React.Component {
             tags: [],
             degree: "",
         },
-        status: ""
+        status: "",
+        selectedCategories:{}
     };
 
 

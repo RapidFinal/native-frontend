@@ -4,6 +4,7 @@ import Login_Test from "../screens/Login_Test";
 import View_Test from "../screens/View_Test";
 import LikeScreen from "../screens/Like";
 import ViewProfile from "../screens/ViewProfile";
+import Signup from "../screens/Signup"
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {createBottomTabNavigator, createStackNavigator, createSwitchNavigator} from "react-navigation";
 import React from "react";
@@ -15,6 +16,10 @@ import {
     WorkExp
 } from "../screens/employeeSignUp";
 import ProjectDetail from '../components/ProjectDetail';
+import {
+    EmployerCategorySelect,
+    EmployerCredentialSignUp,
+} from "../screens/employerSignUp"
 
 /* Changes both EmployerMainStack & CandidateMainStack */
 const headerOptions = {
@@ -109,13 +114,32 @@ const AuthStack = createStackNavigator(
         employeeCredentialSignUp: EmployeeCredentialSignUp,
         employeeInfo: EmployeeInfo,
         workExp: WorkExp,
+        employerCredentialSignUp : EmployerCredentialSignUp,
+        employerCategorySelect : EmployerCategorySelect,
+        signUp: Signup
     },
     {
-        initialRouteName: 'employeeCredentialSignUp'
+        initialRouteName: 'signUp',
+
     }
 );
 
-EmployerTabStack.navigationOptions = ({navigation}) => {
+const ModalStack = createStackNavigator(
+    {
+        Main: {
+            screen: AuthStack,
+        },
+        signUpModal: {
+            screen: Signup,
+        },
+    },
+    {
+        mode: "modal",
+        headerMode: "none",
+    },
+)
+
+EmployerTabStack.navigationOptions = ({ navigation }) => {
     return setHeaderToRouteName(navigation);
 };
 
@@ -138,7 +162,8 @@ MainNavigator = createSwitchNavigator(
         Auth: AuthStack, // Should probably be a stack consisting of login, signup, forgot password etc.
         // Auth: Login_Test, // Should probably be a stack consisting of login, signup, forgot password etc.
         ViewProfile: ViewProfile,
-        ProjectDetail: ProjectDetail
+        ProjectDetail: ProjectDetail,
+        Modal : ModalStack
     },
     {
         initialRouteName: 'Auth',

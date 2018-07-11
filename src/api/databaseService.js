@@ -289,7 +289,7 @@ class DatabaseService {
   //   "categoryId1": ["subcategoryId1", "subcategoryId2", "subcategoryId3"],
   //   "categoryId2": ["subcategoryId1", "subcategoryId2", "subcategoryId3"]
   // }
-  createEmployerInfo(uid, firstName, lastName, companyName, categories, imgUrl) {
+  static createEmployerInfo(uid, firstName, lastName, companyName, categories) {
     let value = {
       firstName: firstName,
       lastName: lastName,
@@ -514,7 +514,7 @@ class DatabaseService {
   //         {subCategoryId: "subCat3", subCategoryName: "Advertising Banner"}
   //       ]
   //     }]
-  getAllCategories() {
+  static getAllCategories() {
     return new Promise((resolve, reject) => {
       firebase.database().ref("categories/").once('value').then(function(snapshot) {
         // console.log(snapshot.val());
