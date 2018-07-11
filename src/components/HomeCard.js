@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         backgroundColor: '#EAEAEA',
         justifyContent: 'center',
-        flexGrow: 1,
+        // flexGrow: 1,
     },
     text: {
         fontSize: 15,
@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
     image: {
         justifyContent: 'center',
         alignItems: 'center',
+        marginLeft: 35,
         height: 100,
         borderRadius: 50,
         width: 100,

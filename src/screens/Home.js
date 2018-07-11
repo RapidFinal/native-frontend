@@ -67,7 +67,7 @@ class Home extends React.Component {
                     searchIcon={{ size: 24 }}
                     placeholder='Search' />
                 <Container style={styles.container}>
-                    <Text>
+                    <Text style={styles.titleText}>
                         Recommended
                     </Text>
                     <SwiperFlatList
@@ -79,16 +79,16 @@ class Home extends React.Component {
                                 <TouchableHighlight
                                     style={styles.button}
                                     onPress={this.onPress}
-                                    underlayColor="white"
+                                    underlayColor="#EAEAEA"
                                     key={key}
-                                        >
+                                >
                                     <HomeCard name={prop.name} major={prop.major} status={prop.status}/>
                                 </TouchableHighlight>
                             );
                         })}
 
                     </SwiperFlatList>
-                    <Text>
+                    <Text style={styles.titleText}>
                         Recently Viewed
                     </Text>
                     <SwiperFlatList
@@ -100,7 +100,7 @@ class Home extends React.Component {
                                 <TouchableHighlight
                                     style={styles.button}
                                     onPress={this.onPress}
-                                    underlayColor="white"
+                                    underlayColor="#EAEAEA"
                                     key={key}
                                 >
                                     <HomeCard name={prop.name} major={prop.major} status={prop.status}/>
@@ -118,13 +118,20 @@ class Home extends React.Component {
 
 const styles = StyleSheet.create({
     swipeBox: {
-        marginBottom: 10,
+        marginLeft: 5,
+        marginRight: 5,
+        borderRadius: 10,
+    },
+    titleText: {
+        marginBottom: 15,
+        marginTop: 15,
     },
     container: {
         marginTop: 20,
         marginLeft: 20,
         marginRight: 20,
         flex: 1,
+        borderRadius: 10,
     },
     button: {
         alignItems: 'center',
