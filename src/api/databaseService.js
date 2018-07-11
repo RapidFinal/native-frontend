@@ -570,11 +570,18 @@ class DatabaseService {
     });
   }
 
+  // array of tags: ["java", "python"]
+  createSuggestedTag(catId, tags) {
+    firebase.database().ref("suggestedTags/" + catId + "/").set({suggestions:tags});
+  }
+
   // categoryId that employee pick
-  // suppose that employee pick web and programming
-  // get predefined data from sunny
   getSuggestedTagsFrom(categoryId) {
-    return ["java", "react", "vue", "python"];
+    return new Promise((resolve, reject) => {
+      firebase.database().ref("suggestedTags/" + categoryId + "/").once('value').then(function(snapshot) {
+        resolve(snapshot.val().suggestions);
+      });
+    });
   }
 
   getTagName(tagId) {
