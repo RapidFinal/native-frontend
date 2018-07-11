@@ -333,7 +333,7 @@ class DatabaseService {
   //     }
   //   ]
   // };
-  getEmployerInfo(uid) {
+  static getEmployerInfo(uid) {
     return new Promise((resolve, reject) => {
       this.getCategoriesInfo().then(allCats => {
         firebase.database().ref("employerInfo/" + uid + "/").once('value').then((snapshot) => {
@@ -466,7 +466,7 @@ class DatabaseService {
     });
   }
 
-  getCategoriesInfo() {
+  static getCategoriesInfo() {
     return new Promise((resolve, reject) => {
       firebase.database().ref("categories/").once('value').then(function(snapshot) {
         let ret = {};
