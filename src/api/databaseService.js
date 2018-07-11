@@ -273,55 +273,60 @@ class DatabaseService {
 
   }
 
+  // return {firstName: "Alice", lastName:"Smith", companyName: "MUIC",
+  //   categories: [
+  //     {
+  //       categoryId: "cat1",
+  //       categoryName: "Graphic and Design",
+  //       subCategory: [
+  //         {subCategoryId: "subCat1", subCategoryName: "Logo"},
+  //         {subCategoryId: "subCat2", subCategoryName: "Character Design"},
+  //         {subCategoryId: "subCat3", subCategoryName: "Advertising Banner"}
+  //       ]
+  //     },
+  //     {
+  //       categoryId: "cat2",
+  //       categoryName: "Web and Programming",
+  //       subCategory: [
+  //         {subCategoryId: "subCat1", subCategoryName: "HTML / CSS"},
+  //         {subCategoryId: "subCat2", subCategoryName: "Web Development"},
+  //         {subCategoryId: "subCat3", subCategoryName: "Mobile Application"}
+  //       ]
+  //     }
+  //   ]
+  // };
   getEmployerInfo(uid) {
-    let ret = {firstName: "Alice", lastName:"Smith", companyName: "MUIC",
-      categories: [
-        {
-          categoryId: "cat1",
-          categoryName: "Graphic and Design",
-          subCategory: [
-            {subCategoryId: "subCat1", subCategoryName: "Logo"},
-            {subCategoryId: "subCat2", subCategoryName: "Character Design"},
-            {subCategoryId: "subCat3", subCategoryName: "Advertising Banner"}
-          ]
-        },
-        {
-          categoryId: "cat2",
-          categoryName: "Web and Programming",
-          subCategory: [
-            {subCategoryId: "subCat1", subCategoryName: "HTML / CSS"},
-            {subCategoryId: "subCat2", subCategoryName: "Web Development"},
-            {subCategoryId: "subCat3", subCategoryName: "Mobile Application"}
-          ]
-        }
-      ]
-    };
-    return ret;
-  }
-
-  // suppose you get categories
-  getEmployerInfoAt(uid, field) {
-    let ret = [
-      {
-        categoryId: "cat1",
-        categoryName: "Graphic and Design",
-        subCategory: [
-          {subCategoryId: "subCat1", subCategoryName: "Logo"},
-          {subCategoryId: "subCat2", subCategoryName: "Character Design"},
-          {subCategoryId: "subCat3", subCategoryName: "Advertising Banner"}
-        ]
-      },
-      {
-        categoryId: "cat2",
-        categoryName: "Web and Programming",
-        subCategory: [
-          {subCategoryId: "subCat1", subCategoryName: "HTML / CSS"},
-          {subCategoryId: "subCat2", subCategoryName: "Web Development"},
-          {subCategoryId: "subCat3", subCategoryName: "Mobile Application"}
-        ]
-      }
-    ];
-    return ret;
+    return new Promise((resolve, reject) => {
+      this.getCategoriesInfo().then(allCats => {
+        firebase.database().ref("employerInfo/" + uid + "/").once('value').then((snapshot) => {
+          const ret = {};
+          let val = snapshot.val();
+          let cat = [];
+          Object.entries(val.categories).forEach(
+            ([categoryId, subCatIds]) => {
+              let tmp = {};
+              let arr = [];
+              subCatIds.subCategoryIds.forEach( (subCatId) => {
+                let subCats = {
+                  subCategoryId: subCatId,
+                  subCategoryName: allCats[categoryId].subCategory[subCatId].subCategoryName
+                };
+                arr.push(subCats);
+              });
+              tmp.categoryId = categoryId;
+              tmp.categoryName = allCats[categoryId].categoryName;
+              tmp.subCategory = arr;
+              cat.push(tmp);
+            }
+          );
+          ret.firstName = val.firstName;
+          ret.lastName = val.lastName;
+          ret.companyName = val.companyName;
+          ret.categories = cat;
+          resolve(ret);
+        });
+      });
+    });
   }
 
   // Status
@@ -380,6 +385,25 @@ class DatabaseService {
     });
   }
 
+  getCategoriesInfo() {
+    return new Promise((resolve, reject) => {
+      firebase.database().ref("categories/").once('value').then(function(snapshot) {
+        let ret = {};
+        snapshot.forEach(cat => {
+          let tmpObj = {};
+          let tmpArray = [];
+          // Object.entries(cat.val().subCategories).forEach(([key, info]) => {
+          //   tmpArray.push({subCategoryId: key, subCategoryName: info.subCategoryName})
+          // });
+          tmpObj.subCategory = cat.val().subCategories;
+          tmpObj.categoryName = cat.val().categoryName;
+          ret[cat.key] = tmpObj
+        });
+        resolve(ret);
+      });
+    });
+  }
+
   //return [{
   //       categoryId: "cat1",
   //       categoryName: "Graphic and Design",
@@ -389,14 +413,14 @@ class DatabaseService {
   //         {subCategoryId: "subCat3", subCategoryName: "Advertising Banner"}
   //       ]
   //     }]
-  getCategories() {
+  getAllCategories() {
     return new Promise((resolve, reject) => {
       firebase.database().ref("categories/").once('value').then(function(snapshot) {
         // console.log(snapshot.val());
-        let ret = []
+        let ret = [];
         snapshot.forEach(cat => {
-          let tmpObj = {}
-          let tmpArray = []
+          let tmpObj = {};
+          let tmpArray = [];
           Object.entries(cat.val().subCategories).forEach(([key, info]) => {
             tmpArray.push({subCategoryId: key, subCategoryName: info.subCategoryName})
           });
