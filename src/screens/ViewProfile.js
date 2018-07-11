@@ -8,6 +8,7 @@ import SkillSetsCard from '../components/SkillSetsCard';
 import CircularProfilePhoto from '../components/CircularProfilePhoto';
 import ProjectSection from '../components/ProjectSection';
 import DatabaseService from '../api/databaseService';
+import TagsSection from '../components/TagsSection';
 
 class ViewProfile extends React.Component {
 
@@ -28,7 +29,7 @@ class ViewProfile extends React.Component {
         description: "",
         status: "",
         experiences: [],
-        skillSets: ["Python", "Java"],
+        skillSets: [],
         projects: [],
         tags: []
 
@@ -44,15 +45,29 @@ class ViewProfile extends React.Component {
                 description: result.description,
                 status: result.status,
                 experiences: result.experiences,
-                projects: result.projects
+                projects: result.projects,
+                skillSets: result.skillSet,
             })
+            this.getAllTags(result.tagIds)
         }).catch((error) => {
             console.log(error)
         })
     }
 
+    getAllTags(tagIds) {
+        let db = new DatabaseService
+        tagIds.forEach((id) => {
+            db.getTagName(id).then((tagName) => {
+                this.setState(prevState => ({
+                    tags: [...prevState.tags, tagName]
+                }))
+            })
+        })
+    }
+
+
     render() {
-        const {imgUrl, fullName, status, description, experiences, skillSets, projects} = this.state;
+        const {imgUrl, fullName, status, description, experiences, skillSets, projects, tags} = this.state;
 
         return (
             <ScrollView contentContainerStyle={styles.ScrollContainer}>
@@ -65,6 +80,7 @@ class ViewProfile extends React.Component {
                     <Text style={styles.Description}>
                         {description}
                     </Text>
+                    <TagsSection tags={tags}/>
                     <ExperiencesCard experiences={experiences}/>
                     <SkillSetsCard skills={skillSets}/>
                     <ProjectSection projects={projects} navigation={this.props.navigation}/>
