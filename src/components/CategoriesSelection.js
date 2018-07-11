@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import {StyleSheet, Text, View, ScrollView} from "react-native";
 import {Body, CheckBox, ListItem, Button, Container} from "native-base";
 import Modal from "react-native-modal";
+import {withContext} from "../context/withContext";
 
 class CategoriesSelection extends React.Component {
 
@@ -53,7 +54,7 @@ class CategoriesSelection extends React.Component {
                 ]
             }
         ], //wait to use db later
-        selectedCategories:{}
+        selectedCategories:this.props.context.selectedCategories
     };
 
     _toggleModal = () =>
@@ -87,7 +88,7 @@ class CategoriesSelection extends React.Component {
                 selectedCategories[categoryId]=[subKey];
             }
         }
-        this.setState({selectedCategories:selectedCategories})
+        this.props.setContext({selectedCategories:selectedCategories})
     };
 
     _handleOnScroll = event => {
@@ -236,4 +237,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default compose() (CategoriesSelection)
+export default compose(withContext) (CategoriesSelection)

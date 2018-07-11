@@ -6,6 +6,7 @@ import {Body, CheckBox, ListItem, Button, Container} from "native-base";
 import Modal from "react-native-modal";
 import Stepper from "../../components/Stepper";
 import CategoriesSelection from "../../components/CategoriesSelection";
+import {withContext} from "../../context/withContext";
 
 class EmployerCategorySelect extends React.Component {
 
@@ -60,4 +61,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default compose() (EmployerCategorySelect)
+export default compose(withContext) (EmployerCategorySelect)

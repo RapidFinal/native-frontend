@@ -33,7 +33,8 @@ class App extends React.Component {
             lastName: "",
             email: "",
             password: "",
-        }
+        },
+        selectedCategories:{}
     };
 
 
