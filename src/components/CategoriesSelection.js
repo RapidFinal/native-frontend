@@ -7,6 +7,11 @@ import Modal from "react-native-modal";
 import {withContext} from "../context/withContext";
 import DatabaseService from "../api/databaseService";
 
+const categories=[];
+DatabaseService.getAllCategories().then(data=>{
+    categories = data;
+});
+
 class CategoriesSelection extends React.Component {
 
     static propTypes = {
@@ -55,11 +60,12 @@ class CategoriesSelection extends React.Component {
         //         ]
         //     }
         // ],
-        categories: DatabaseService.getAllCategories(),
-        //has to recheck if db really return like mock up data
+        categories: categories,
 
         selectedCategories:this.props.context.selectedCategories
     };
+
+
 
     _toggleModal = () =>
         this.setState({ isModalVisible: !this.state.isModalVisible });
@@ -136,6 +142,7 @@ class CategoriesSelection extends React.Component {
 
     displayCategoriesButton= ()=>{
         let categories = this.state.categories;
+
         return categories.map((category, index)=>(
             <Button
                 info
