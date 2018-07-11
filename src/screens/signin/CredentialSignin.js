@@ -49,7 +49,7 @@ class CredentialSignin extends React.Component {
                 })
             }
         } catch (e) {
-            
+
         }
     }
 
