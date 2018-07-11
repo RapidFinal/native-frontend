@@ -12,7 +12,7 @@ class DatabaseService {
   //   "categoryId1": ["subcategoryId1", "subcategoryId2", "subcategoryId3"],
   //   "categoryId2": ["subcategoryId1", "subcategoryId2", "subcategoryId3"]
   // }
-  createEmployeeInfo(uid, firstName, lastName, desc, statusId, tags, imgUrl, categories, experiences) {
+  createEmployeeInfo(uid, firstName, lastName, desc, statusId, tags, imgUrl, categories, experiences, degree) {
     this.getAllTags().then((allTags) => {
       let tagIds = [];
       tags.forEach(tag => {
@@ -34,7 +34,8 @@ class DatabaseService {
         description: desc,
         statusId: statusId,
         tagIds: tagIds,
-        imgUrl: imgUrl
+        imgUrl: imgUrl,
+        degree: degree
       };
       firebase.database().ref("employeeInfo/" + uid + "/").set(value);
 
@@ -151,10 +152,15 @@ class DatabaseService {
           ret.tagIds = val.tagIds;
           ret.projects = prog;
           ret.skillSet = skills;
+          ret.degree = val.degree;
           resolve(ret)
         })
       });
     });
+  }
+
+  updateEmployeeDegree(uid, degree) {
+    firebase.database().ref("employeeInfo/" + uid + "/degree").set(degree);
   }
 
   updateEmployeeFirstName(uid, firstName) {
@@ -237,6 +243,14 @@ class DatabaseService {
           tagIds: tagIds
         };
         firebase.database().ref("employeeInfo/" + uid + "/projects/" + projectId + "/").set(value);
+      });
+    });
+  }
+
+  getEmployeeTags(uid) {
+    return new Promise((resolve, reject) => {
+      firebase.database().ref("employeeInfo/" + uid + "/tagIds/").once('value').then((snapshot) => {
+        resolve(snapshot.val());
       });
     });
   }
