@@ -358,37 +358,56 @@ class DatabaseService {
   }
 
   // Categories
-  getCategories() {
-    let ret = [
-      {
-        categoryId: "cat1",
-        categoryName: "Graphic and Design",
-        subCategory: [
-          {subCategoryId: "subCat1", subCategoryName: "Logo"},
-          {subCategoryId: "subCat2", subCategoryName: "Character Design"},
-          {subCategoryId: "subCat3", subCategoryName: "Advertising Banner"}
-        ]
-      },
-      {
-        categoryId: "cat2",
-        categoryName: "Web and Programming",
-        subCategory: [
-          {subCategoryId: "subCat1", subCategoryName: "HTML / CSS"},
-          {subCategoryId: "subCat2", subCategoryName: "Web Development"},
-          {subCategoryId: "subCat3", subCategoryName: "Mobile Application"}
-        ]
-      }
-    ];
-    return ret;
+  // value = map of cat-subCat
+  // {
+  //   "Web and Programming": ["web apllication", "mobile application", "HTML/CSS"],
+  //   "Graphic and design": ["logo", "character design", "banner design"]
+  // }
+  createCategories(value){
+    Object.entries(value).forEach( ([catName, subCats]) => {
+      let val = {
+        categoryName: catName,
+      };
+      let catId = firebase.database().ref("categories/").push().key;
+      firebase.database().ref("categories/" + catId + "/").set(val);
+      this.createSubCategories(subCats, catId);
+    })
   }
 
-  // suppose the category is Web and Programming
-  getSubCategories(categoryId) {
-    let ret = [
-      {subCategoryId: "subCat1", subCategoryName: "HTML / CSS"},
-      {subCategoryId: "subCat2", subCategoryName: "Web Development"},
-      {subCategoryId: "subCat3", subCategoryName: "Mobile Application"}
-    ]
+  createSubCategories(subCats, catId) {
+    Object.entries(subCats).forEach(([i, subCat]) => {
+      firebase.database().ref("categories/" + catId +"/subCategories").push({subCategoryName: subCat});
+    });
+  }
+
+  //return [{
+  //       categoryId: "cat1",
+  //       categoryName: "Graphic and Design",
+  //       subCategory: [
+  //         {subCategoryId: "subCat1", subCategoryName: "Logo"},
+  //         {subCategoryId: "subCat2", subCategoryName: "Character Design"},
+  //         {subCategoryId: "subCat3", subCategoryName: "Advertising Banner"}
+  //       ]
+  //     }]
+  getCategories() {
+    return new Promise((resolve, reject) => {
+      firebase.database().ref("categories/").once('value').then(function(snapshot) {
+        // console.log(snapshot.val());
+        let ret = []
+        snapshot.forEach(cat => {
+          let tmpObj = {}
+          let tmpArray = []
+          Object.entries(cat.val().subCategories).forEach(([key, info]) => {
+            tmpArray.push({subCategoryId: key, subCategoryName: info.subCategoryName})
+          });
+          tmpObj.subCategory = tmpArray;
+          tmpObj.categoryId = cat.key;
+          tmpObj.categoryName = cat.val().categoryName;
+          ret.push(tmpObj);
+        });
+        resolve(ret);
+      });
+    });
   }
 
   // Tags
