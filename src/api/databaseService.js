@@ -96,8 +96,8 @@ class DatabaseService {
           const ret = {};
           let val = snapshot.val();
 
-          let ex = []
-          if (val.experiences !== null){
+          let ex = [];
+          if (typeof(val.experiences) !== 'undefined'){
             Object.entries(val.experiences).forEach( ([id, info]) => {
               ex.push({title: info.title, description: info.desc});
             });
@@ -105,10 +105,11 @@ class DatabaseService {
             ex = null;
           }
 
-          let prog = []
-          if (val.projects !== null){
+          let prog = [];
+          console.log(val.projects);
+          if (typeof(val.projects) !== 'undefined'){
             Object.entries(val.projects).forEach( ([id, info]) => {
-              prog.push({progId: id, name: info.projectName, description: info.projectDescription,
+              prog.push({name: info.projectName, description: info.projectDescription,
                 date: info.date, tags: info.tagIds});
             });
           } else {
@@ -125,8 +126,6 @@ class DatabaseService {
           ret.projects = prog;
           resolve(ret)
         })
-      }).catch((error) => {
-        reject(error);
       });
     });
   }
