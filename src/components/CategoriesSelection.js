@@ -5,6 +5,7 @@ import {StyleSheet, Text, View, ScrollView} from "react-native";
 import {Body, CheckBox, ListItem, Button, Container} from "native-base";
 import Modal from "react-native-modal";
 import {withContext} from "../context/withContext";
+import DatabaseService from "../api/databaseService";
 
 class CategoriesSelection extends React.Component {
 
@@ -16,44 +17,46 @@ class CategoriesSelection extends React.Component {
         currentCategoryIndex : null,
         currentCategoryId :'',
         isModalVisible:false,
-        categories : [
-            {
-                categoryId: "cat1",
-                categoryName:"Graphic and Design",
-                subCategory:[
-                    {
-                        subCategoryId: "subCat1",
-                        subCategoryName: "Logo"
-                    },
-                    {
-                        subCategoryId: "subCat2",
-                        subCategoryName: "Character Design"
-                    },
-                    {
-                        subCategoryId: "subCat3",
-                        subCategoryName: "Advertising Banner"
-                    },
-                ]
-            },
-            {
-                categoryId: "cat2",
-                categoryName:"Web and Programming",
-                subCategory:[
-                    {
-                        subCategoryId: "subCat1",
-                        subCategoryName: "HTML/CSS"
-                    },
-                    {
-                        subCategoryId: "subCat2",
-                        subCategoryName: "Web Development"
-                    },
-                    {
-                        subCategoryId: "subCat3",
-                        subCategoryName: "Mobile Application"
-                    },
-                ]
-            }
-        ], //wait to use db later
+        // categories : [
+        //     {
+        //         categoryId: "cat1",
+        //         categoryName:"Graphic and Design",
+        //         subCategory:[
+        //             {
+        //                 subCategoryId: "subCat1",
+        //                 subCategoryName: "Logo"
+        //             },
+        //             {
+        //                 subCategoryId: "subCat2",
+        //                 subCategoryName: "Character Design"
+        //             },
+        //             {
+        //                 subCategoryId: "subCat3",
+        //                 subCategoryName: "Advertising Banner"
+        //             },
+        //         ]
+        //     },
+        //     {
+        //         categoryId: "cat2",
+        //         categoryName:"Web and Programming",
+        //         subCategory:[
+        //             {
+        //                 subCategoryId: "subCat1",
+        //                 subCategoryName: "HTML/CSS"
+        //             },
+        //             {
+        //                 subCategoryId: "subCat2",
+        //                 subCategoryName: "Web Development"
+        //             },
+        //             {
+        //                 subCategoryId: "subCat3",
+        //                 subCategoryName: "Mobile Application"
+        //             },
+        //         ]
+        //     }
+        // ],
+        categories: DatabaseService.getAllCategories(),
+        //has to recheck if db really return like mock up data
 
         selectedCategories:this.props.context.selectedCategories
     };
