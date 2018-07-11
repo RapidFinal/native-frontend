@@ -89,6 +89,23 @@ class DatabaseService {
     });
   }
 
+  CreateEmployeeSkillSet(uid, skill) {
+    this.getEmployeeSkillSet(uid).then(skills => {
+      // console.log(skills.val());
+      skills[skill] = true;
+      firebase.database().ref("employeeInfo/" + uid + "/skillSet/").set(skills);
+    })
+  }
+
+  getEmployeeSkillSet(uid) {
+    return new Promise((resolve, reject) => {
+      firebase.database().ref("employeeInfo/" + uid + "/skillSet/").once('value').then(snapshot => {
+        resolve(snapshot.val());
+      });
+    });
+  }
+
+
   getEmployeeInfo(uid) {
     return new Promise((resolve, reject) => {
       firebase.database().ref("employeeInfo/" + uid + "/").once('value').then((snapshot) => {
@@ -102,18 +119,27 @@ class DatabaseService {
               ex.push({title: info.title, description: info.desc});
             });
           } else {
-            ex = null;
+            ex = [];
           }
 
           let prog = [];
-          console.log(val.projects);
+          // console.log(val.projects);
           if (typeof(val.projects) !== 'undefined'){
             Object.entries(val.projects).forEach( ([id, info]) => {
               prog.push({name: info.projectName, description: info.projectDescription,
                 date: info.date, tags: info.tagIds});
             });
           } else {
-            prog = null;
+            prog = [];
+          }
+
+          let skills = [];
+          if (typeof(val.skillSet) !== 'undefined'){
+            Object.entries(val.skillSet).forEach( ([skill, bool]) => {
+              skills.push(skill);
+            });
+          } else {
+            skills = [];
           }
 
           ret.firstName = val.firstName;
@@ -124,6 +150,7 @@ class DatabaseService {
           ret.experiences = ex;
           ret.tagIds = val.tagIds;
           ret.projects = prog;
+          ret.skillSet = skills;
           resolve(ret)
         })
       });
@@ -284,7 +311,7 @@ class DatabaseService {
 
   }
 
-  // return {firstName: "Alice", lastName:"Smith", companyName: "MUIC",
+  // ret = {firstName: "Alice", lastName:"Smith", companyName: "MUIC",
   //   categories: [
   //     {
   //       categoryId: "cat1",
