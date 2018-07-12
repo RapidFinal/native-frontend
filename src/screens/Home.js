@@ -23,7 +23,7 @@ class Home extends React.Component {
     }
 
     goToProfile = (userID) => {
-        // this.props.navigation.navigate("Profile", { userID: userID });
+        this.props.navigation.navigate("ViewProfile", { userID: userID });
     };
 
     onChangeText = (text) => {
