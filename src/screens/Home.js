@@ -2,8 +2,9 @@ import React from 'react';
 import compose from 'recompose/compose'
 import HomeCard from '../components/HomeCard'
 import SwiperFlatList from 'react-native-swiper-flatlist';
+import View_Test from './View_Test'
 import PropTypes from 'prop-types'
-import { SearchBar } from 'react-native-elements'
+import { SearchBar, Card } from 'react-native-elements'
 import { StyleSheet, ScrollView, TouchableHighlight } from 'react-native';
 import {Container, Text} from "native-base";
 
@@ -62,11 +63,12 @@ class Home extends React.Component {
             <ScrollView>
                 <SearchBar
                     lightTheme
+                    // showLoadingIcon
                     onChangeText={this.onChangeText()}
                     onClear={this.onClear()}
                     searchIcon={{ size: 24 }}
                     placeholder='Search' />
-                <Container style={styles.container}>
+                <Card>
                     <Text style={styles.titleText}>
                         Recommended
                     </Text>
@@ -78,7 +80,7 @@ class Home extends React.Component {
                             return (
                                 <TouchableHighlight
                                     style={styles.button}
-                                    onPress={this.onPress}
+                                    onPress={this.onPress()}
                                     underlayColor="#EAEAEA"
                                     key={key}
                                 >
@@ -88,6 +90,8 @@ class Home extends React.Component {
                         })}
 
                     </SwiperFlatList>
+                </Card>
+                <Card>
                     <Text style={styles.titleText}>
                         Recently Viewed
                     </Text>
@@ -99,7 +103,7 @@ class Home extends React.Component {
                             return (
                                 <TouchableHighlight
                                     style={styles.button}
-                                    onPress={this.onPress}
+                                    onPress={this.onPress()}
                                     underlayColor="#EAEAEA"
                                     key={key}
                                 >
@@ -108,7 +112,7 @@ class Home extends React.Component {
                             );
                         })}
                     </SwiperFlatList>
-                </Container>
+                </Card>
             </ScrollView>
 
         )
@@ -123,20 +127,19 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     titleText: {
-        marginBottom: 15,
-        marginTop: 15,
+        marginBottom: 10,
     },
     container: {
         marginTop: 20,
-        marginLeft: 20,
-        marginRight: 20,
+        marginLeft: 10,
+        marginRight: 10,
         flex: 1,
         borderRadius: 10,
     },
     button: {
         alignItems: 'center',
-        backgroundColor: '#FFFFFF',
-        padding: 10
+        // backgroundColor: '#FFFFFF',
+        padding: 7,
     },
 });
 

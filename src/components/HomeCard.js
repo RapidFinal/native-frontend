@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         backgroundColor: '#EAEAEA',
         justifyContent: 'center',
-        // flexGrow: 1,
+        flexGrow: 1,
     },
     text: {
         fontSize: 15,
