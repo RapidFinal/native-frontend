@@ -95,7 +95,7 @@ class EmployeeInfo extends React.Component {
     };
 
     validate = (errorField) => {
-        const {error, tags, degree, status} = this.state;
+        const {error, tags, degree, statusId} = this.state;
 
         if (typeof errorField === "number" && tags[errorField] === '') {
             error.tags[errorField] = true;
@@ -103,7 +103,7 @@ class EmployeeInfo extends React.Component {
         else if (errorField === "degree" && degree === '') {
             error.degree = true;
         }
-        else if (status === "") {
+        else if (statusId === "") {
             error.status = true;
         }
         else {

@@ -116,9 +116,22 @@ class WorkExp extends React.Component {
             return exp.title !== "" && exp.desc !== ""
         })
 
-        if (exps.length === 0) {
-            exps = ""
+        let workExps = null
+        if (exps.length !== 0) {
+            workExps = exps
         }
+        // console.log(
+        //     currentUser.uid,
+        //     employee.firstName,
+        //     employee.lastName,
+        //     "",
+        //     statusId,
+        //     employee.tags,
+        //     "NO_IMAGE",
+        //     selectedCategories,
+        //     workExps,
+        //     employee.degree
+        // )
 
         //uid, firstName, lastName, desc, statusId, tags, imgUrl, categories, experiences, degree
         DatabaseService.createEmployerInfo(
@@ -128,9 +141,9 @@ class WorkExp extends React.Component {
             "",
             statusId,
             employee.tags,
-            "",
+            "NO_IMAGE",
             selectedCategories,
-            exps,
+            workExps,
             employee.degree
         )
     }

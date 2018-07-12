@@ -28,7 +28,6 @@ class EmployeeCategorySelect extends React.Component {
                     currentPosition={1}
                     stepCount={4}
                 />
-                <Text>Category Select</Text>
                 <CategoriesSelection/>
                 <NextButton
                     onPress={() => navigation.navigate('employeeInfo')}
