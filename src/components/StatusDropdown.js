@@ -3,13 +3,7 @@ import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
 import {StyleSheet, View} from "react-native";
 import {Item, Picker, Text} from "native-base";
-import {withContext} from "../context/withContext";
-
-const status = [
-    "Looking for job",
-    "Looking for opportunities",
-    "Not looking"
-]
+import DatabaseService from "../api/databaseService";
 
 class StatusDropdown extends React.Component {
 
@@ -18,7 +12,23 @@ class StatusDropdown extends React.Component {
     }
 
     state = {
-        selectedStatus: undefined
+        selectedStatus: undefined,
+        allStatus: {}
+    }
+
+    componentDidMount() {
+        this.getStatusFromDB()
+    }
+
+    getStatusFromDB = () => {
+        DatabaseService.getAllStatus().
+        then(
+            statusFromDB => {
+                this.setState({
+                    allStatus: statusFromDB
+                })
+            }
+        )
     }
 
     changeStatus = (status) => {
@@ -31,7 +41,7 @@ class StatusDropdown extends React.Component {
     }
 
     render(){
-        const {selectedStatus} = this.state; // to easily access state put desire variable in the curly brace so it may become const {variable} = this.state;
+        const {selectedStatus, allStatus} = this.state; // to easily access state put desire variable in the curly brace so it may become const {variable} = this.state;
         const {hasError} = this.props;
         return (
             <View>
@@ -44,10 +54,10 @@ class StatusDropdown extends React.Component {
                             label="Select Status..."
                             value={null}/>
                         {
-                            status.map((item,index)=>{
+                            Object.keys(allStatus).map((item, index)=>{
                                 return <Picker.Item
                                     key={index}
-                                    label={item}
+                                    label={allStatus[item]}
                                     value={item}
                                 />;
                             })
@@ -66,4 +76,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default compose(withContext) (StatusDropdown)
+export default compose() (StatusDropdown)

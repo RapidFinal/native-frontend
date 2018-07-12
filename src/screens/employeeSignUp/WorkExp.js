@@ -64,7 +64,7 @@ class WorkExp extends React.Component {
     }
 
     renderBox = (experience, idx) => (
-        <View style={styles.box}>
+        <View key={idx} style={styles.box}>
             {this.renderCloseButton(idx)}
             <TextInputWithLabel
                 label="Title"
@@ -112,11 +112,13 @@ class WorkExp extends React.Component {
     submit = () => {
         const {experiences} = this.state
         const {employee, currentUser, statusId, selectedCategories} = this.props.context
-        const exps = experiences.filter((exp) => {
+        let exps = experiences.filter((exp) => {
             return exp.title !== "" && exp.desc !== ""
         })
 
-        // console.log(employee,currentUser, statusId, selectedCategories)
+        if (exps.length === 0) {
+            exps = ""
+        }
 
         //uid, firstName, lastName, desc, statusId, tags, imgUrl, categories, experiences, degree
         DatabaseService.createEmployerInfo(

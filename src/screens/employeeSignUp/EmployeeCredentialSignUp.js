@@ -60,7 +60,6 @@ class EmployeeCredentialSignUp extends React.Component {
     setError = (errorField, message) => {
         const {error} = this.state;
         const capErrorField = String(errorField).capitalize();
-        // const errorKey = "error".concat(capErrorField);
         if (message !== null) {
             error.flags[errorField] = true;
             const errorMessage = "errorMessage".concat(capErrorField);
@@ -200,8 +199,7 @@ class EmployeeCredentialSignUp extends React.Component {
                             errorMessage={errorMessageConfirmPassword}
                         />
                         <NextButton
-                            // onPress={this.attemptSignUp}
-                            onPress={()=>this.props.navigation.navigate("employeeCategorySelect")}
+                            onPress={this.attemptSignUp}
                         />
                     </SignUpForm>
                 </ScrollView>

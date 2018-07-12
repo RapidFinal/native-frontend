@@ -54,7 +54,7 @@ class EmployeeInfo extends React.Component {
             status: false,
         },
         suggestionTags: [],
-        status: "",
+        statusId: "",
     };
 
 
@@ -96,7 +96,7 @@ class EmployeeInfo extends React.Component {
 
     validate = (errorField) => {
         const {error, tags, degree, status} = this.state;
-        console.log(this.props.context)
+
         if (typeof errorField === "number" && tags[errorField] === '') {
             error.tags[errorField] = true;
         }
@@ -121,8 +121,7 @@ class EmployeeInfo extends React.Component {
     };
 
     passAllFlags = () => {
-        const {tags, degree, status} = this.state;
-        const {context} = this.props;
+        const {tags, degree, statusId} = this.state;
         let flag = true;
         for (let index = 0; index < tags.length; index++) {
             if (tags[index] === '') {
@@ -134,7 +133,7 @@ class EmployeeInfo extends React.Component {
             this.validate("degree");
             flag = false
         }
-        if (status === "") {
+        if (statusId === "") {
             this.validate("status")
             flag = false
         }
@@ -143,27 +142,26 @@ class EmployeeInfo extends React.Component {
     };
 
     attemptSubmit = () => {
-        const {tags, degree, status} = this.state;
+        const {tags, degree, statusId} = this.state;
         const {navigation, setContext, context} = this.props;
 
         if (this.passAllFlags()) {
             context.employee.tags = tags;
             context.employee.degree = degree;
-            context.status = status;
             setContext({
                 employee: context.employee,
-                status: context.status
+                statusId: statusId
             });
 
             navigation.navigate("workExp")
         }
     }
 
-    setStatusState = (status) => {
+    setStatusState = (statusId) => {
         const {error} = this.state;
         error.status = false;
         this.setState({
-            status: status,
+            statusId: statusId,
             error: error
         });
     }
@@ -204,12 +202,14 @@ class EmployeeInfo extends React.Component {
 
                             <View style={styles.container}>
                                 {
-                                    suggestionTags.map(v => (<MyAwesomeButton onPress={this.putTagInTextInput}>{v}</MyAwesomeButton>))
+                                    suggestionTags.map(v => (<MyAwesomeButton
+                                         onPress={this.putTagInTextInput}>{v}</MyAwesomeButton>))
                                 }
                             </View>
 
                             {tags.map((tag, index) => (
                                 <TextInput
+                                    key={index}
                                     placeholder={`${index + 1}. Add ...`}
                                     value={tag}
                                     onChange={this.handleChange(index)}
@@ -233,7 +233,9 @@ class EmployeeInfo extends React.Component {
                             <Text>Status</Text>
                             <StatusDropdown func={this.setStatusState} hasError={error.status}/>
                             {error.status ? <Text style={styles.error}>{error.message}</Text> : null}
-                            <NextButton onPress={() => this.attemptSubmit()}/>
+                            <NextButton
+                                onPress={() => this.attemptSubmit()}
+                            />
                         </SignUpForm>
                     </ScrollView>
                 </Content>

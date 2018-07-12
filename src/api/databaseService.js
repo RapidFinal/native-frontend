@@ -451,7 +451,7 @@ class DatabaseService {
   // return map of id and status
   // {"id1": "looking for job",
   //  "id2": "looking for opportunity"}
-  getAllStatus() {
+  static getAllStatus() {
     return new Promise((resolve, reject) => {
       firebase.database().ref("status/").once('value').then((snapshot) => {
         const ret = {};
