@@ -8,7 +8,6 @@ import {Item} from "native-base";
 import {CredentialAuthentication} from "../../api/authentication"
 import IonIcons from 'react-native-vector-icons/Ionicons'
 import {withContext} from "../../context/withContext";
-import {hoistStatics} from "recompose";
 import ClickButton from "../../components/ClickButton";
 
 class CredentialSignin extends React.Component {
