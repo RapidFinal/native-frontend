@@ -4479,6 +4479,10 @@ react-lifecycles-compat@^3, react-lifecycles-compat@^3.0.2, react-lifecycles-com
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
 
+react-native-actionsheet@^2.4.2:
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/react-native-actionsheet/-/react-native-actionsheet-2.4.2.tgz#6a00dd51a75ef2c8974312130e405af73191500f"
+
 react-native-dismiss-keyboard@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/react-native-dismiss-keyboard/-/react-native-dismiss-keyboard-1.0.0.tgz#32886242b3f2317e121f3aeb9b0a585e2b879b49"
@@ -4572,6 +4576,10 @@ react-native-tab-view@^1.0.0:
   resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-1.0.2.tgz#66e0bc6d38a227ed2b212e3a256b7902f6ce02ed"
   dependencies:
     prop-types "^15.6.1"
+
+react-native-tags@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/react-native-tags/-/react-native-tags-1.2.1.tgz#785fbeaff624e2cc9df02da7500a5fd442defd4f"
 
 react-native-vector-icons@^4.6.0:
   version "4.6.0"
