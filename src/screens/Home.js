@@ -1,10 +1,10 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import HomeCard from '../components/HomeCard'
-import SwiperFlatList from 'react-native-swiper-flatlist';
-import SearchBox from 'react-native-search-box';
+import SwiperFlatList from 'react-native-swiper-flatlist'
+import SearchBox from 'react-native-search-box'
 import { Card } from 'react-native-elements'
-import { StyleSheet, ScrollView, TouchableHighlight, Button, View, Dimensions } from 'react-native';
+import { StyleSheet, ScrollView, TouchableHighlight} from 'react-native';
 import { Text } from "native-base";
 
 class Home extends React.Component {
@@ -18,16 +18,22 @@ class Home extends React.Component {
 
         this.state = {
             loading: false,
+            searchText: ''
         }
     }
 
-    goToProfile(userID) {
-        this.props.navigation.navigate("Profile", { userID: userID});
+    goToProfile = (userID) => {
+        this.props.navigation.navigate("Profile", { userID: userID });
     };
 
-    onSearchButtonPress = (text) => {
-        const formatText = text.toLowerCase();
-        this.props.navigation.navigate("View", { textInput: formatText });
+    onChangeText = (text) => {
+        this.setState({ searchText: text})
+        // console.log(text)
+    }
+
+    onSearchButtonPress = () => {
+        console.log(this.state.searchText)
+        this.props.navigation.navigate("View", { textInput: this.state.searchText });
     }
 
     render(){
@@ -70,6 +76,7 @@ class Home extends React.Component {
                     cancelTitle="Cancel"
                     backgroundColor="white"
                     titleCancelColor="#007AFF"
+                    onChangeText={(text) => this.onChangeText(text)}
                     afterSearch={() => this.onSearchButtonPress()}
                 />
                 <Card>
