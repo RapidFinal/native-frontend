@@ -2,11 +2,10 @@ import React from 'react';
 import compose from 'recompose/compose'
 import HomeCard from '../components/HomeCard'
 import SwiperFlatList from 'react-native-swiper-flatlist';
-import View_Test from './View_Test'
-import PropTypes from 'prop-types'
-import { SearchBar, Card } from 'react-native-elements'
-import { StyleSheet, ScrollView, TouchableHighlight } from 'react-native';
-import {Container, Text} from "native-base";
+import SearchBox from 'react-native-search-box';
+import { Card } from 'react-native-elements'
+import { StyleSheet, ScrollView, TouchableHighlight, Button, View, Dimensions } from 'react-native';
+import { Text } from "native-base";
 
 class Home extends React.Component {
 
@@ -14,46 +13,51 @@ class Home extends React.Component {
 
     }
 
-    state = {
+    constructor(props) {
+        super(props);
 
+        this.state = {
+            loading: false,
+        }
     }
 
-    onPress = () => {
+    goToProfile(userID) {
+        this.props.navigation.navigate("Profile", { userID: userID});
+    };
 
-    }
-
-    onClear = () => {
-
-    }
-
-    onChangeText = () => {
-
+    onSearchButtonPress = (text) => {
+        const formatText = text.toLowerCase();
+        this.props.navigation.navigate("View", { textInput: formatText });
     }
 
     render(){
         const { } = this.state;
         const userInfo = [
             {
+                userID: 1,
                 name: "Pan",
                 major: "text1",
                 status: "looking for job"
             },
             {
+                userID: 2,
                 name: "karn",
                 major: "cssss",
                 status: "looking"
             },
             {
+                userID: 3,
                 name: "sea",
                 major: "bba",
                 status: "not looking"
             },
-            {
+            {   userID: 4,
                 name: "ice",
                 major: "cssss",
                 status: "looking yo"
             },
             {
+                userID: 5,
                 name: "pan",
                 major: "bba yo",
                 status: "not looking HA"
@@ -61,13 +65,13 @@ class Home extends React.Component {
         ];
         return (
             <ScrollView>
-                <SearchBar
-                    lightTheme
-                    // showLoadingIcon
-                    onChangeText={this.onChangeText()}
-                    onClear={this.onClear()}
-                    searchIcon={{ size: 24 }}
-                    placeholder='Search' />
+                <SearchBox
+                    placeholder="Search"
+                    cancelTitle="Cancel"
+                    backgroundColor="white"
+                    titleCancelColor="#007AFF"
+                    afterSearch={() => this.onSearchButtonPress()}
+                />
                 <Card>
                     <Text style={styles.titleText}>
                         Recommended
@@ -80,7 +84,7 @@ class Home extends React.Component {
                             return (
                                 <TouchableHighlight
                                     style={styles.button}
-                                    onPress={this.onPress()}
+                                    onPress={() => this.goToProfile(prop.userID)}
                                     underlayColor="#EAEAEA"
                                     key={key}
                                 >
@@ -103,7 +107,7 @@ class Home extends React.Component {
                             return (
                                 <TouchableHighlight
                                     style={styles.button}
-                                    onPress={this.onPress()}
+                                    onPress={() => this.goToProfile(prop.userID)}
                                     underlayColor="#EAEAEA"
                                     key={key}
                                 >
@@ -135,6 +139,11 @@ const styles = StyleSheet.create({
         marginRight: 10,
         flex: 1,
         borderRadius: 10,
+    },
+    inline: {
+        flex: 1,
+        flexDirection: 'row',
+        // justifyContent: 'center'
     },
     button: {
         alignItems: 'center',
