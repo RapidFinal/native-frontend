@@ -3,13 +3,13 @@ import View_Test from "../screens/View_Test";
 import LikeScreen from "../screens/Like";
 import ViewProfile from "../screens/ViewProfile";
 import Signup from "../screens/Signup"
+import AccountWrapper from "../screens/accountmanagement/AccountWrapper"
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Home from '../screens/Home';
 import {createBottomTabNavigator, createStackNavigator, createSwitchNavigator, createDrawerNavigator} from "react-navigation";
 import React from "react";
-import {Button} from "react-native";
 import {
     EmployeeCategorySelect,
     EmployeeCredentialSignUp,
@@ -21,9 +21,15 @@ import {
     EmployerCategorySelect,
     EmployerCredentialSignUp,
 } from "../screens/employerSignUp"
-import { Signin, CredentialSignin } from '../screens/signin'
+import {
+    Signin,
+    CredentialSignin,
+    ForgotPassword,
+} from '../screens/signin'
 import SideMenu from "../components/CategorySideMenu";
 import SubCategorySideMenu from "../components/SubCategorySideMenu"
+import ChangeEmail from "../screens/accountmanagement/ChangeEmail"
+import ChangePassword from "../screens/accountmanagement/ChangePassword"
 
 /* Changes both EmployerMainStack & CandidateMainStack */
 const headerOptions = ({navigation}) => ({
@@ -40,7 +46,7 @@ const headerOptions = ({navigation}) => ({
             name="account"
             backgroundColor="transparent"
             color="black"
-            onPress={() => navigation.push("Signin")}/>
+            onPress={() => navigation.push("AccountWrapper")}/>
     ),
     headerTitleStyle: {flex: 1, textAlign: 'center'}
 });
@@ -132,7 +138,11 @@ const AuthenticationMainStack = createStackNavigator(
     {
         Home: Home,
         Signin: Signin,
-        CredentialSignin: CredentialSignin
+        CredentialSignin: CredentialSignin,
+        ForgotPassword: ForgotPassword,
+        AccountWrapper: AccountWrapper,
+        ChangePassword: ChangePassword,
+        ChangeEmail: ChangeEmail
     },
     {
         navigationOptions: headerOptions,

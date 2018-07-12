@@ -6,8 +6,10 @@ import Signin from './Signin'
 import Signup from './Signup'
 import ViewProfile from './ViewProfile'
 import ViewTimeline from './ViewTimeline'
+import AccountWrapper from './accountmanagement/AccountWrapper'
 
 export {
+    AccountWrapper,
     EditProfile,
     EmployerSignup,
     Home,

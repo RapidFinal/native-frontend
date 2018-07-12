@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View} from "react-native";
+import {Alert, Text, View} from "react-native";
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {ClickButton} from '../../components'
 import {FacebookAuthentication} from '../../api/authentication'
@@ -8,6 +8,7 @@ import IonIcons from 'react-native-vector-icons/Ionicons'
 import compose from 'recompose/compose'
 import hoistStatics from "recompose/hoistStatics";
 import {withContext} from "../../context/withContext";
+import RNFirebase from 'react-native-firebase'
 
 const FacebookLoginButton = ({children, ...rest}) => (
     <FontAwesome.Button name="facebook" backgroundColor="#3b5998" {...rest}>
@@ -28,8 +29,7 @@ class Signin extends React.Component {
         try {
             const currentUser = await FacebookAuthentication.facebookLogin();
             this.props.setContext({
-                currentUser,
-                authProvider: "FACEBOOK"
+                currentUser
             })
         } catch (e) {
             // TODO: Handle error
@@ -46,6 +46,9 @@ class Signin extends React.Component {
                                  color={"black"}
                                  onPress={() => navigation.pop()} />
             ),
+            headerRight: (
+                null
+            )
         })
 
     };
@@ -53,9 +56,11 @@ class Signin extends React.Component {
     render() {
         return (
             <View>
-                <SpanTextButton onPress={() => alert("sign up pressed")}>Sign up</SpanTextButton>
+                <SpanTextButton onPress={() => this.props.navigation.navigate("SignupStack")}>Resend Confirmation Email</SpanTextButton>
+                <SpanTextButton onPress={() => this.props.navigation.navigate("SignupStack")}>Sign up</SpanTextButton>
                 <SpanTextButton onPress={() => this.props.navigation.navigate("CredentialSignin")}>Sign in</SpanTextButton>
                 <FacebookLoginButton onPress={this.facebookAuth}>Login with Facebook</FacebookLoginButton>
+                <SpanTextButton onPress={() => this.props.navigation.navigate("ForgotPassword")}>Forgot Password ?</SpanTextButton>
             </View>
         )
     }

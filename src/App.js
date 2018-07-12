@@ -38,23 +38,31 @@ class App extends React.Component {
         },
         statusId: "",
         selectedCategories:{},
-        authProvider: null
+        authProvider: null,
+        emailVerified: null,
+        photoURL: null
     };
-
 
     componentDidMount(){
         this.unsubscribe = Authentication.onAuthStateChanged((currentUser) => {
+
             if (!!currentUser){
+                console.log("CU", currentUser, this.extractCurrentUserData(currentUser))
                 this.setState({
-                   authenticated: true,
-                   loading: false
+                    authenticated: true,
+                    loading: false,
+                    ...this.extractCurrentUserData(currentUser)
                 })
             } else {
+                console.log("currentUser null")
                 this.setState({
                     authenticated: false,
                     loading: false,
                     currentUser: null,
-                    authProvider: null
+                    authProvider: null,
+                    emailVerified: null,
+                    photoURL: null
+
                 })
 
             }
@@ -65,10 +73,22 @@ class App extends React.Component {
         this.unsubscribe()
     }
 
+    extractCurrentUserData = (currentUser) => {
+        return {
+            authProvider: currentUser._user.providerData["0"].providerId,
+            emailVerified: currentUser._user.emailVerified,
+            photoURL: currentUser._user.photoURL
+        }
+    }
+
     updateState = (nextState, cb) => {
+        console.log("nextState", nextState);
         this.setState({
             ..._.pick(nextState, Object.keys(this.state))
-        }, cb);
+        }, () => {
+            cb && cb();
+            console.log("states", this.state)
+        });
     };
 
     render(){

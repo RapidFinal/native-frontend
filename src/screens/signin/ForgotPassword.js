@@ -1,6 +1,7 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import hoistStatics from 'recompose/hoistStatics'
+import {Alert} from 'react-native'
 import PropTypes from 'prop-types'
 import {StyleSheet} from "react-native";
 import {Container, Content, Form, Input, Spinner} from "native-base";
@@ -10,7 +11,7 @@ import IonIcons from 'react-native-vector-icons/Ionicons'
 import {withContext} from "../../context/withContext";
 import ClickButton from "../../components/ClickButton";
 
-class CredentialSignin extends React.Component {
+class ForgotPassword extends React.Component {
 
     static propTypes = {
 
@@ -18,7 +19,6 @@ class CredentialSignin extends React.Component {
 
     state = {
         email: "",
-        password: ""
     };
 
     handleStateChange = (name) => (e) => {
@@ -29,7 +29,7 @@ class CredentialSignin extends React.Component {
 
     static navigationOptions = ({navigation}) => {
         return ({
-            title: 'Signin',
+            title: 'Forgot Password',
             headerLeft: (
                 <IonIcons.Button
                     name="ios-arrow-back"
@@ -44,23 +44,35 @@ class CredentialSignin extends React.Component {
         })
     };
 
-    handleSigin = async () => {
-        const {email, password} = this.state;
+    handleClick = async () => {
+        const {email} = this.state
         try {
-            const auth = await CredentialAuthentication.signin({email, password})
-
-            if (auth !== null){
-                this.props.setContext({
-                    currentUser: auth
+            CredentialAuthentication.forgotpassword({email})
+                .then(() => {
+                    Alert.alert(
+                        'Success',
+                        `Password reset email has been sent to ${email}`,
+                        [
+                            {text: 'OK'},
+                        ],
+                        { cancelable: false }
+                    )
                 })
-            }
         } catch (e) {
-            console.error(e)
+            Alert.alert(
+                'Failure',
+                `There was an error`,
+                [
+                    {text: 'OK'},
+                ],
+                { cancelable: false }
+            )
+            console.log(e)
         }
     }
 
     render(){
-        const {email, password} = this.state;
+        const {email} = this.state;
         return (
             <Container>
                 <Content>
@@ -68,11 +80,8 @@ class CredentialSignin extends React.Component {
                         <Item>
                             <Input placeholder="Email"  value={email} onChange={this.handleStateChange("email")}/>
                         </Item>
-                        <Item last>
-                            <Input placeholder="Password" value={password} onChange={this.handleStateChange("password")} />
-                        </Item>
                     </Form>
-                    <ClickButton onPress={this.handleSigin}>Signin</ClickButton>
+                    <ClickButton onPress={this.handleClick}>Sent Password Reset Email</ClickButton>
                 </Content>
             </Container>
         )
@@ -84,4 +93,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default hoistStatics(compose(withContext)) (CredentialSignin)
+export default hoistStatics(compose(withContext)) (ForgotPassword)
