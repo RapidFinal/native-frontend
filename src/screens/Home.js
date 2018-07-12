@@ -23,7 +23,7 @@ class Home extends React.Component {
     }
 
     goToProfile = (userID) => {
-        this.props.navigation.navigate("Profile", { userID: userID });
+        // this.props.navigation.navigate("Profile", { userID: userID });
     };
 
     onChangeText = (text) => {
@@ -33,7 +33,7 @@ class Home extends React.Component {
 
     onSearchButtonPress = () => {
         console.log(this.state.searchText)
-        this.props.navigation.navigate("View", { textInput: this.state.searchText });
+        // this.props.navigation.navigate("View", { textInput: this.state.searchText });
     }
 
     render(){
