@@ -134,14 +134,14 @@ class WorkExp extends React.Component {
         // )
 
         //uid, firstName, lastName, desc, statusId, tags, imgUrl, categories, experiences, degree
-        DatabaseService.createEmployerInfo(
+        DatabaseService.createEmployeeInfo(
             currentUser.uid,
             employee.firstName,
             employee.lastName,
             "",
             statusId,
             employee.tags,
-            "NO_IMAGE",
+            "",
             selectedCategories,
             workExps,
             employee.degree

@@ -20,7 +20,7 @@ class DatabaseService {
   //   "categoryId1": ["subcategoryId1", "subcategoryId2", "subcategoryId3"],
   //   "categoryId2": ["subcategoryId1", "subcategoryId2", "subcategoryId3"]
   // }
-  createEmployeeInfo(uid, firstName, lastName, desc, statusId, tags, imgUrl, categories, experiences, degree) {
+  static createEmployeeInfo(uid, firstName, lastName, desc, statusId, tags, imgUrl, categories, experiences, degree) {
     this.getAllTags().then((allTags) => {
       let tagIds = [];
       tags.forEach(tag => {
@@ -65,7 +65,7 @@ class DatabaseService {
   }
 
 
-  createEmployeeExperiences(uid, title, desc) {
+  static createEmployeeExperiences(uid, title, desc) {
     let value = {
       experience_title: title,
       experience_description: desc
@@ -494,7 +494,7 @@ class DatabaseService {
     });
   }
 
-  addUidToSubCategory(uid, catId, subCatIds) {
+  static addUidToSubCategory(uid, catId, subCatIds) {
     Object.entries(subCatIds).forEach(([i, subCatId]) => {
       this.getEmployeeFromSubCategory(catId).then(employeeIds => {
         if (typeof(employeeIds[uid]) === 'undefined'){
@@ -574,7 +574,7 @@ class DatabaseService {
     firebase.database().ref("tags/").push({tagName: tagName});
   }
 
-  addUidToTag(uid, tagId) {
+  static addUidToTag(uid, tagId) {
     this.getEmployeeFromTag(tagId).then(employeeIds => {
       if (typeof(employeeIds[uid]) === 'undefined'){
         employeeIds[uid] = true;
@@ -593,7 +593,7 @@ class DatabaseService {
   }
 
   // return array of uid
-  getEmployeeFromTag(tagId) {
+  static getEmployeeFromTag(tagId) {
     return new Promise((resolve, reject) => {
       firebase.database().ref("tags/" + tagId + "/").once('value').then(function(snapshot) {
         if (snapshot.hasChild("employeeIds")){
@@ -640,7 +640,7 @@ class DatabaseService {
     });
   }
 
-  getAllTags() {
+  static getAllTags() {
     return new Promise((resolve, reject) => {
       firebase.database().ref("tags/").once('value').then(function(snapshot) {
         // resolve(snapshot);
