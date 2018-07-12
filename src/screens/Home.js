@@ -40,30 +40,30 @@ class Home extends React.Component {
         const { } = this.state;
         const userInfo = [
             {
-                userID: 1,
+                uid: 1,
                 name: "Pan",
                 major: "text1",
                 status: "looking for job"
             },
             {
-                userID: 2,
+                uid: 2,
                 name: "karn",
                 major: "cssss",
                 status: "looking"
             },
             {
-                userID: 3,
+                uid: 3,
                 name: "sea",
                 major: "bba",
                 status: "not looking"
             },
-            {   userID: 4,
+            {   uid: 4,
                 name: "ice",
                 major: "cssss",
                 status: "looking yo"
             },
             {
-                userID: 5,
+                uid: 5,
                 name: "pan",
                 major: "bba yo",
                 status: "not looking HA"
@@ -91,7 +91,7 @@ class Home extends React.Component {
                             return (
                                 <TouchableHighlight
                                     style={styles.button}
-                                    onPress={() => this.goToProfile(prop.userID)}
+                                    onPress={() => this.goToProfile(prop.uid)}
                                     underlayColor="#EAEAEA"
                                     key={key}
                                 >
@@ -114,7 +114,7 @@ class Home extends React.Component {
                             return (
                                 <TouchableHighlight
                                     style={styles.button}
-                                    onPress={() => this.goToProfile(prop.userID)}
+                                    onPress={() => this.goToProfile(prop.uid)}
                                     underlayColor="#EAEAEA"
                                     key={key}
                                 >
