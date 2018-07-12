@@ -153,10 +153,17 @@ class DatabaseService {
             skills = [];
           }
 
+          let imgUrl = "";
+          if (typeof(val.imgUrl) !== 'undefined'){
+            imgUrl = val.imgUrl;
+          } else {
+            imgUrl = "";
+          }
+
           ret.firstName = val.firstName;
           ret.lastName = val.lastName;
           ret.description = val.description;
-          ret.imgUrl = val.imgUrl;
+          ret.imgUrl = imgUrl;
           ret.status = status;
           ret.experiences = ex;
           ret.tagIds = val.tagIds;
@@ -336,7 +343,7 @@ class DatabaseService {
 
   }
 
-  // ret = {firstName: "Alice", lastName:"Smith", companyName: "MUIC",
+  // ret = {firstName: "Alice", lastName:"Smith", companyName: "MUIC", imgUrl,
   //   categories: [
   //     {
   //       categoryId: "cat1",
@@ -364,7 +371,7 @@ class DatabaseService {
         firebase.database().ref("employerInfo/" + uid + "/").once('value').then((snapshot) => {
           const ret = {};
           let val = snapshot.val();
-          let cat = [];
+          let cat = []
           Object.entries(val.categories).forEach(
             ([categoryId, subCatIds]) => {
               let tmp = {};
@@ -373,20 +380,28 @@ class DatabaseService {
                 let subCats = {
                   subCategoryId: subCatId,
                   subCategoryName: allCats[categoryId].subCategory[subCatId].subCategoryName
-                };
+                }
                 arr.push(subCats);
               });
               tmp.categoryId = categoryId;
               tmp.categoryName = allCats[categoryId].categoryName;
-              tmp.subCategory = arr;
+              tmp.subCategory = arr
               cat.push(tmp);
             }
           );
+
+          let imgUrl = "";
+          if (typeof(val.imgUrl) !== 'undefined'){
+            imgUrl = val.imgUrl;
+          } else {
+            imgUrl = "";
+          }
+
           ret.firstName = val.firstName;
           ret.lastName = val.lastName;
           ret.companyName = val.companyName;
           ret.categories = cat;
-          ret.imgUrl = val.imgUrl;
+          ret.imgUrl = imgUrl;
           resolve(ret);
         });
       });
