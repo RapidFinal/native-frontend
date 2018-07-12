@@ -2,6 +2,14 @@ import firebase from 'react-native-firebase'
 
 class DatabaseService {
 
+  getUserRole(uid) {
+    return new Promise((resolve, reject) => {
+      firebase.database().ref("userRole/" + uid + "/role/").once('value').then((snapshot) => {
+        resolve(snapshot.val());
+      });
+    });
+  }
+
   // Employee
 
   // tags = ["java", "python"]
@@ -35,13 +43,16 @@ class DatabaseService {
         statusId: statusId,
         tagIds: tagIds,
         imgUrl: imgUrl,
-        degree: degree
+        degree: degree,
+        role: "employee"
       };
       firebase.database().ref("employeeInfo/" + uid + "/").set(value);
+      firebase.database().ref("userRole/" + uid + "/").set({role: "employee"});
 
       Object.entries(categories).forEach(
         ([categoryId, subCatIds]) => {
           firebase.database().ref("employeeInfo/" + uid + "/categories/" + categoryId + "/").set({subCategoryIds: subCatIds});
+          this.addUidToSubCategory(uid, categoryId, subCatIds);
         }
       );
 
@@ -294,20 +305,17 @@ class DatabaseService {
       firstName: firstName,
       lastName: lastName,
       companyName: companyName,
-      imgUrl: imgUrl
+      imgUrl: imgUrl,
+      role: "employer"
     };
     firebase.database().ref("employerInfo/" + uid + "/").set(value);
+    firebase.database().ref("userRole/" + uid + "/").set({role: "employer"});
 
     Object.entries(categories).forEach(
       ([categoryId, subCatIds]) => {
         firebase.database().ref("employerInfo/" + uid + "/categories/" + categoryId + "/").set({subCategoryIds: subCatIds});
       }
     );
-  }
-
-  // look for field name and type of value in doc
-  updateEmployerInfoAt(uid, field, value) {
-
   }
 
   updateEmployerImgUrl(uid, url) {
@@ -483,6 +491,30 @@ class DatabaseService {
   createSubCategories(subCats, catId) {
     Object.entries(subCats).forEach(([i, subCat]) => {
       firebase.database().ref("categories/" + catId +"/subCategories").push({subCategoryName: subCat});
+    });
+  }
+
+  addUidToSubCategory(uid, catId, subCatIds) {
+    Object.entries(subCatIds).forEach(([i, subCatId]) => {
+      this.getEmployeeFromSubCategory(catId).then(employeeIds => {
+        if (typeof(employeeIds[uid]) === 'undefined'){
+          employeeIds[uid] = true;
+          firebase.database().ref("categories/" + catId + "/subCategories/" + subCatId + "/").set({employeeIds: employeeIds});
+        }
+      });
+    });
+  }
+
+  // return array of uids
+  getEmployeeFromSubCategory(catId, subCatId) {
+    return new Promise((resolve, reject) => {
+      firebase.database().ref("categories/" + catId + "/subCategories/" + subCatId + "/").once('value').then(function(snapshot) {
+        if (snapshot.hasChild("employeeIds")){
+          resolve(snapshot.val().employeeIds);
+        } else {
+          resolve({});
+        }
+      });
     });
   }
 
