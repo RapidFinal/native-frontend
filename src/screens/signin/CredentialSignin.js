@@ -31,10 +31,14 @@ class CredentialSignin extends React.Component {
         return ({
             title: 'Signin',
             headerLeft: (
-                <IonIcons.Button name="ios-arrow-back" backgroundColor="transparent" color={"black"} onPress={() => navigation.pop()} />
+                <IonIcons.Button
+                    name="ios-arrow-back"
+                    backgroundColor="transparent"
+                    color={"black"}
+                    onPress={() => navigation.pop()}
+                />
             ),
         })
-
     };
 
     handleSigin = async () => {

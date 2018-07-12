@@ -20,6 +20,11 @@ class Home extends React.Component {
         })
     }
 
+    drawer = () => {
+        this.props.navigation.openDrawer();
+        console.log("drawer open")
+    }
+
 
     render(){
         // const {} = this.state; // to easily access state put desire variable in the curly brace so it may become const {variable} = this.state;

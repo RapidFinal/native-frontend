@@ -1,6 +1,4 @@
-import Home_Test from "../screens/Home_Test";
 import Edit_Test from "../screens/Edit_Test";
-import Login_Test from "../screens/Login_Test";
 import View_Test from "../screens/View_Test";
 import LikeScreen from "../screens/Like";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -10,15 +8,25 @@ import Home from '../screens/Home';
 import {createBottomTabNavigator, createStackNavigator, createSwitchNavigator, createDrawerNavigator} from "react-navigation";
 import React from "react";
 import { Signin, CredentialSignin } from '../screens/signin'
-import SideMenu from "../components/SideMenu";
+import SideMenu from "../components/CategorySideMenu";
+import SubCategorySideMenu from "../components/SubCategorySideMenu"
 
 /* Changes both EmployerMainStack & CandidateMainStack */
 const headerOptions = ({navigation}) => ({
     headerLeft: (
-        <FontAwesome.Button name="navicon" backgroundColor="transparent" color={"black"} onPress={() => navigation.navigate('DrawerOpen')} />
+        <FontAwesome.Button
+            name="navicon"
+            backgroundColor="transparent"
+            color="black"
+            onPress={() => navigation.push("SideMenu")}
+        />
     ),
     headerRight: (
-        <MaterialCommunityIcons.Button name="account" backgroundColor="transparent" color="black" onPress={() => navigation.push("Signin")}/>
+        <MaterialCommunityIcons.Button
+            name="account"
+            backgroundColor="transparent"
+            color="black"
+            onPress={() => navigation.push("Signin")}/>
     ),
     headerTitleStyle: {flex: 1, textAlign: 'center'}
 });
@@ -132,8 +140,26 @@ function setHeaderToRouteName(navigation) {
     };
 }
 
+const SideMenuStack = createStackNavigator (
+    {
+        SideMenu: SideMenu,
+        SubCategorySideMenu: SubCategorySideMenu
+    },
+    {
+
+        navigationOptions: {
+            headerTitleStyle: {
+                flex: 1,
+                textAlign: 'center'
+            },
+            title: "Category"
+        }
+    }
+)
+
 MainStackNavigator = createSwitchNavigator(
     {
+        SideMenuStack: SideMenuStack,
         MainEmployer: EmployerMainStack,
         MainCandidate: CandidateMainStack,
         Auth: AuthenticationMainStack, // Should probably be a stack consisting of login, signup, forgot password etc.
@@ -142,14 +168,5 @@ MainStackNavigator = createSwitchNavigator(
         initialRouteName: 'Auth',
     }
 );
-
-/*MainNavigator = createDrawerNavigator(
-    {
-        MainStackNavigator
-    },
-    {
-        contentComponent: props => <SideMenu {...props} />,
-    }
-)*/
 
 export default MainStackNavigator
