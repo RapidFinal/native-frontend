@@ -20,7 +20,7 @@ class DatabaseService {
   //   "categoryId1": ["subcategoryId1", "subcategoryId2", "subcategoryId3"],
   //   "categoryId2": ["subcategoryId1", "subcategoryId2", "subcategoryId3"]
   // }
-  static createEmployeeInfo(uid, firstName, lastName, desc, statusId, tags, imgUrl, categories, experiences, degree) {
+  static createEmployeeInfo(uid, firstName, lastName, desc, statusId, tags, categories, experiences, degree) {
     this.getAllTags().then((allTags) => {
       let tagIds = [];
       tags.forEach(tag => {
@@ -42,7 +42,6 @@ class DatabaseService {
         description: desc,
         statusId: statusId,
         tagIds: tagIds,
-        imgUrl: imgUrl,
         degree: degree,
         role: "employee"
       };
@@ -305,7 +304,6 @@ class DatabaseService {
       firstName: firstName,
       lastName: lastName,
       companyName: companyName,
-      imgUrl: imgUrl,
       role: "employer"
     };
     firebase.database().ref("employerInfo/" + uid + "/").set(value);
