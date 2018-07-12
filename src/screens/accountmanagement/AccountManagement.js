@@ -77,9 +77,19 @@ class AccountManagement extends React.Component {
         this.props.navigation.navigate("ChangePassword");
     };
 
+    sendVerificationEmail = () => {
+        CredentialAuthentication.sendEmailVerification().then(() => {
+            console.log("Auth Email Sent")
+        })
+    }
+
     render(){
+        const {authProvider, emailVerified} = this.props.context
         return (
             <Container>
+                {
+                    authProvider === "password" && !emailVerified && (<ClickButton onPress={this.sendVerificationEmail}>Resent Confirmation Email</ClickButton>)
+                }
                 <ClickButton onPress={this.changeEmail}>Change Email</ClickButton>
                 <ClickButton onPress={this.changePassword}>Change Password</ClickButton>
                 <ClickButton onPress={this.logout}>Logout</ClickButton>

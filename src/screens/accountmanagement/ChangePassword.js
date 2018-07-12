@@ -48,7 +48,7 @@ class ChangeEmail extends React.Component {
     handleClick = async () => {
         const {password, confirmPassword, newPassword} = this.state
         try {
-            CredentialAuthentication.changepassword({password, confirmPassword, newPassword})
+            CredentialAuthentication.changePassword({password, confirmPassword, newPassword})
                 .then(() => {
                     Alert.alert(
                         'Success',

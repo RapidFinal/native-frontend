@@ -20,7 +20,7 @@ const reauthenticate = (currentPassword) => {
     return user.reauthenticateAndRetrieveDataWithCredential(cred);
 }
 
-export const changepassword = async ({password, newPassword, confirmPassword}) => {
+export const changePassword = async ({password, newPassword, confirmPassword}) => {
     if (newPassword !== confirmPassword){
         throw new Error("Password and confirm password do not match")
     }
@@ -29,7 +29,7 @@ export const changepassword = async ({password, newPassword, confirmPassword}) =
         .then((user) => user.updatePassword(newPassword))
 }
 
-export const changeemail = async ({password, newEmail, confirmEmail}) => {
+export const changeEmail = async ({password, newEmail, confirmEmail}) => {
     if (newEmail !== confirmEmail){
         throw new Error("New email and confirm email do not match")
     }
@@ -40,6 +40,11 @@ export const changeemail = async ({password, newEmail, confirmEmail}) => {
 
 }
 
-export const forgotpassword = async ({email}) => {
+export const forgotPassword = async ({email}) => {
     return RNFirebase.auth().sendPasswordResetEmail(email)
+}
+
+export const sendEmailVerification = async () => {
+    return RNFirebase.auth().currentUser.sendEmailVerification()
+
 }

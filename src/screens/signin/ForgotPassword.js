@@ -47,7 +47,7 @@ class ForgotPassword extends React.Component {
     handleClick = async () => {
         const {email} = this.state
         try {
-            CredentialAuthentication.forgotpassword({email})
+            CredentialAuthentication.forgotPassword({email})
                 .then(() => {
                     Alert.alert(
                         'Success',
