@@ -7,7 +7,7 @@ import Modal from "react-native-modal";
 import {withContext} from "../context/withContext";
 import DatabaseService from "../api/databaseService";
 
-const categories=[];
+let categories=[];
 DatabaseService.getAllCategories().then(data=>{
     categories = data;
 });

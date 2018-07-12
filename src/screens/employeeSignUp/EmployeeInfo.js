@@ -1,6 +1,7 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
+import _ from 'lodash'
 import {FlatList, ScrollView, StyleSheet, View} from "react-native";
 import {
     Button,
@@ -17,6 +18,17 @@ import {
     TextInputWithLabel
 } from "../../components/";
 import {withContext} from "../../context/withContext";
+import DatabaseService from "../../api/databaseService";
+
+const MyAwesomeButton = ({onPress, children}) => (
+    <Button
+        small
+        style={styles.button}
+        onPress={onPress(children)}
+    >
+        <Text uppercase={false}>{"+ " + children}</Text>
+    </Button>
+)
 
 class EmployeeInfo extends React.Component {
 
@@ -41,9 +53,32 @@ class EmployeeInfo extends React.Component {
             degree: false,
             status: false,
         },
-        suggestionTags: ["Java","vue","python","c","c++"],
+        suggestionTags: [],
         status: "",
     };
+
+
+    componentDidMount(){
+        this.getData()
+    }
+
+    getData = () => {
+        const {
+            selectedCategories
+        } = this.props.context
+        if (selectedCategories === null) {
+            return;
+        }
+        const k = Object.keys(selectedCategories);
+        const dataPromises = k.map(val => DatabaseService.getSuggestedTagsFrom(val))
+
+        Promise
+            .all(dataPromises)
+            .then((data) => [].concat.apply([], data))
+            .then((d) => this.setState({suggestionTags:d}))
+    }
+
+
 
     handleChange = (name) => (event) => {
         if (typeof name === "number") {
@@ -133,18 +168,9 @@ class EmployeeInfo extends React.Component {
         });
     }
 
-    renderButton = (tag) => (
-        <Button
-            small
-            style={styles.button}
-            onPress={() => this.putTagInTextInput(tag)}
-        >
-            <Text uppercase={false}>{"+ " + tag}</Text>
-        </Button>
-    )
 
 
-    putTagInTextInput = (tag) => {
+    putTagInTextInput = (tag) => (e) => {
         const {tags, error} = this.state
         let flag = false;
         for (let index = 0; index < tags.length; index++) {
@@ -162,7 +188,6 @@ class EmployeeInfo extends React.Component {
         }
     }
 
-
     render() {
         const {tags, degree, error, suggestionTags} = this.state; // to easily access state put desire variable in the curly brace so it may become const {variable} = this.state;
         return (
@@ -178,9 +203,9 @@ class EmployeeInfo extends React.Component {
                             <Text style={styles.text}>Suggestion of popular tags for </Text>
 
                             <View style={styles.container}>
-                                {suggestionTags.map((tag, index) => (
-                                    this.renderButton(tag)
-                                ))}
+                                {
+                                    suggestionTags.map(v => (<MyAwesomeButton onPress={this.putTagInTextInput}>{v}</MyAwesomeButton>))
+                                }
                             </View>
 
                             {tags.map((tag, index) => (
