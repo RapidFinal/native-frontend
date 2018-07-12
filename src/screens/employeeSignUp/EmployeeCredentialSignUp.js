@@ -200,7 +200,8 @@ class EmployeeCredentialSignUp extends React.Component {
                             errorMessage={errorMessageConfirmPassword}
                         />
                         <NextButton
-                            onPress={this.attemptSignUp}
+                            // onPress={this.attemptSignUp}
+                            onPress={()=>this.props.navigation.navigate("employeeCategorySelect")}
                         />
                     </SignUpForm>
                 </ScrollView>

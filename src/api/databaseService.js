@@ -591,7 +591,7 @@ class DatabaseService {
   }
 
   // categoryId that employee pick
-  getSuggestedTagsFrom(categoryId) {
+  static getSuggestedTagsFrom(categoryId) {
     return new Promise((resolve, reject) => {
       firebase.database().ref("suggestedTags/" + categoryId + "/").once('value').then(function(snapshot) {
         resolve(snapshot.val().suggestions);

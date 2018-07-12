@@ -7,6 +7,7 @@ import {
     NextButton,
     Stepper
 } from "../../components";
+import CategoriesSelection from "../../components/CategoriesSelection";
 
 class EmployeeCategorySelect extends React.Component {
 
@@ -28,6 +29,7 @@ class EmployeeCategorySelect extends React.Component {
                     stepCount={4}
                 />
                 <Text>Category Select</Text>
+                <CategoriesSelection/>
                 <NextButton
                     onPress={() => navigation.navigate('employeeInfo')}
                 />
