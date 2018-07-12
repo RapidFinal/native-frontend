@@ -5,7 +5,7 @@ import {StyleSheet} from "react-native";
 import AppNavigator from "./routes";
 import { YellowBox } from 'react-native';
 import ContextProvider from './context/withContext'
-import {Content, Spinner, Container} from "native-base";
+import {Content, Spinner, Container, Root} from "native-base";
 import {Authentication} from './api'
 import _ from 'lodash'
 
@@ -36,7 +36,7 @@ class App extends React.Component {
             tags: [],
             degree: "",
         },
-        status: "",
+        statusId: "",
         selectedCategories:{}
     };
 
@@ -88,7 +88,9 @@ class App extends React.Component {
 }
 
 const AuthLoaded = ({}) => (
-    <AppNavigator />
+    <Root>
+        <AppNavigator />
+    </Root>
 )
 
 const AuthLoading = ({}) => (

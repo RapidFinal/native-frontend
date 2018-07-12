@@ -1,14 +1,24 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import {StyleSheet, View} from "react-native";
-import {Button, Container, H3, Text} from "native-base";
+import {ScrollView, StyleSheet, View} from "react-native";
+import {
+    Button,
+    Container,
+    Content,
+    H3,
+    Icon,
+    Toast,
+    Text
+} from "native-base";
 import {
     PlusButton,
     SignUpForm,
     Stepper,
     TextInputWithLabel
 } from "../../components";
+import {withContext} from "../../context/withContext";
+import DatabaseService from "../../api/databaseService";
 
 class WorkExp extends React.Component {
 
@@ -17,37 +27,141 @@ class WorkExp extends React.Component {
     }
 
     state = {
+        experiences: [
+            {
+                title: "",
+                desc: ""
+            }
+        ]
+    }
 
+    removeExperience = (idx) => {
+        this.state.experiences.splice(idx, 1);
+        this.setState({
+            experiences: this.state.experiences
+        })
+    }
+
+    handleExperienceChange = (idx, name) => (event) => {
+        this.state.experiences[idx][name] = event.nativeEvent.text;
+        this.setState({
+            experiences: this.state.experiences
+        })
+    }
+
+    renderCloseButton = (idx) => {
+        if (this.state.experiences.length > 1) {
+            return (
+                <Button
+                    style={[styles.leftAlign]}
+                    transparent
+                    onPress={() => this.removeExperience(idx)}
+                >
+                    <Icon name={"close"}/>
+                </Button>
+            )
+        }
+    }
+
+    renderBox = (experience, idx) => (
+        <View style={styles.box}>
+            {this.renderCloseButton(idx)}
+            <TextInputWithLabel
+                label="Title"
+                placeholder="Title"
+                value={experience.title}
+                onChange={this.handleExperienceChange(idx, "title")}
+            />
+            <TextInputWithLabel
+                label="Description"
+                placeholder="Description"
+                value={experience.desc}
+                onChange={this.handleExperienceChange(idx, "desc")}
+            />
+        </View>
+    );
+
+    addMoreWorkExp = () => {
+        const {experiences} = this.state;
+
+        if (this.checkCanAdd()) {
+            this.setState({
+                experiences: experiences.concat({title: "", desc: ""})
+            })
+        }
+        else {
+            Toast.show({
+                text: 'Please fill in all the information before adding new one!',
+                buttonText: 'Okay'
+            })
+        }
+    }
+
+    checkCanAdd = () => {
+        const {experiences} = this.state;
+
+        for (let idx in experiences) {
+            let exp = experiences[idx]
+            if (exp.title === "" || exp.desc === "") {
+                return false
+            }
+        }
+        return true
+    }
+
+    submit = () => {
+        const {experiences} = this.state
+        const {employee, currentUser, statusId, selectedCategories} = this.props.context
+        const exps = experiences.filter((exp) => {
+            return exp.title !== "" && exp.desc !== ""
+        })
+
+        // console.log(employee,currentUser, statusId, selectedCategories)
+
+        //uid, firstName, lastName, desc, statusId, tags, imgUrl, categories, experiences, degree
+        DatabaseService.createEmployerInfo(
+            currentUser.uid,
+            employee.firstName,
+            employee.lastName,
+            "",
+            statusId,
+            employee.tags,
+            "",
+            selectedCategories,
+            exps,
+            employee.degree
+        )
     }
 
 
     render(){
-        // const {} = this.state; // to easily access state put desire variable in the curly brace so it may become const {variable} = this.state;
+        const {experiences} = this.state; // to easily access state put desire variable in the curly brace so it may become const {variable} = this.state;
         return (
             <Container>
-                <Stepper
-                    currentPosition={3}
-                    stepCount={4}
-                />
-                <SignUpForm>
-                    <H3>Work Experience (Optional)</H3>
-                    <View style={styles.box}>
-                        <TextInputWithLabel
-                            label="Degree"
-                            placeholder="Degree"
+                <Content>
+                    <Stepper
+                        currentPosition={3}
+                        stepCount={4}
+                    />
+                    <ScrollView>
+                        <SignUpForm>
+                            <H3>Work Experience (Optional)</H3>
+                            {experiences.map((experience, idx) =>
+                                this.renderBox(experience, idx)
+                        )}
+                        </SignUpForm>
+                        <PlusButton
+                            style={[styles.plusButton, styles.center]}
+                            onPress={this.addMoreWorkExp}
                         />
-                        <TextInputWithLabel
-                            label="Description"
-                            placeholder="Description"
-                        />
-                    </View>
-                </SignUpForm>
-                <PlusButton
-                    style={[styles.plusButton, styles.center]}
-                />
-                <Button style={[styles.submitButton, styles.center]}>
-                    <Text>Submit</Text>
-                </Button>
+                        <Button
+                            style={[styles.submitButton, styles.center]}
+                            onPress={this.submit}
+                        >
+                            <Text>Submit</Text>
+                        </Button>
+                    </ScrollView>
+                </Content>
             </Container>
         )
     }
@@ -71,7 +185,14 @@ const styles = StyleSheet.create({
     },
     submitButton: {
         marginVertical: 60,
+    },
+    leftAlign: {
+        alignSelf: "flex-end"
+    },
+    row: {
+        flexDirection: "row",
+        justifyContent: "space-between"
     }
 });
 
-export default compose() (WorkExp)
+export default compose(withContext) (WorkExp)
