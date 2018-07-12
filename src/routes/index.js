@@ -1,12 +1,26 @@
 import Edit_Test from "../screens/Edit_Test";
 import View_Test from "../screens/View_Test";
 import LikeScreen from "../screens/Like";
+import ViewProfile from "../screens/ViewProfile";
+import Signup from "../screens/Signup"
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Home from '../screens/Home';
 import {createBottomTabNavigator, createStackNavigator, createSwitchNavigator, createDrawerNavigator} from "react-navigation";
 import React from "react";
+import {Button} from "react-native";
+import {
+    EmployeeCategorySelect,
+    EmployeeCredentialSignUp,
+    EmployeeInfo,
+    WorkExp
+} from "../screens/employeeSignUp";
+import ProjectDetail from '../components/ProjectDetail';
+import {
+    EmployerCategorySelect,
+    EmployerCredentialSignUp,
+} from "../screens/employerSignUp"
 import { Signin, CredentialSignin } from '../screens/signin'
 import SideMenu from "../components/CategorySideMenu";
 import SubCategorySideMenu from "../components/SubCategorySideMenu"
@@ -35,10 +49,10 @@ const EmployerTabStack = createBottomTabNavigator(
     {
         View: View_Test,
         Home: Home,
-        Like: LikeScreen,
+        Like: LikeScreen
     },
     {
-        navigationOptions: ({ navigation }) => ({
+        navigationOptions: ({navigation}) => ({
             tabBarIcon: ({focused, tintColor}) => {
                 const {routeName} = navigation.state;
                 let iconName;
@@ -53,7 +67,8 @@ const EmployerTabStack = createBottomTabNavigator(
 
                 return <Ionicons name={iconName} size={25} color={tintColor}/>;
             }
-        })
+        }),
+        initialRouteName: "Home"
     }
 );
 
@@ -64,7 +79,7 @@ const CandidateTabStack = createBottomTabNavigator(
         Edit: Edit_Test,
     },
     {
-        navigationOptions: ({ navigation }) => ({
+        navigationOptions: ({navigation}) => ({
             tabBarIcon: ({focused, tintColor}) => {
                 const {routeName} = navigation.state;
                 let iconName;
@@ -79,7 +94,8 @@ const CandidateTabStack = createBottomTabNavigator(
 
                 return <Ionicons name={iconName} size={25} color={tintColor}/>;
             }
-        })
+        }),
+        initialRouteName: "Home"
     }
 );
 
@@ -107,7 +123,7 @@ const CandidateMainStack = createStackNavigator(
         MainCandidate: CandidateTabStack
     },
     {
-        navigationOptions:  headerOptions,
+        navigationOptions: headerOptions
 
     }
 );
@@ -124,16 +140,48 @@ const AuthenticationMainStack = createStackNavigator(
     }
 );
 
+const SignupStack = createStackNavigator(
+    {
+        employeeCategorySelect: EmployeeCategorySelect,
+        employeeCredentialSignUp: EmployeeCredentialSignUp,
+        employeeInfo: EmployeeInfo,
+        workExp: WorkExp,
+        employerCredentialSignUp : EmployerCredentialSignUp,
+        employerCategorySelect : EmployerCategorySelect,
+        signUp: Signup
+    },
+    {
+        initialRouteName: 'signUp',
+        headerMode: "none"
+
+    }
+);
+
+const ModalStack = createStackNavigator(
+    {
+        Main: {
+            screen: SignupStack,
+        },
+        signUpModal: {
+            screen: Signup,
+        },
+    },
+    {
+        mode: "modal",
+        headerMode: "none",
+    },
+)
+
 EmployerTabStack.navigationOptions = ({ navigation }) => {
     return setHeaderToRouteName(navigation);
 };
 
-CandidateTabStack.navigationOptions = ({ navigation }) => {
+CandidateTabStack.navigationOptions = ({navigation}) => {
     return setHeaderToRouteName(navigation);
 };
 
 function setHeaderToRouteName(navigation) {
-    let { routeName } = navigation.state.routes[navigation.state.index];
+    let {routeName} = navigation.state.routes[navigation.state.index];
     let headerTitle = routeName;
     return {
         headerTitle,
@@ -162,10 +210,14 @@ MainStackNavigator = createSwitchNavigator(
         SideMenuStack: SideMenuStack,
         MainEmployer: EmployerMainStack,
         MainCandidate: CandidateMainStack,
-        Auth: AuthenticationMainStack, // Should probably be a stack consisting of login, signup, forgot password etc.
+        SignupStack: SignupStack,
+        ViewProfile: ViewProfile,
+        ProjectDetail: ProjectDetail,
+        Modal : ModalStack,
+        Home: AuthenticationMainStack,
     },
     {
-        initialRouteName: 'Auth',
+        initialRouteName: 'Home',
     }
 );
 

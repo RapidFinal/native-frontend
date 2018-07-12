@@ -1,5 +1,4 @@
 import EditProfile from './EditProfile'
-import EmployeeSignup from './EmployeeSignup'
 import EmployerSignup from './EmployerSignup'
 import Home from './Home'
 import SearceResult from './SearchResult'
@@ -11,7 +10,6 @@ import ViewTimeline from './ViewTimeline'
 export {
     EditProfile,
     EmployerSignup,
-    EmployeeSignup,
     Home,
     SearceResult,
     Signup,
