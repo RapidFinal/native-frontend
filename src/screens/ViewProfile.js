@@ -5,65 +5,89 @@ import {StyleSheet, Image, View, Text, ScrollView} from "react-native";
 import StatusText from '../components/StatusText';
 import ExperiencesCard from '../components/ExperiencesCard';
 import SkillSetsCard from '../components/SkillSetsCard';
+import CircularProfilePhoto from '../components/CircularProfilePhoto';
+import ProjectSection from '../components/ProjectSection';
+import DatabaseService from '../api/databaseService';
+import TagsSection from '../components/TagsSection';
 
 class ViewProfile extends React.Component {
 
-    static propTypes = {}
+    static propTypes = {
+        imgUrl: PropTypes.string,
+        fullName: PropTypes.string,
+        description: PropTypes.string,
+        status: PropTypes.string,
+        experiences: PropTypes.array,
+        skillSets: PropTypes.array,
+        projects: PropTypes.array,
+        tags: PropTypes.array,
+    }
 
     state = {
-        imgUrl: "https://st2.depositphotos.com/1006318/10458/v/950/depositphotos_104583834-stock-illustration-business-man-profile-icon-male.jpg",
-        fullname: "FULLNAME",
-        description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-        status: "Looking for job",
-        experiences: [
-            {
-                title: "Python",
-                description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
-            },
-            {
-                title: "Java",
-                description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
-            }
-        ],
-        skillSets: ["SKILL 1", "SKILL 2"],
-        project: [
-            {
-                name: "PROJECT 1",
-                description: "PROJECT DESCRIPTION 1",
-                date: ""
-            }
-        ],
+        imgUrl: "",
+        fullName: "",
+        description: "",
+        status: "",
+        experiences: [],
+        skillSets: [],
+        projects: [],
+        tags: []
 
     };
 
+    componentWillMount() {
+        let db = new DatabaseService
+        db.getEmployeeInfo('uid3').then((result) => {
+            console.log(result)
+            this.setState({
+                imgUrl: result.imgUrl,
+                fullName: result.firstName + ' ' + result.lastName,
+                description: result.description,
+                status: result.status,
+                experiences: result.experiences,
+                projects: result.projects,
+                skillSets: result.skillSet,
+            })
+            this.getAllTags(result.tagIds)
+        }).catch((error) => {
+            console.log(error)
+        })
+    }
+
+    getAllTags(tagIds) {
+        let db = new DatabaseService
+        tagIds.forEach((id) => {
+            db.getTagName(id).then((tagName) => {
+                this.setState(prevState => ({
+                    tags: [...prevState.tags, tagName]
+                }))
+            })
+        })
+    }
+
+
     render() {
-        const {imgUrl, fullname, status, description, experiences, skillSets} = this.state;
+        const {imgUrl, fullName, status, description, experiences, skillSets, projects, tags} = this.state;
 
         return (
             <ScrollView contentContainerStyle={styles.ScrollContainer}>
-                <View  style={styles.MainContainer}>
-                    <Image source={{uri: imgUrl}}
-                           style={{width: 150, height: 150, borderRadius: 150 / 2}}
-                    />
-
+                <View style={styles.MainContainer}>
+                    <CircularProfilePhoto url={imgUrl} diameter={150}/>
                     <Text style={styles.ProfileName}>
-                        {fullname}
+                        {fullName}
                     </Text>
-
                     <StatusText status={status}/>
-
                     <Text style={styles.Description}>
                         {description}
                     </Text>
-
+                    <TagsSection tags={tags}/>
                     <ExperiencesCard experiences={experiences}/>
-
                     <SkillSetsCard skills={skillSets}/>
+                    <ProjectSection projects={projects} navigation={this.props.navigation}/>
                 </View>
             </ScrollView>
         )
     }
-
 }
 
 const styles = StyleSheet.create({

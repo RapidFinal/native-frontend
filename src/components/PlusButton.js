@@ -2,8 +2,9 @@ import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
 import {StyleSheet} from "react-native";
+import {Button, Icon} from "native-base";
 
-class SideMenu extends React.Component {
+class PlusButton extends React.Component {
 
     static propTypes = {
 
@@ -15,8 +16,15 @@ class SideMenu extends React.Component {
 
     render(){
         // const {} = this.state; // to easily access state put desire variable in the curly brace so it may become const {variable} = this.state;
+        const {style, onPress} = this.props;
         return (
-            null
+            <Button
+                rounded
+                style={style}
+                onPress={onPress}
+            >
+                <Icon name='md-add' />
+            </Button>
         )
     }
 
@@ -26,4 +34,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default compose() (SideMenu)
+export default compose() (PlusButton)

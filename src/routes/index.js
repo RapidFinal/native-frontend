@@ -1,36 +1,60 @@
-import Home_Test from "../screens/Home_Test";
 import Edit_Test from "../screens/Edit_Test";
-import Login_Test from "../screens/Login_Test";
 import View_Test from "../screens/View_Test";
 import LikeScreen from "../screens/Like";
 import ViewProfile from "../screens/ViewProfile";
+import Signup from "../screens/Signup"
+import AccountWrapper from "../screens/accountmanagement/AccountWrapper"
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {createBottomTabNavigator, createStackNavigator, createSwitchNavigator} from "react-navigation";
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import Home from '../screens/Home';
+import {createBottomTabNavigator, createStackNavigator, createSwitchNavigator, createDrawerNavigator} from "react-navigation";
 import React from "react";
-import {Button} from "react-native";
-import ViewEmployerProfile from "../screens/ViewEmployerProfile";
+import {
+    EmployeeCategorySelect,
+    EmployeeCredentialSignUp,
+    EmployeeInfo,
+    WorkExp
+} from "../screens/employeeSignUp";
+import ProjectDetail from '../components/ProjectDetail';
+import {
+    EmployerCategorySelect,
+    EmployerCredentialSignUp,
+} from "../screens/employerSignUp"
+import {
+    Signin,
+    CredentialSignin,
+    ForgotPassword,
+} from '../screens/signin'
+import SideMenu from "../components/CategorySideMenu";
+import SubCategorySideMenu from "../components/SubCategorySideMenu"
+import ChangeEmail from "../screens/accountmanagement/ChangeEmail"
+import ChangePassword from "../screens/accountmanagement/ChangePassword"
 
 /* Changes both EmployerMainStack & CandidateMainStack */
-const headerOptions = {
+const headerOptions = ({navigation}) => ({
     headerLeft: (
-        <Button
-            onPress={() => alert('This is a left button!')}
-            title="Left"
+        <FontAwesome.Button
+            name="navicon"
+            backgroundColor="transparent"
+            color="black"
+            onPress={() => navigation.push("SideMenu")}
         />
     ),
     headerRight: (
-        <Button
-            onPress={() => alert('This is a right button!')}
-            title="Right"
-        />
+        <MaterialCommunityIcons.Button
+            name="account"
+            backgroundColor="transparent"
+            color="black"
+            onPress={() => navigation.push("AccountWrapper")}/>
     ),
     headerTitleStyle: {flex: 1, textAlign: 'center'}
-};
+});
 
 const EmployerTabStack = createBottomTabNavigator(
     {
         View: View_Test,
-        Home: Home_Test,
+        Home: Home,
         Like: LikeScreen
     },
     {
@@ -49,14 +73,15 @@ const EmployerTabStack = createBottomTabNavigator(
 
                 return <Ionicons name={iconName} size={25} color={tintColor}/>;
             }
-        })
+        }),
+        initialRouteName: "Home"
     }
 );
 
 const CandidateTabStack = createBottomTabNavigator(
     {
         View: View_Test,
-        Home: Home_Test,
+        Home: Home,
         Edit: Edit_Test,
     },
     {
@@ -75,9 +100,20 @@ const CandidateTabStack = createBottomTabNavigator(
 
                 return <Ionicons name={iconName} size={25} color={tintColor}/>;
             }
-        })
+        }),
+        initialRouteName: "Home"
     }
 );
+
+const HomeStack = createStackNavigator(
+    {
+        Home: Home
+    },
+    {
+        headerTitle: "Test",
+        navigationOptions: headerOptions
+    }
+)
 
 const EmployerMainStack = createStackNavigator(
     {
@@ -94,10 +130,59 @@ const CandidateMainStack = createStackNavigator(
     },
     {
         navigationOptions: headerOptions
+
     }
 );
 
-EmployerTabStack.navigationOptions = ({navigation}) => {
+const AuthenticationMainStack = createStackNavigator(
+    {
+        Home: Home,
+        Signin: Signin,
+        CredentialSignin: CredentialSignin,
+        ForgotPassword: ForgotPassword,
+        AccountWrapper: AccountWrapper,
+        ChangePassword: ChangePassword,
+        ChangeEmail: ChangeEmail
+    },
+    {
+        navigationOptions: headerOptions,
+        initialRouteName: 'Home',
+    }
+);
+
+const SignupStack = createStackNavigator(
+    {
+        employeeCategorySelect: EmployeeCategorySelect,
+        employeeCredentialSignUp: EmployeeCredentialSignUp,
+        employeeInfo: EmployeeInfo,
+        workExp: WorkExp,
+        employerCredentialSignUp : EmployerCredentialSignUp,
+        employerCategorySelect : EmployerCategorySelect,
+        signUp: Signup
+    },
+    {
+        initialRouteName: 'signUp',
+        headerMode: "none"
+
+    }
+);
+
+const ModalStack = createStackNavigator(
+    {
+        Main: {
+            screen: SignupStack,
+        },
+        signUpModal: {
+            screen: Signup,
+        },
+    },
+    {
+        mode: "modal",
+        headerMode: "none",
+    },
+)
+
+EmployerTabStack.navigationOptions = ({ navigation }) => {
     return setHeaderToRouteName(navigation);
 };
 
@@ -113,17 +198,37 @@ function setHeaderToRouteName(navigation) {
     };
 }
 
-MainNavigator = createSwitchNavigator(
+const SideMenuStack = createStackNavigator (
     {
-        MainEmployer: EmployerMainStack,
-        MainCandidate: CandidateMainStack,
-        Auth: Login_Test, // Should probably be a stack consisting of login, signup, forgot password etc.
-        ViewProfile: ViewProfile,
-        ViewEmployerProfile: ViewEmployerProfile
+        SideMenu: SideMenu,
+        SubCategorySideMenu: SubCategorySideMenu
     },
     {
-        initialRouteName: 'Auth',
+
+        navigationOptions: {
+            headerTitleStyle: {
+                flex: 1,
+                textAlign: 'center'
+            },
+            title: "Category"
+        }
+    }
+)
+
+MainStackNavigator = createSwitchNavigator(
+    {
+        SideMenuStack: SideMenuStack,
+        MainEmployer: EmployerMainStack,
+        MainCandidate: CandidateMainStack,
+        SignupStack: SignupStack,
+        ViewProfile: ViewProfile,
+        ProjectDetail: ProjectDetail,
+        Modal : ModalStack,
+        Home: AuthenticationMainStack,
+    },
+    {
+        initialRouteName: 'Home',
     }
 );
 
-export default MainNavigator
+export default MainStackNavigator

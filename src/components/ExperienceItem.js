@@ -6,7 +6,8 @@ import {StyleSheet, Text, View, Button} from "react-native";
 class ExperienceItem extends React.Component {
 
     static propTypes = {
-
+        title: PropTypes.string,
+        desc: PropTypes.string
     }
 
     render(){
@@ -17,7 +18,6 @@ class ExperienceItem extends React.Component {
             </View>
         );
     }
-
 }
 
 const styles = StyleSheet.create({
