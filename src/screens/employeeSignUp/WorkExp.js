@@ -120,32 +120,33 @@ class WorkExp extends React.Component {
         if (exps.length !== 0) {
             workExps = exps
         }
-        // console.log(
+        console.log(
+            currentUser,
+            employee.firstName,
+            employee.lastName,
+            "",
+            statusId,
+            employee.tags,
+            "NO_IMAGE",
+            selectedCategories,
+            workExps,
+            employee.degree
+        )
+
+        //uid, firstName, lastName, desc, statusId, tags, imgUrl, categories, experiences, degree
+        // DatabaseService.createEmployeeInfo(
         //     currentUser.uid,
         //     employee.firstName,
         //     employee.lastName,
         //     "",
         //     statusId,
         //     employee.tags,
-        //     "NO_IMAGE",
+        //     "",
         //     selectedCategories,
         //     workExps,
         //     employee.degree
         // )
-
-        //uid, firstName, lastName, desc, statusId, tags, imgUrl, categories, experiences, degree
-        DatabaseService.createEmployeeInfo(
-            currentUser.uid,
-            employee.firstName,
-            employee.lastName,
-            "",
-            statusId,
-            employee.tags,
-            "",
-            selectedCategories,
-            workExps,
-            employee.degree
-        )
+        this.props.navigation.navigate("MainCandidate")
     }
 
 
