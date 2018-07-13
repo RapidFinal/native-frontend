@@ -80,7 +80,7 @@ class ChangeEmail extends React.Component {
                 <Content>
                     <Form>
                         <Item>
-                            <Input placeholder="Password"  value={password} onChange={this.handleStateChange("password")}/>
+                            <Input placeholder="Password" style={styles.input}  value={password} onChange={this.handleStateChange("password")}/>
                         </Item>
                         <Item>
                             <Input placeholder="New Email"  value={newEmail} onChange={this.handleStateChange("newEmail")}/>
@@ -98,7 +98,14 @@ class ChangeEmail extends React.Component {
 }
 
 const styles = StyleSheet.create({
-
+    container: {
+        paddingLeft: '2.5%',
+        paddingRight: '2.5%',
+        paddingTop: "4%"
+    },
+    input: {
+        backgroundColor: 'white'
+    }
 });
 
 export default hoistStatics(compose(withContext)) (ChangeEmail)

@@ -9,9 +9,11 @@ class AccountWrapper extends React.Component {
     render(){
         const { context: {authenticated}, ...rest } = this.props;
         if (authenticated) {
-            return <AccountManagement {...rest} />
+            const AccountManageWrap = hoistStatics(compose(withContext))(AccountManagement)
+            return <AccountManageWrap {...rest} />
         } else {
-            return <Signin {...rest} />
+            const SigninWrap = hoistStatics(compose(withContext))(Signin)
+            return <SigninWrap {...rest} />
         }
     }
 }
