@@ -1,29 +1,22 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import {StyleSheet} from "react-native";
+import {Image} from "react-native";
 
 class CircularProfilePhoto extends React.Component {
 
     static propTypes = {
-
-    }
-
-    state = {
-
+        url: PropTypes.string,
+        diameter: PropTypes.number
     }
 
     render(){
-        const {} = this.state;
         return (
-            null
+            <Image source={{uri: this.props.url}}
+                   style={{width: this.props.diameter, height: this.props.diameter, borderRadius: this.props.diameter / 2}}
+            />
         )
     }
-
 }
-
-const styles = StyleSheet.create({
-
-});
 
 export default compose() (CircularProfilePhoto)

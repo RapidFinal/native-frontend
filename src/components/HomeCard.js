@@ -1,29 +1,46 @@
 import React from 'react';
-import compose from 'recompose/compose'
-import PropTypes from 'prop-types'
-import {StyleSheet} from "react-native";
+import { StyleSheet, View, Image} from 'react-native';
+import {Text} from "native-base";
 
-class HomeCard extends React.Component {
-
-    static propTypes = {
-
-    }
-
-    state = {
-
-    }
-
-    render(){
-        const {} = this.state;
-        return (
-            null
-        )
-    }
-
-}
+const HomeCard = ({photo, name, major, status}) => (
+    <View style={styles.card}>
+        <Image
+            style={styles.image} source = {require('../static/snoopy.jpg')}
+            resizeMode="contain"/>
+        <Text style={styles.title}>{name}</Text>
+        <Text style={styles.text}>{major}</Text>
+        <Text style={styles.text}>{status}</Text>
+    </View>
+)
 
 const styles = StyleSheet.create({
-
+    card: {
+        height: 220,
+        width: 170,
+        borderRadius: 10,
+        backgroundColor: '#EAEAEA',
+        justifyContent: 'center',
+        flexGrow: 1,
+    },
+    text: {
+        fontSize: 15,
+        color: '#999999',
+        textAlign: 'center',
+    },
+    title: {
+        fontSize: 18,
+        color: 'black',
+        textAlign: 'center',
+    },
+    image: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginLeft: 35,
+        height: 100,
+        borderRadius: 50,
+        width: 100,
+        marginBottom: 6,
+    },
 });
 
-export default compose() (HomeCard)
+export default HomeCard;

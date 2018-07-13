@@ -5,7 +5,7 @@ import {StyleSheet} from "react-native";
 import AppNavigator from "./routes";
 import { YellowBox } from 'react-native';
 import ContextProvider from './context/withContext'
-import {Content, Spinner, Container} from "native-base";
+import {Content, Spinner, Container, Root} from "native-base";
 import {Authentication} from './api'
 import _ from 'lodash'
 
@@ -20,23 +20,49 @@ class App extends React.Component {
     state = {
         authenticated: false,
         loading: true,
-        currentUser: null
+        currentUser: null,
+        employer: {
+            firstName: "",
+            lastName: "",
+            email: "",
+            companyName:'',
+            password: "",
+        },
+        employee: {
+            firstName: "",
+            lastName: "",
+            email: "",
+            password: "",
+            tags: [],
+            degree: "",
+        },
+        statusId: "",
+        selectedCategories:{},
+        authProvider: null,
+        emailVerified: null,
+        photoURL: null
     };
-
 
     componentDidMount(){
         this.unsubscribe = Authentication.onAuthStateChanged((currentUser) => {
+
             if (!!currentUser){
+                console.log("CU", currentUser, this.extractCurrentUserData(currentUser))
                 this.setState({
-                   authenticated: true,
-                   loading: false,
-                   currentUser
+                    authenticated: true,
+                    loading: false,
+                    ...this.extractCurrentUserData(currentUser)
                 })
             } else {
+                console.log("currentUser null")
                 this.setState({
                     authenticated: false,
                     loading: false,
-                    currentUser: null
+                    currentUser: null,
+                    authProvider: null,
+                    emailVerified: null,
+                    photoURL: null
+
                 })
 
             }
@@ -47,10 +73,22 @@ class App extends React.Component {
         this.unsubscribe()
     }
 
+    extractCurrentUserData = (currentUser) => {
+        return {
+            authProvider: currentUser._user.providerData["0"].providerId,
+            emailVerified: currentUser._user.emailVerified,
+            photoURL: currentUser._user.photoURL
+        }
+    }
+
     updateState = (nextState, cb) => {
+        console.log("nextState", nextState);
         this.setState({
             ..._.pick(nextState, Object.keys(this.state))
-        }, cb);
+        }, () => {
+            cb && cb();
+            console.log("states", this.state)
+        });
     };
 
     render(){
@@ -69,7 +107,9 @@ class App extends React.Component {
 }
 
 const AuthLoaded = ({}) => (
-    <AppNavigator />
+    <Root>
+        <AppNavigator />
+    </Root>
 )
 
 const AuthLoading = ({}) => (

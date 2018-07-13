@@ -1,15 +1,25 @@
-import React from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
 const { Consumer, Provider } = React.createContext({});
 
-export const withContext = Component => props => (
-    <Consumer>
-        {
-            context => <Component {...context} {...props} />
+export const withContext = function withContext(WrappedComponent){
+    return class extends React.Component{
+        render(){
+            const {children, ...rest} = this.props
+            return (
+                <Consumer>
+                    {
+                        context => (
+                            <WrappedComponent {...context} {...rest}>{children}</WrappedComponent>
+                        )
+                    }
+                </Consumer>
+            )
+
         }
-    </Consumer>
-);
+    }
+};
 
 export const withProvider = ({ children, state: value }) => (
     <Provider value={value}>

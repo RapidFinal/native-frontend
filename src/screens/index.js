@@ -1,5 +1,4 @@
 import EditProfile from './EditProfile'
-import EmployeeSignup from './EmployeeSignup'
 import EmployerSignup from './EmployerSignup'
 import Home from './Home'
 import SearceResult from './SearchResult'
@@ -7,11 +6,12 @@ import Signin from './Signin'
 import Signup from './Signup'
 import ViewProfile from './ViewProfile'
 import ViewTimeline from './ViewTimeline'
+import AccountWrapper from './accountmanagement/AccountWrapper'
 
 export {
+    AccountWrapper,
     EditProfile,
     EmployerSignup,
-    EmployeeSignup,
     Home,
     SearceResult,
     Signup,
