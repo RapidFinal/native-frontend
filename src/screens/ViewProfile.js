@@ -38,7 +38,8 @@ class ViewProfile extends React.Component {
 
     componentWillMount() {
         let db = new DatabaseService
-        db.getEmployeeInfo('uid3').then((result) => {
+        let uid = this.props.uid
+        db.getEmployeeInfo(uid).then((result) => {
             console.log(result)
             this.getAllTags(result.tagIds)
             this.setState({
