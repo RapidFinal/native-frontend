@@ -34,7 +34,7 @@ class Home extends React.Component {
     }
 
     goToProfile = (userID) => {
-        this.props.navigation.navigate("ViewProfile", { userID: userID });
+        this.props.navigation.navigate("View", { userID: userID });
     };
     drawer = () => {
         this.props.navigation.openDrawer();

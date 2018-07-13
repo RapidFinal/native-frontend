@@ -52,6 +52,7 @@ class CredentialSignin extends React.Component {
                 this.props.setContext({
                     currentUser: auth
                 })
+                this.props.navigation.navigate("MainEmployer")
             }
         } catch (e) {
             console.error(e)
