@@ -29,6 +29,7 @@ import SideMenu from "../components/CategorySideMenu";
 import SubCategorySideMenu from "../components/SubCategorySideMenu"
 import ChangeEmail from "../screens/accountmanagement/ChangeEmail"
 import ChangePassword from "../screens/accountmanagement/ChangePassword"
+import ViewEmployerProfile from "../screens/ViewEmployerProfile"
 
 /* Changes both EmployerMainStack & CandidateMainStack */
 const headerOptions = ({navigation}) => ({
@@ -53,6 +54,7 @@ const headerOptions = ({navigation}) => ({
 const ViewStack = createStackNavigator(
     {
         ViewProfile: ViewProfile,
+        ViewEmployerProfile : ViewEmployerProfile,
         ProjectDetail: ProjectDetail
     },
     {
