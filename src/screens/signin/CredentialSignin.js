@@ -50,9 +50,9 @@ class CredentialSignin extends React.Component {
             const auth = await CredentialAuthentication.signin({email, password})
 
             if (auth !== null){
-                this.props.setContext({
-                    currentUser: auth
-                })
+                // this.props.setContext({
+                //     currentUser: auth
+                // })
             }
         } catch (e) {
             console.error(e)

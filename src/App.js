@@ -47,12 +47,13 @@ class App extends React.Component {
         this.unsubscribe = Authentication.onAuthStateChanged((currentUser) => {
 
             if (!!currentUser){
-                console.log("CU", currentUser, this.extractCurrentUserData(currentUser))
+                // console.log("CU", currentUser, this.extractCurrentUserData(currentUser))
                 this.setState({
                     authenticated: true,
                     loading: false,
+                    currentUser,
                     ...this.extractCurrentUserData(currentUser)
-                })
+                }, () => console.log("LOGIN STATE: ",this.state))
             } else {
                 console.log("currentUser null")
                 this.setState({
@@ -75,9 +76,9 @@ class App extends React.Component {
 
     extractCurrentUserData = (currentUser) => {
         return {
-            authProvider: currentUser._user.providerData["0"].providerId,
+            authProvider: currentUser.providerData["0"].providerId,
             emailVerified: currentUser._user.emailVerified,
-            photoURL: currentUser._user.photoURL
+            photoURL: currentUser.photoURL
         }
     }
 
