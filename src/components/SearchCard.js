@@ -43,7 +43,7 @@ class SearchCard extends Component {
                             <Body>
                                 <Text>{i.firstName} {i.lastName}</Text>
                                 <Text note style={{fontSize: 12, color: "black"}}>{i.status} <Icon name='circle' color='green' style={{fontSize: 12, color: 'green'}}/></Text>
-                                <Text note style={{fontSize: 12}}>{i.degree}</Text>
+                                <Text note style={{fontSize: 12}}>{i.major}</Text>
                                 <Tags
                                     initialTags={["java", "css"]}
                                     readonly={true}
