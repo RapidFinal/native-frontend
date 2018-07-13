@@ -81,13 +81,13 @@ class ChangeEmail extends React.Component {
                 <Content>
                     <Form>
                         <Item>
-                            <Input placeholder="Password"  value={password} onChange={this.handleStateChange("password")}/>
+                            <Input placeholder="Password"  secureTextEntry={true} value={password} onChange={this.handleStateChange("password")}/>
                         </Item>
                         <Item>
-                            <Input placeholder="New Password"  value={newPassword} onChange={this.handleStateChange("newPassword")}/>
+                            <Input placeholder="New Password"  secureTextEntry={true} value={newPassword} onChange={this.handleStateChange("newPassword")}/>
                         </Item>
                         <Item>
-                            <Input placeholder="Confirm Password"  value={confirmPassword} onChange={this.handleStateChange("confirmPassword")}/>
+                            <Input placeholder="Confirm Password"  secureTextEntry={true} value={confirmPassword} onChange={this.handleStateChange("confirmPassword")}/>
                         </Item>
                     </Form>
                     <ClickButton onPress={this.handleClick}>Change Password</ClickButton>
