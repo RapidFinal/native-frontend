@@ -1,7 +1,8 @@
 import Edit_Test from "../screens/Edit_Test";
 import LikeScreen from "../screens/Like";
 import ViewProfile from "../screens/ViewProfile";
-import Signup from "../screens/Signup"
+import Signup from "../screens/Signup";
+import SearchResult from "../screens/SearchResult";
 import AccountWrapper from "../screens/accountmanagement/AccountWrapper"
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -137,7 +138,8 @@ const EmployerMainStack = createStackNavigator(
     {
         MainEmployer: EmployerTabStack,
         SideMenu: SideMenuStack,
-        AccountWrapper: AccountWrapper
+        AccountWrapper: AccountWrapper,
+        SearchResult: SearchResult,
     },
     {
         navigationOptions: headerOptions
@@ -148,7 +150,8 @@ const CandidateMainStack = createStackNavigator(
     {
         MainCandidate: CandidateTabStack,
         SideMenu: SideMenuStack,
-        AccountWrapper: AccountWrapper
+        AccountWrapper: AccountWrapper,
+        SearchResult: SearchResult,
     },
     {
         navigationOptions: headerOptions
