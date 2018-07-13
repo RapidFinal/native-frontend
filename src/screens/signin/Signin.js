@@ -27,9 +27,9 @@ class Signin extends React.Component {
     facebookAuth = async () => {
         try {
             const currentUser = await FacebookAuthentication.facebookLogin();
-            this.props.setContext({
-                currentUser
-            })
+            // this.props.setContext({
+            //     currentUser
+            // })
         } catch (e) {
             // TODO: Handle error
             console.error(e)
