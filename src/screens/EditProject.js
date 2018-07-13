@@ -18,7 +18,7 @@ class Edit_Test extends React.Component {
         projectDate: '',
         projectGit: '',
         projectVideo: '',
-        projectTags: []
+        projectTags: ["Java","Python","NodeJs"]
       }
     }
 
@@ -100,8 +100,8 @@ class Edit_Test extends React.Component {
             <View style = {styles.inputContainer}>
               <Text style = {styles.inputTitle}> #Tags </Text>
               <Tags
-                initialText="C++"
-                initialTags={["Java","Python","NodeJs"]}
+                initialText=""
+                initialTags={this.state.projectTags}
                 containerStyle={{justifyContent: "center"}}
                 onChangeTags={this.handleTagsChange}
                 onTagPress={(index, tagLabel, event) => this.removeTag(index)}
