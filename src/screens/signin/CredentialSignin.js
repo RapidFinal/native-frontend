@@ -2,7 +2,7 @@ import React from 'react';
 import compose from 'recompose/compose'
 import hoistStatics from 'recompose/hoistStatics'
 import PropTypes from 'prop-types'
-import {StyleSheet} from "react-native";
+import {StyleSheet, Alert} from "react-native";
 import {Container, Content, Form, Input, Spinner} from "native-base";
 import {Item} from "native-base";
 import {CredentialAuthentication} from "../../api/authentication"
@@ -48,15 +48,15 @@ class CredentialSignin extends React.Component {
         const {email, password} = this.state;
         try {
             const auth = await CredentialAuthentication.signin({email, password})
-
             if (auth !== null){
-                this.props.setContext({
-                    currentUser: auth
-                })
                 this.props.navigation.navigate("MainEmployer")
+                // this.props.setContext({
+                //     currentUser: auth
+                // })
             }
         } catch (e) {
-            console.error(e)
+            Alert.alert("There was an error signing in")
+            console.log(e)
         }
     }
 
@@ -70,7 +70,7 @@ class CredentialSignin extends React.Component {
                             <Input placeholder="Email"  value={email} onChange={this.handleStateChange("email")}/>
                         </Item>
                         <Item last>
-                            <Input placeholder="Password" value={password} onChange={this.handleStateChange("password")} />
+                            <Input placeholder="Password" secureTextEntry={true} input={"password"} value={password} onChange={this.handleStateChange("password")} />
                         </Item>
                     </Form>
                     <ClickButton onPress={this.handleSigin}>Signin</ClickButton>

@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
+    "start:no-cache": "node node_modules/react-native/local-cli/cli.js start --reset-cache",
     "test": "jest",
-    "install:ios": ""
+    "install:ios": "cd ios/ && pod install && cd ../"
   },
   "dependencies": {
     "lodash": "^4.17.10",

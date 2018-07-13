@@ -7,8 +7,9 @@ import {FacebookAuthentication, CredentialAuthentication} from '../../api/authen
 import {
     ClickButton
 } from '../../components/index'
-import {Alert} from 'react-native'
-import RNFirebase from 'react-native-firebase'
+import {
+    Alert, StyleSheet
+} from 'react-native'
 
 
 // TODO: Fix proxy component problem
@@ -86,16 +87,25 @@ class AccountManagement extends React.Component {
     render(){
         const {authProvider, emailVerified} = this.props.context
         return (
-            <Container>
+            <Container style={styles.container}>
                 {
                     authProvider === "password" && !emailVerified && (<ClickButton onPress={this.sendVerificationEmail}>Resent Confirmation Email</ClickButton>)
                 }
                 <ClickButton onPress={this.changeEmail}>Change Email</ClickButton>
                 <ClickButton onPress={this.changePassword}>Change Password</ClickButton>
-                <ClickButton onPress={this.logout}>Logout</ClickButton>
+                <ClickButton danger onPress={this.logout}>Logout</ClickButton>
             </Container>
         )
     }
 }
+
+const styles = StyleSheet.create({
+    container: {
+        paddingLeft: '2.5%',
+        paddingRight: '2.5%',
+        paddingTop: "4%"
+    },
+
+})
 
 export default hoistStatics(compose(withContext)) (AccountManagement)

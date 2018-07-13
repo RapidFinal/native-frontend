@@ -75,7 +75,7 @@ class SubCategorySideMenu extends React.Component {
     };
 
     handleClicked = (key) => (e) => {
-        alert(key)
+
     }
 
     render(){

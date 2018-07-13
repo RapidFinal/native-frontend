@@ -8,7 +8,6 @@ import IonIcons from 'react-native-vector-icons/Ionicons'
 import compose from 'recompose/compose'
 import hoistStatics from "recompose/hoistStatics";
 import {withContext} from "../../context/withContext";
-import RNFirebase from 'react-native-firebase'
 
 const FacebookLoginButton = ({children, ...rest}) => (
     <FontAwesome.Button name="facebook" backgroundColor="#3b5998" {...rest}>
@@ -28,9 +27,9 @@ class Signin extends React.Component {
     facebookAuth = async () => {
         try {
             const currentUser = await FacebookAuthentication.facebookLogin();
-            this.props.setContext({
-                currentUser
-            })
+            // this.props.setContext({
+            //     currentUser
+            // })
         } catch (e) {
             // TODO: Handle error
             console.error(e)
@@ -56,7 +55,6 @@ class Signin extends React.Component {
     render() {
         return (
             <View>
-                <SpanTextButton onPress={() => this.props.navigation.navigate("Signup")}>Resend Confirmation Email</SpanTextButton>
                 <SpanTextButton onPress={() => this.props.navigation.navigate("Signup")}>Sign up</SpanTextButton>
                 <SpanTextButton onPress={() => this.props.navigation.navigate("CredentialSignin")}>Sign in</SpanTextButton>
                 <FacebookLoginButton onPress={this.facebookAuth}>Login with Facebook</FacebookLoginButton>
