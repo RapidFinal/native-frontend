@@ -46,7 +46,7 @@ class App extends React.Component {
     componentDidMount(){
         this.unsubscribe = Authentication.onAuthStateChanged((currentUser) => {
 
-            if (!!currentUser){
+            if (currentUser !== null){
                 console.log("CU", currentUser, this.extractCurrentUserData(currentUser))
                 this.setState({
                     authenticated: true,
@@ -54,7 +54,7 @@ class App extends React.Component {
                     ...this.extractCurrentUserData(currentUser)
                 })
             } else {
-                console.log("currentUser null")
+                console.log("currentUser null");
                 this.setState({
                     authenticated: false,
                     loading: false,
