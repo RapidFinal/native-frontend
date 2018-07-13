@@ -56,8 +56,8 @@ class Signin extends React.Component {
     render() {
         return (
             <View>
-                <SpanTextButton onPress={() => this.props.navigation.navigate("SignupStack")}>Resend Confirmation Email</SpanTextButton>
-                <SpanTextButton onPress={() => this.props.navigation.navigate("SignupStack")}>Sign up</SpanTextButton>
+                <SpanTextButton onPress={() => this.props.navigation.navigate("Signup")}>Resend Confirmation Email</SpanTextButton>
+                <SpanTextButton onPress={() => this.props.navigation.navigate("Signup")}>Sign up</SpanTextButton>
                 <SpanTextButton onPress={() => this.props.navigation.navigate("CredentialSignin")}>Sign in</SpanTextButton>
                 <FacebookLoginButton onPress={this.facebookAuth}>Login with Facebook</FacebookLoginButton>
                 <SpanTextButton onPress={() => this.props.navigation.navigate("ForgotPassword")}>Forgot Password ?</SpanTextButton>

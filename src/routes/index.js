@@ -1,5 +1,4 @@
 import Edit_Test from "../screens/Edit_Test";
-import View_Test from "../screens/View_Test";
 import LikeScreen from "../screens/Like";
 import ViewProfile from "../screens/ViewProfile";
 import Signup from "../screens/Signup"
@@ -30,6 +29,7 @@ import SideMenu from "../components/CategorySideMenu";
 import SubCategorySideMenu from "../components/SubCategorySideMenu"
 import ChangeEmail from "../screens/accountmanagement/ChangeEmail"
 import ChangePassword from "../screens/accountmanagement/ChangePassword"
+import ViewEmployerProfile from "../screens/ViewEmployerProfile"
 
 /* Changes both EmployerMainStack & CandidateMainStack */
 const headerOptions = ({navigation}) => ({
@@ -51,9 +51,37 @@ const headerOptions = ({navigation}) => ({
     headerTitleStyle: {flex: 1, textAlign: 'center'}
 });
 
+const ViewStack = createStackNavigator(
+    {
+        ViewProfile: ViewProfile,
+        ViewEmployerProfile : ViewEmployerProfile,
+        ProjectDetail: ProjectDetail
+    },
+    {
+        initialRouteName: 'ViewProfile',
+    }
+);
+
+const SideMenuStack = createStackNavigator (
+    {
+        SideMenu: SideMenu,
+        SubCategorySideMenu: SubCategorySideMenu
+    },
+    {
+
+        navigationOptions: {
+            headerTitleStyle: {
+                flex: 1,
+                textAlign: 'center'
+            },
+            title: "Category"
+        }
+    }
+);
+
 const EmployerTabStack = createBottomTabNavigator(
     {
-        View: View_Test,
+        View: ViewStack,
         Home: Home,
         Like: LikeScreen
     },
@@ -80,7 +108,7 @@ const EmployerTabStack = createBottomTabNavigator(
 
 const CandidateTabStack = createBottomTabNavigator(
     {
-        View: View_Test,
+        View: ViewStack,
         Home: Home,
         Edit: Edit_Test,
     },
@@ -105,19 +133,11 @@ const CandidateTabStack = createBottomTabNavigator(
     }
 );
 
-const HomeStack = createStackNavigator(
-    {
-        Home: Home
-    },
-    {
-        headerTitle: "Test",
-        navigationOptions: headerOptions
-    }
-)
-
 const EmployerMainStack = createStackNavigator(
     {
-        MainEmployer: EmployerTabStack
+        MainEmployer: EmployerTabStack,
+        SideMenu: SideMenuStack,
+        AccountWrapper: AccountWrapper
     },
     {
         navigationOptions: headerOptions
@@ -126,7 +146,9 @@ const EmployerMainStack = createStackNavigator(
 
 const CandidateMainStack = createStackNavigator(
     {
-        MainCandidate: CandidateTabStack
+        MainCandidate: CandidateTabStack,
+        SideMenu: SideMenuStack,
+        AccountWrapper: AccountWrapper
     },
     {
         navigationOptions: headerOptions
@@ -134,21 +156,6 @@ const CandidateMainStack = createStackNavigator(
     }
 );
 
-const AuthenticationMainStack = createStackNavigator(
-    {
-        Home: Home,
-        Signin: Signin,
-        CredentialSignin: CredentialSignin,
-        ForgotPassword: ForgotPassword,
-        AccountWrapper: AccountWrapper,
-        ChangePassword: ChangePassword,
-        ChangeEmail: ChangeEmail
-    },
-    {
-        navigationOptions: headerOptions,
-        initialRouteName: 'Home',
-    }
-);
 
 const SignupStack = createStackNavigator(
     {
@@ -167,20 +174,20 @@ const SignupStack = createStackNavigator(
     }
 );
 
-const ModalStack = createStackNavigator(
+const AuthenticationMainStack = createStackNavigator(
     {
-        Main: {
-            screen: SignupStack,
-        },
-        signUpModal: {
-            screen: Signup,
-        },
+        Signin: Signin,
+        Signup: SignupStack,
+        CredentialSignin: CredentialSignin,
+        ForgotPassword: ForgotPassword,
+        AccountWrapper: AccountWrapper,
+        ChangePassword: ChangePassword,
+        ChangeEmail: ChangeEmail
     },
     {
-        mode: "modal",
-        headerMode: "none",
-    },
-)
+        initialRouteName: 'AccountWrapper',
+    }
+);
 
 EmployerTabStack.navigationOptions = ({ navigation }) => {
     return setHeaderToRouteName(navigation);
@@ -198,36 +205,14 @@ function setHeaderToRouteName(navigation) {
     };
 }
 
-const SideMenuStack = createStackNavigator (
-    {
-        SideMenu: SideMenu,
-        SubCategorySideMenu: SubCategorySideMenu
-    },
-    {
-
-        navigationOptions: {
-            headerTitleStyle: {
-                flex: 1,
-                textAlign: 'center'
-            },
-            title: "Category"
-        }
-    }
-)
-
 MainStackNavigator = createSwitchNavigator(
     {
-        SideMenuStack: SideMenuStack,
         MainEmployer: EmployerMainStack,
         MainCandidate: CandidateMainStack,
-        SignupStack: SignupStack,
-        ViewProfile: ViewProfile,
-        ProjectDetail: ProjectDetail,
-        Modal : ModalStack,
-        Home: AuthenticationMainStack,
+        Auth: AuthenticationMainStack,
     },
     {
-        initialRouteName: 'Home',
+        initialRouteName: 'Auth',
     }
 );
 
