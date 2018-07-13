@@ -2,21 +2,22 @@ import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
 import {StyleSheet, Text, View, Button} from "react-native";
-import CategoryItem from "../components/CategoryItem"
+import SubCategoryItem from './SubCategoryItem'
 
 class CategoryCard extends React.Component {
 
     static propTypes = {}
 
     render() {
-        // const {} = this.state; // to easily access state put desire variable in the curly brace so it may become const {variable} = this.state;
+        const {categories} = this.props;
         return (
             <View style={styles.MainContainer}>
                 <Text style={styles.Title}>Categories</Text>
-                {this.props.categories.map((value, index) => {
+                {/*{console.log(categories)}*/}
+                {categories.map((value, index) => {
                     if (index === this.props.categories.length -1) {
                         return (
-                            <CategoryItem
+                            <SubCategoryItem
                                 style={styles.Item}
                                 title={value.categoryName}
                                 subCategory={value.subCategory}
@@ -25,7 +26,7 @@ class CategoryCard extends React.Component {
                         )
                     } else {
                         return (
-                            <CategoryItem
+                            <SubCategoryItem
                                 style={[styles.Item, styles.DividerLine]}
                                 title={value.categoryName}
                                 subCategory={value.subCategory}
@@ -33,7 +34,6 @@ class CategoryCard extends React.Component {
                             />
                         )
                     }
-
                 })}
             </View>
         );
