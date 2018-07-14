@@ -28,10 +28,6 @@ class Signup extends React.Component {
         const {navigation} = this.props
         return (
             <Container style={styles.container}>
-                <Text
-                    style={styles.title}>
-                    Sign Up
-                </Text>
                 <Button
                     info
                     style={styles.centerButton}
@@ -67,12 +63,6 @@ const styles = StyleSheet.create({
         alignSelf:'center',
         padding:20,
         margin:5
-    },
-    title:{
-        color: 'black',
-        fontWeight: 'bold',
-        fontSize: 30,
-        padding:20,
     },
     closeButton:{
         top : 10,
