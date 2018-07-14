@@ -8,12 +8,22 @@ import {
     Stepper
 } from "../../components";
 import CategoriesSelection from "../../components/CategoriesSelection";
+import {withContext} from "../../context/withContext";
+import hoistStatics from "recompose/hoistStatics";
 
 class EmployeeCategorySelect extends React.Component {
 
     static propTypes = {
 
     }
+
+    static navigationOptions = () => {
+        return ({
+            title: 'Sign up (Employee)',
+            headerTitleStyle: {flex: 1, textAlign: 'center'},
+            headerRight: () => <View></View>,
+        })
+    };
 
     state = {
 
@@ -42,4 +52,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default compose() (EmployeeCategorySelect)
+export default hoistStatics(compose(withContext)) (EmployeeCategorySelect)

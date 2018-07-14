@@ -19,6 +19,7 @@ import {
 } from "../../components/";
 import {withContext} from "../../context/withContext";
 import DatabaseService from "../../api/databaseService";
+import hoistStatics from "recompose/hoistStatics";
 
 const MyAwesomeButton = ({onPress, children}) => (
     <Button
@@ -35,6 +36,14 @@ class EmployeeInfo extends React.Component {
     static propTypes = {
 
     }
+
+    static navigationOptions = () => {
+        return ({
+            title: 'Sign up (Employee)',
+            headerTitleStyle: {flex: 1, textAlign: 'center'},
+            headerRight: () => <View></View>,
+        })
+    };
 
     state = {
         tags: [
@@ -270,4 +279,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default compose(withContext) (EmployeeInfo)
+export default hoistStatics(compose(withContext)) (EmployeeInfo)

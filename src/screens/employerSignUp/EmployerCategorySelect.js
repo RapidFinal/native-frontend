@@ -9,6 +9,7 @@ import CategoriesSelection from "../../components/CategoriesSelection";
 import {withContext} from "../../context/withContext";
 
 import DatabaseService from "../../api/databaseService";
+import hoistStatics from "recompose/hoistStatics";
 
 class EmployerCategorySelect extends React.Component {
 
@@ -16,21 +17,25 @@ class EmployerCategorySelect extends React.Component {
 
     };
 
+    static navigationOptions = () => {
+        return ({
+            title: 'Sign up (Employer)',
+            headerTitleStyle: {flex: 1, textAlign: 'center'},
+            headerRight: () => <View></View>,
+        })
+    };
+
     submit(){
         const employer = this.props.context.employer;
         const uid = this.props.context.currentUser.uid;
         const selectedCategories = this.props.context.selectedCategories;
         DatabaseService.createEmployerInfo(uid,employer.firstName,employer.lastName,employer.companyName,selectedCategories);
-        this.props.navigation.navigate("signUp");
+        this.props.navigation.navigate("MainEmployer");
     }
 
     render(){
         return (
             <Container style={{flex:1}} >
-                <Text
-                    style={styles.title}>
-                    Employer Sign Up
-                </Text>
                 <Stepper
                     currentPosition={1}
                     stepCount={2}
@@ -72,4 +77,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default compose(withContext) (EmployerCategorySelect)
+export default hoistStatics(compose(withContext)) (EmployerCategorySelect)

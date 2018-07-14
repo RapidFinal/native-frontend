@@ -11,6 +11,7 @@ import {
 } from "../../components";
 import {withContext} from "../../context/withContext";
 import {CredentialAuthentication} from "../../api/authentication"
+import hoistStatics from "recompose/hoistStatics";
 
 // To set context:
 // this.props.setContext({authenticated: false});
@@ -25,6 +26,14 @@ class EmployeeCredentialSignUp extends React.Component {
 
     static propTypes = {
 
+    };
+
+    static navigationOptions = () => {
+        return ({
+            title: 'Sign up (Employee)',
+            headerTitleStyle: {flex: 1, textAlign: 'center'},
+            headerRight: () => <View></View>,
+        })
     };
 
     state = {
@@ -213,4 +222,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default compose(withContext) (EmployeeCredentialSignUp)
+export default hoistStatics(compose(withContext)) (EmployeeCredentialSignUp)

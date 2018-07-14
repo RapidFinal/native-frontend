@@ -5,9 +5,15 @@ import hoistStatics from "recompose/hoistStatics";
 import AccountManagement from './AccountManagement'
 import {Signin} from "../signin/index"
 
-
-
 class AccountWrapper extends React.Component {
+
+    static navigationOptions = () => {
+        return ({
+            title: 'Account Management',
+            headerTitleStyle: {flex: 1, textAlign: 'center'},
+            //headerRight: () => <View></View>,, /* Will not center properly after pressing logout */
+        })
+    };
 
     render(){
         const { context: {authenticated}, ...rest } = this.props;
