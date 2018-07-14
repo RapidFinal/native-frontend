@@ -30,16 +30,13 @@ import SubCategorySideMenu from "../components/SubCategorySideMenu"
 import ChangeEmail from "../screens/accountmanagement/ChangeEmail"
 import ChangePassword from "../screens/accountmanagement/ChangePassword"
 import ViewEmployerProfile from "../screens/ViewEmployerProfile"
+import {View} from "react-native";
 
 /* Changes both EmployerMainStack & CandidateMainStack */
 const headerOptions = ({navigation}) => ({
     headerLeft: (
-        <FontAwesome.Button
-            name="navicon"
-            backgroundColor="transparent"
-            color="black"
-            onPress={() => navigation.push("SideMenu")}
-        />
+        <View>
+        </View>
     ),
     headerRight: (
         <MaterialCommunityIcons.Button
@@ -182,18 +179,44 @@ const AuthenticationMainStack = createStackNavigator(
 );
 
 EmployerTabStack.navigationOptions = ({ navigation }) => {
-    return setHeaderToRouteName(navigation);
+    return setHeaderTabItems(navigation);
 };
 
 CandidateTabStack.navigationOptions = ({navigation}) => {
-    return setHeaderToRouteName(navigation);
+    return setHeaderTabItems(navigation);
 };
 
-function setHeaderToRouteName(navigation) {
+/* Set each screen in the tab navigator to the route name.
+ * It'll adjust the route name if necessary.
+ * For home page, it'll show the side menu button on the top left.
+ */
+function setHeaderTabItems(navigation) {
     let {routeName} = navigation.state.routes[navigation.state.index];
     let headerTitle = routeName;
-    if (headerTitle === "ViewEmployer") headerTitle = "View";
-    return {
+    // Adjust header title if necessary
+    if (routeName === "ViewEmployer") headerTitle = "View";
+    // Show category menu icon if in home page (+ set route name)
+    if (routeName === "Home") return {
+        headerTitle,
+        headerLeft: (
+            <FontAwesome.Button
+                name="navicon"
+                backgroundColor="transparent"
+                color="black"
+                onPress={() => navigation.push("SideMenu")}
+            />
+        ),
+        headerRight: (
+            <MaterialCommunityIcons.Button
+                name="account"
+                backgroundColor="transparent"
+                color="black"
+                onPress={() => navigation.push("AccountWrapper")}/>
+        ),
+        headerTitleStyle: {flex: 1, textAlign: 'center'}
+    };
+    // Otherwise, simply set header title to route name
+    else return {
         headerTitle,
     };
 }
