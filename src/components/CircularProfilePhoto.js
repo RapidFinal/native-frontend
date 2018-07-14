@@ -13,7 +13,7 @@ class CircularProfilePhoto extends React.Component {
     render(){
         return (
             <View>
-                {this.props.url === "" ? (
+                {this.props.url === "" || this.props.url === null || typeof(this.props.url === "undefined") ? (
                     <Image
                         source={require('../assets/images/default.jpeg')}
                         style={{width: this.props.diameter, height: this.props.diameter, borderRadius: this.props.diameter / 2}}
