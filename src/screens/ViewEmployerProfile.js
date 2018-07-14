@@ -24,17 +24,20 @@ class ViewEmployerProfile extends React.Component {
         fullName: "",
         companyName:"",
         categories:[],
+        ready:false, //for setting spinner
 
     };
 
     componentWillMount() {
         let db = new DatabaseService
-        db.getEmployerInfo('uid').then((result) => {
+        let uid = this.props.uid
+        db.getEmployerInfo(uid).then((result) => {
             this.setState({
                 imgUrl: result.imgUrl,
                 fullName: result.firstName + ' ' + result.lastName,
                 companyName: result.companyName,
-                categories: result.categories
+                categories: result.categories,
+                ready:true,
             })
         }).catch((error) => {
             console.log(error)
