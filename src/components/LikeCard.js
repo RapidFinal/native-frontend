@@ -38,23 +38,10 @@ class LikeCard extends Component {
         this.actionSheetRefs = {};
     }
 
-    // componentDidUpdate(prevProps) {
-    //     if (this.props.results === prevProps.results)
-	  //         return true;
-    // }
-
     render() {
-        //console.log("SearchCard Results:", results);
-
-        // Use a LIST???
-
         return (
             <SafeAreaView style={{
                 flex: 1,
-                // flexDirection: 'column',
-                // justifyContent: 'space-between',
-                // alignItems: 'flex-start',
-                // flexWrap: 'wrap'
             }}>
                 <Content style={{flex: 1}}>
                     { this.state.profiles.map( (i, d) =>
