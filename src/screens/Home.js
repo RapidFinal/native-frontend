@@ -44,8 +44,8 @@ class Home extends React.Component {
     }
 
     onSearchButtonPress = () => {
-        console.log(this.state.searchText)
-        // this.props.navigation.navigate("View", { textInput: this.state.searchText });
+        console.log('OnSearchPress:', this.state.searchText);
+        this.props.navigation.navigate("SearchResult", { textInput: this.state.searchText });
     }
 
     render(){
