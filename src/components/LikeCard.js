@@ -11,8 +11,6 @@ import { withNavigation } from 'react-navigation';
 import DatabaseService from "../api/databaseService";
 import {Authentication} from '../api'
 
-const db = new DatabaseService;
-const currentUser = Authentication.currentUser();
 let deleteSnackbarTimer;
 let restoreSnackbarTimer;
 
@@ -34,6 +32,8 @@ class LikeCard extends Component {
             showDeleteSnackbar: false,
             showRestoreSnackbar: false
         };
+        this.db = new DatabaseService;
+        this.currentUser = Authentication.currentUser();
         this.actionSheetRefs = {};
     }
 
@@ -93,7 +93,7 @@ class LikeCard extends Component {
 
     restoreProfileToDB = () => {
         const profileBackup = this.state.profileBackup;
-        //db.likedEmployee(currentUser.uid, profileBackup.uid);
+        this.db.likedEmployee(this.currentUser.uid, profileBackup.uid);
          this.setState({
             restoreSnackbarMessage: profileBackup.firstName + " " + profileBackup.lastName + " was restored",
             showDeleteSnackbar: false,
@@ -116,7 +116,7 @@ class LikeCard extends Component {
         const profileBackup = Object.assign(this.state.profiles[index]);
         const profileName = profileBackup.firstName + " " + profileBackup.lastName;
         profilesClone.splice(index, 1);
-        //likeProfilesRef.child(this.state.profiles[index].id).remove();
+        this.db.unLikedEmployee(this.currentUser.uid, profileBackup.uid);
         this.setState({
             profiles: profilesClone,
             lastRemovedIndex: index,

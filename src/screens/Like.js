@@ -25,6 +25,8 @@ class Like extends React.Component {
         const db = new DatabaseService;
         const currentUser = Authentication.currentUser();
         const likeProfilesInfo = [];
+        //db.likedEmployee(currentUser.uid, "JcdJSycWxme6ZuEbq8JydllWRwq2");
+        //db.likedEmployee(currentUser.uid, "rBR0dChOPATDXk7UAU43FTk74Ri2");
         db.getLikedEmployee(currentUser.uid).then(async (likeProfiles) => {
             for (let uid in likeProfiles) {
                 let employeeInfo = await db.getEmployeeInfo(uid);
