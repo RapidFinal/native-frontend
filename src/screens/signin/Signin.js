@@ -36,22 +36,6 @@ class Signin extends React.Component {
         }
     };
 
-    static navigationOptions = ({navigation}) => {
-        return ({
-            title: 'Signin',
-            headerLeft: (
-                <IonIcons.Button name="ios-arrow-back"
-                                 backgroundColor="transparent"
-                                 color={"black"}
-                                 onPress={() => navigation.pop()} />
-            ),
-            headerRight: (
-                null
-            )
-        })
-
-    };
-
     render() {
         return (
             <View>

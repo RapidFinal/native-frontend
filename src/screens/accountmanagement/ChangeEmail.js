@@ -31,17 +31,8 @@ class ChangeEmail extends React.Component {
     static navigationOptions = ({navigation}) => {
         return ({
             title: 'Change Email',
-            headerLeft: (
-                <IonIcons.Button
-                    name="ios-arrow-back"
-                    backgroundColor="transparent"
-                    color={"black"}
-                    onPress={() => navigation.pop()}
-                />
-            ),
-            headerRight: (
-                null
-            )
+            headerTitleStyle: {flex: 1, textAlign: 'center'},
+            headerRight: () => <View></View>,
         })
     };
 

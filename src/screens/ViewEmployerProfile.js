@@ -6,7 +6,11 @@ import CategoryCard from "../components/CategoryCard";
 import DatabaseService from "../api/databaseService";
 import CircularProfilePhoto from "../components/CircularProfilePhoto";
 
-class ViewProfile extends React.Component {
+class ViewEmployerProfile extends React.Component {
+
+    static navigationOptions = () => ({
+        title: 'View'
+    });
 
     static propTypes = {
         imgUrl: PropTypes.string,
@@ -80,4 +84,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default compose()(ViewProfile)
+export default compose()(ViewEmployerProfile)

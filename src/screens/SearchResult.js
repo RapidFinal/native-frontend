@@ -12,6 +12,14 @@ class SearchResult extends React.Component {
         textInput: PropTypes.string,
     }
 
+    static navigationOptions = ({navigation}) => {
+        return ({
+            title: 'Search Results',
+            headerTitleStyle: {flex: 1, textAlign: 'center'},
+            headerRight: () => <View></View>,
+        })
+    };
+
     state = {
         textInput: "",
         loading: true,

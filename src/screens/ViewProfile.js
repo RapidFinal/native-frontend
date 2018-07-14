@@ -24,6 +24,7 @@ class ViewProfile extends React.Component {
     }
 
     state = {
+        ready: false,
         imgUrl: "",
         fullName: "",
         description: "",
@@ -35,10 +36,20 @@ class ViewProfile extends React.Component {
 
     };
 
+    static navigationOptions = ({navigation}) => {
+        return ({
+            title: 'View',
+            headerTitleStyle: {flex: 1, textAlign: 'center'},
+            headerRight: () => <View></View>,
+        })
+    };
+
     componentWillMount() {
         let db = new DatabaseService
-        db.getEmployeeInfo('uid3').then((result) => {
+        let uid = this.props.uid
+        db.getEmployeeInfo(uid).then((result) => {
             console.log(result)
+            this.getAllTags(result.tagIds)
             this.setState({
                 imgUrl: result.imgUrl,
                 fullName: result.firstName + ' ' + result.lastName,
@@ -47,8 +58,9 @@ class ViewProfile extends React.Component {
                 experiences: result.experiences,
                 projects: result.projects,
                 skillSets: result.skillSet,
+                ready: true
             })
-            this.getAllTags(result.tagIds)
+
         }).catch((error) => {
             console.log(error)
         })

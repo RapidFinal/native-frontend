@@ -20,12 +20,21 @@ import {
 import {withContext} from "../../context/withContext";
 import DatabaseService from "../../api/databaseService";
 import {CredentialAuthentication} from "../../api/authentication"
+import hoistStatics from "recompose/hoistStatics";
 
 class WorkExp extends React.Component {
 
     static propTypes = {
         experiences: PropTypes.array
     }
+
+    static navigationOptions = () => {
+        return ({
+            title: 'Sign up (Employee)',
+            headerTitleStyle: {flex: 1, textAlign: 'center'},
+            headerRight: () => <View></View>,
+        })
+    };
 
     state = {
         experiences: [
@@ -215,4 +224,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default compose(withContext) (WorkExp)
+export default hoistStatics(compose(withContext)) (WorkExp)

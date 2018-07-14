@@ -1,9 +1,7 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import {
-    Text
-} from "native-base";
+import {Text, Container} from "native-base";
 import HomeCard from '../components/HomeCard'
 import SwiperFlatList from 'react-native-swiper-flatlist'
 import SearchBox from 'react-native-search-box'
@@ -19,17 +17,10 @@ import {
 class Home extends React.Component {
 
     static propTypes = {
-
+        searchText: PropTypes.string
     };
 
-    static navigationOptions = ({navigation}) => {
-        return ({
-            title: 'Home'
-        })
-    }
-
     state = {
-        loading: false,
         searchText: ''
     }
 
@@ -94,7 +85,7 @@ class Home extends React.Component {
                     onChangeText={(text) => this.onChangeText(text)}
                     afterSearch={() => this.onSearchButtonPress()}
                 />
-                <Card>
+                <Card containerStyle={styles.cardContainer}>
                     <Text style={styles.titleText}>
                         Recommended
                     </Text>
@@ -117,7 +108,7 @@ class Home extends React.Component {
 
                     </SwiperFlatList>
                 </Card>
-                <Card>
+                <Card containerStyle={styles.cardContainer}>
                     <Text style={styles.titleText}>
                         Recently Viewed
                     </Text>
@@ -172,6 +163,12 @@ const styles = StyleSheet.create({
         // backgroundColor: '#FFFFFF',
         padding: 7,
     },
+    cardContainer: {
+        marginLeft: 0,
+        marginRight: 0,
+        marginTop: 0,
+        marginBottom: 10,
+    }
 });
 
 export default compose() (Home)

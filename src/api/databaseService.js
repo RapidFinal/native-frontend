@@ -24,13 +24,13 @@ class DatabaseService {
     this.getAllTags().then((allTags) => {
       let tagIds = [];
       tags.forEach(tag => {
-        if ( allTags[tag] !== null) {
+        if (typeof(allTags[tag]) !== 'undefined') {
           let tagId = allTags[tag];
           tagIds.push(tagId);
           this.addUidToTag(uid, tagId);
         } else {
           let tagId = firebase.database().ref("tags/").push().key;
-          tagIds.push(allTags[tag]);
+          tagIds.push(tagId);
           firebase.database().ref("tags/" + tagId + "/").set({tagName: tag});
           this.addUidToTag(uid, tagId)
         }

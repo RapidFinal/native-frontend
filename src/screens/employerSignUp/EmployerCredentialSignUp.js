@@ -11,6 +11,7 @@ import {
 
 import {withContext} from "../../context/withContext";
 import {CredentialAuthentication} from "../../api/authentication";
+import hoistStatics from "recompose/hoistStatics";
 
 String.prototype.capitalize = function() {
     return this.charAt(0).toUpperCase() + this.slice(1);
@@ -21,6 +22,14 @@ class EmployerCredentialSignUp extends React.Component {
     static propTypes = {
 
     }
+
+    static navigationOptions = () => {
+        return ({
+            title: 'Sign up (Employer)',
+            headerTitleStyle: {flex: 1, textAlign: 'center'},
+            headerRight: () => <View></View>,
+        })
+    };
 
     state = {
         credential: {
@@ -238,4 +247,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default compose(withContext) (EmployerCredentialSignUp)
+export default hoistStatics(compose(withContext)) (EmployerCredentialSignUp)

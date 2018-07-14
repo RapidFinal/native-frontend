@@ -5,11 +5,20 @@ import {StyleSheet} from "react-native";
 import {Container, Toast} from "native-base";
 import {CategoriesSelection, NextButton, Stepper} from "../../components";
 import {withContext} from "../../context/withContext";
+import hoistStatics from "recompose/hoistStatics";
 
 class EmployeeCategorySelect extends React.Component {
 
     static propTypes = {
         selectedCategories: PropTypes.object
+    };
+
+    static navigationOptions = () => {
+        return ({
+            title: 'Sign up (Employee)',
+            headerTitleStyle: {flex: 1, textAlign: 'center'},
+            headerRight: () => <View></View>,
+        })
     };
 
     state = {
@@ -80,4 +89,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default compose(withContext) (EmployeeCategorySelect)
+export default hoistStatics(compose(withContext)) (EmployeeCategorySelect)

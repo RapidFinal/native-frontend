@@ -20,6 +20,7 @@ import {
 import {withContext} from "../../context/withContext";
 import DatabaseService from "../../api/databaseService";
 import Tags from "react-native-tags";
+import hoistStatics from "recompose/hoistStatics";
 
 const MyAwesomeButton = ({onPress, children}) => (
     <Button
@@ -50,6 +51,14 @@ class EmployeeInfo extends React.Component {
         // error: PropTypes.object,
         // suggestionTags: PropTypes.array,
         // statusId: PropTypes.string
+    };
+
+    static navigationOptions = () => {
+        return ({
+            title: 'Sign up (Employee)',
+            headerTitleStyle: {flex: 1, textAlign: 'center'},
+            headerRight: () => <View></View>,
+        })
     };
 
     state = {
@@ -273,4 +282,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default compose(withContext) (EmployeeInfo)
+export default hoistStatics(compose(withContext)) (EmployeeInfo)

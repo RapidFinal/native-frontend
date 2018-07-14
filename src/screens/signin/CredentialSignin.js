@@ -2,7 +2,7 @@ import React from 'react';
 import compose from 'recompose/compose'
 import hoistStatics from 'recompose/hoistStatics'
 import PropTypes from 'prop-types'
-import {StyleSheet, Alert} from "react-native";
+import {StyleSheet, Alert, View} from "react-native";
 import {Container, Content, Form, Input, Spinner} from "native-base";
 import {Item} from "native-base";
 import {CredentialAuthentication} from "../../api/authentication"
@@ -27,20 +27,11 @@ class CredentialSignin extends React.Component {
         })
     }
 
-    static navigationOptions = ({navigation}) => {
+    static navigationOptions = () => {
         return ({
-            title: 'Signin',
-            headerLeft: (
-                <IonIcons.Button
-                    name="ios-arrow-back"
-                    backgroundColor="transparent"
-                    color={"black"}
-                    onPress={() => navigation.pop()}
-                />
-            ),
-            headerRight: (
-                null
-            )
+            title: 'Sign in',
+            headerTitleStyle: {flex: 1, textAlign: 'center'},
+            headerRight: () => <View></View>,
         })
     };
 
@@ -48,12 +39,6 @@ class CredentialSignin extends React.Component {
         const {email, password} = this.state;
         try {
             const auth = await CredentialAuthentication.signin({email, password})
-            if (auth !== null){
-                this.props.navigation.navigate("MainEmployer")
-                // this.props.setContext({
-                //     currentUser: auth
-                // })
-            }
         } catch (e) {
             Alert.alert("There was an error signing in")
             console.log(e)
