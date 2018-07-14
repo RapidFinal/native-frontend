@@ -19,6 +19,7 @@ import {
 } from "../../components/";
 import {withContext} from "../../context/withContext";
 import DatabaseService from "../../api/databaseService";
+import Tags from "react-native-tags";
 
 const MyAwesomeButton = ({onPress, children}) => (
     <Button
@@ -28,6 +29,17 @@ const MyAwesomeButton = ({onPress, children}) => (
     >
         <Text uppercase={false}>{"+ " + children}</Text>
     </Button>
+)
+
+const SuggestedTags = ({suggestedTags, func}) => (
+    <Tags
+        readonly
+        initialTags={suggestedTags}
+        onTagPress={(index, tagLabel, event) => func(tagLabel)}
+        containerStyle={{justifyContent: "center"}}
+        tagContainerStyle={{width: "30%", alignItems: 'center', height: 40}}
+        tagTextStyle={{fontSize: 16}}
+    />
 )
 
 class EmployeeInfo extends React.Component {
@@ -168,15 +180,13 @@ class EmployeeInfo extends React.Component {
 
 
 
-    putTagInTextInput = (tag) => (e) => {
+    putTagInTextInput = (tag) => {
         const {tags, error} = this.state
-        let flag = false;
         for (let index = 0; index < tags.length; index++) {
             if (tags[index] === tag) {
                 break;
             }
             else if (tags[index] === '') {
-                flag = true;
                 tags[index] = tag
 
                 error.tags[index] = false;
@@ -198,14 +208,10 @@ class EmployeeInfo extends React.Component {
                     <ScrollView>
                         <SignUpForm>
                             <H3>Your top skills</H3>
-                            <Text style={styles.text}>Suggestion of popular tags for </Text>
+                            <Text style={styles.text}>Suggestion of popular tags</Text>
 
-                            <View style={styles.container}>
-                                {
-                                    suggestionTags.map(v => (<MyAwesomeButton
-                                         onPress={this.putTagInTextInput}>{v}</MyAwesomeButton>))
-                                }
-                            </View>
+
+                            <SuggestedTags suggestedTags={suggestionTags} func={this.putTagInTextInput}/>
 
                             {tags.map((tag, index) => (
                                 <TextInput
@@ -222,7 +228,7 @@ class EmployeeInfo extends React.Component {
                             <View style={styles.marginVertical}>
                                 <TextInputWithLabel
                                     label={"Degree"}
-                                    placeholder={"Degree"}
+                                    placeholder={"e.g. B.S. in Marketing"}
                                     value={degree}
                                     onChange={this.handleChange("degree")}
                                     hasError={error.degree}
