@@ -512,7 +512,7 @@ class DatabaseService {
       this.getEmployeeFromSubCategory(catId).then(employeeIds => {
         if (typeof(employeeIds[uid]) === 'undefined'){
           employeeIds[uid] = true;
-          firebase.database().ref("categories/" + catId + "/subCategories/" + subCatId + "/").set({employeeIds: employeeIds});
+          firebase.database().ref("categories/" + catId + "/subCategories/" + subCatId + "/").update({employeeIds: employeeIds});
         }
       });
     });
