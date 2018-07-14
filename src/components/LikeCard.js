@@ -27,7 +27,6 @@ class LikeCard extends Component {
         this.state = {
             profiles : this.props.results,
             // Undo related
-            undoPressed: false,
             lastRemovedIndex: -1,
             profileBackup: null,
             deleteSnackbarMessage: "",
@@ -96,7 +95,6 @@ class LikeCard extends Component {
         const profileBackup = this.state.profileBackup;
         //db.likedEmployee(currentUser.uid, profileBackup.uid);
          this.setState({
-            undoPressed: true,
             restoreSnackbarMessage: profileBackup.firstName + " " + profileBackup.lastName + " was restored",
             showDeleteSnackbar: false,
             showRestoreSnackbar: true,
