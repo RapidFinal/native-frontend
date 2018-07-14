@@ -58,7 +58,7 @@ class EmployeeCredentialSignUp extends React.Component {
                 confirmPassword: "Required",
             }
         },
-        dummyPassword: "123456"
+        dummyPassword: "000000"
     };
 
     handleChange = (name) => (event) => {
