@@ -47,16 +47,13 @@ class EmployeeCategorySelect extends React.Component {
     };
 
     render(){
-        const {selectedCategories} = this.state;
         return (
             <Container style={{flex:1}} >
                 <Stepper
                     currentPosition={1}
                     stepCount={4}
                 />
-                <CategoriesSelection
-                    selectedCategories={selectedCategories}
-                />
+                <CategoriesSelection/>
                 <NextButton
                     onPress={this.submit}
                     style={styles.submitButton}>
