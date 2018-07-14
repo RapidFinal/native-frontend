@@ -6,7 +6,8 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "start:no-cache": "node node_modules/react-native/local-cli/cli.js start --reset-cache",
     "test": "jest",
-    "install:ios": "cd ios/ && pod install && cd ../"
+    "install:ios": "cd ios/ && pod install && cd ../",
+    "open:xcode": "open ios/JobMe.xcworkspace/"
   },
   "dependencies": {
     "lodash": "^4.17.10",
