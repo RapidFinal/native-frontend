@@ -57,7 +57,7 @@ class DatabaseService {
 
       if (experiences !== null) {
         experiences.forEach(exp => {
-          this.createEmployeeExperiences(uid, exp);
+          this.createEmployeeExperiences(uid, exp.title, exp.desc);
         })
       }
     });
@@ -519,7 +519,7 @@ class DatabaseService {
   }
 
   // return array of uids
-  getEmployeeFromSubCategory(catId, subCatId) {
+  static getEmployeeFromSubCategory(catId, subCatId) {
     return new Promise((resolve, reject) => {
       firebase.database().ref("categories/" + catId + "/subCategories/" + subCatId + "/").once('value').then(function(snapshot) {
         if (snapshot.hasChild("employeeIds")){
