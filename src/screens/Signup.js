@@ -20,12 +20,12 @@ class Signup extends React.Component {
         const {navigation} = this.props
         return (
             <Container style={styles.container}>
-                <Button
-                    transparent
-                    style={styles.closeButton}
-                    onPress={()=>navigation.goBack()}>
-                    <Icon name="close" style={{fontSize : 30}}/>
-                </Button>
+                {/*<Button*/}
+                    {/*transparent*/}
+                    {/*style={styles.closeButton}*/}
+                    {/*onPress={()=>navigation.goBack()}>*/}
+                    {/*<Icon name="close" style={{fontSize : 30}}/>*/}
+                {/*</Button>*/}
                 <Text
                     style={styles.title}>
                     Sign Up

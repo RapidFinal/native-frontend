@@ -21,7 +21,7 @@ class SearchCard extends Component {
     render() {
         const {} = this.state;
         const { results } = this.props;
-        console.log("SearchCard Results:", results);
+        //console.log("SearchCard Results:", results);
 
         // Use a LIST???
 
@@ -39,13 +39,13 @@ class SearchCard extends Component {
                     <CardItem bordered>
                         <Left>
                             <Thumbnail style={{width: 105, height: 105, borderRadius: 105/2}}
-                                       source={{uri: "http://housing.umn.edu/sites/housing.umn.edu/files/gender_open_housing_icon.png"}}/>
+                                       source={{uri: i.imgUrl}}/>
                             <Body>
-                                <Text>Full Name {i}</Text>
-                                <Text note style={{fontSize: 12, color: "black"}}>Looking for job <Icon name='circle' color='green' style={{fontSize: 12, color: 'green'}}/></Text>
-                                <Text note style={{fontSize: 12}}>Computer Science</Text>
+                                <Text>{i.firstName} {i.lastName}</Text>
+                                <Text note style={{fontSize: 12, color: "black"}}>{i.status} <Icon name='circle' color='green' style={{fontSize: 12, color: 'green'}}/></Text>
+                                <Text note style={{fontSize: 12}}>{i.major}</Text>
                                 <Tags
-                                    initialTags={["Web app", "Java", "Python"]}
+                                    initialTags={["java", "css"]}
                                     readonly={true}
                                     tagTextStyle={{fontSize: 11}}
                                     onTagPress={() => {return null;}}

@@ -13,18 +13,33 @@ import DatabaseService from "../../api/databaseService";
 class EmployerCategorySelect extends React.Component {
 
     static propTypes = {
-
     };
 
+    state = {
+        selectedCategories:{}
+    }
+
+    componentDidMount(){
+       this.setState({
+           selectedCategories:this.props.context.selectedCategories
+       })
+    }
+
     submit(){
-        const employer = this.props.context.employer;
-        const uid = this.props.context.currentUser.uid;
+        const {employer,currentUser} = this.props.context;
+        const uid = currentUser.uid;
         const selectedCategories = this.props.context.selectedCategories;
-        DatabaseService.createEmployerInfo(uid,employer.firstName,employer.lastName,employer.companyName,selectedCategories);
-        this.props.navigation.navigate("signUp");
+        DatabaseService.createEmployerInfo(
+            uid,employer.firstName,
+            employer.lastName,
+            employer.companyName,
+            selectedCategories);
+
+        this.props.navigation.navigate("MainEmployer");
     }
 
     render(){
+        const {selectedCategories} =this.state;
         return (
             <Container style={{flex:1}} >
                 <Text
@@ -35,7 +50,9 @@ class EmployerCategorySelect extends React.Component {
                     currentPosition={1}
                     stepCount={2}
                 />
-                <CategoriesSelection/>
+                <CategoriesSelection
+                    selectedCategories={selectedCategories}
+                    />
                 <Button
                     onPress={()=>this.submit()}
                     info
