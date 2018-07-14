@@ -31,6 +31,7 @@ import ChangeEmail from "../screens/accountmanagement/ChangeEmail"
 import ChangePassword from "../screens/accountmanagement/ChangePassword"
 import ViewEmployerProfile from "../screens/ViewEmployerProfile"
 import {View} from "react-native";
+import Initial from "../screens/Initial";
 
 /* Changes both EmployerMainStack & CandidateMainStack */
 const headerOptions = ({navigation}) => ({
@@ -174,23 +175,7 @@ const AuthenticationMainStack = createStackNavigator(
         ChangeEmail: ChangeEmail
     },
     {
-        initialRouteName: 'AccountWrapper',
-    }
-);
-
-// Workaround to redirect user correctly without having to signout and login
-const AuthenticationInitialStack = createStackNavigator(
-    {
-        Signin: Signin,
-        Signup: SignupStack,
-        CredentialSignin: CredentialSignin,
-        ForgotPassword: ForgotPassword,
-        InitialAccountWrapper: AccountWrapper,
-        ChangePassword: ChangePassword,
-        ChangeEmail: ChangeEmail
-    },
-    {
-        initialRouteName: 'InitialAccountWrapper',
+        initialRouteName: 'AccountWrapper'
     }
 );
 
@@ -241,10 +226,11 @@ MainStackNavigator = createSwitchNavigator(
     {
         MainEmployer: EmployerMainStack,
         MainCandidate: CandidateMainStack,
-        Auth: AuthenticationInitialStack,
+        Auth: AuthenticationMainStack,
+        Initial: Initial
     },
     {
-        initialRouteName: 'Auth',
+        initialRouteName: 'Initial',
     }
 );
 
