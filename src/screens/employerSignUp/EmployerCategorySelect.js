@@ -15,16 +15,6 @@ class EmployerCategorySelect extends React.Component {
     static propTypes = {
     };
 
-    state = {
-        selectedCategories:{},
-    }
-
-    componentDidMount(){
-       this.setState({
-           selectedCategories:this.props.context.selectedCategories
-       })
-    }
-
     submit = async () =>{
         
         const {employer, selectedCategories} = this.props.context
@@ -65,7 +55,6 @@ class EmployerCategorySelect extends React.Component {
     }
 
     render(){
-        const {selectedCategories} =this.state;
         return (
             <Container style={{flex:1}} >
                 <Text
@@ -76,9 +65,7 @@ class EmployerCategorySelect extends React.Component {
                     currentPosition={1}
                     stepCount={2}
                 />
-                <CategoriesSelection
-                    selectedCategories={selectedCategories}
-                    />
+                <CategoriesSelection/>
                 <Button
                     onPress={()=>this.submit()}
                     info

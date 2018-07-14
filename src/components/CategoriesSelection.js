@@ -11,8 +11,6 @@ import DatabaseService from "../api/databaseService";
 class CategoriesSelection extends React.Component {
 
     static propTypes = {
-        selectedCategories : PropTypes.object,
-        categories:PropTypes.array,
     };
 
     state = {
@@ -29,7 +27,7 @@ class CategoriesSelection extends React.Component {
     }
 
     componentDidMount(){
-        let {selectedCategories}=this.props;
+        let {selectedCategories}=this.props.context;
         this.setState({
             selectedCategories: selectedCategories,
         })
@@ -62,17 +60,16 @@ class CategoriesSelection extends React.Component {
 
     _toggleCheckbox = (subKey) =>{
         let {selectedCategories,currentCategoryId} = this.state;
-        if(this.isSelectedKeyExist(subKey)){
+        if (selectedCategories.hasOwnProperty(currentCategoryId)){
             const index = selectedCategories[currentCategoryId].indexOf(subKey);
-            selectedCategories[currentCategoryId].splice(index,1);
+            if(selectedCategories[currentCategoryId].indexOf(subKey)>-1){
+                selectedCategories[currentCategoryId].splice(index,1);
+            }
+            else{selectedCategories[currentCategoryId].push(subKey)
+            }
         }
         else{
-            if(selectedCategories.hasOwnProperty(currentCategoryId)){
-                selectedCategories[currentCategoryId].push(subKey)
-            }
-            else{
-                selectedCategories[currentCategoryId]=[subKey];
-            }
+            selectedCategories[currentCategoryId]=[subKey];
         }
         this.props.setContext({selectedCategories:selectedCategories})
     };
@@ -88,7 +85,7 @@ class CategoriesSelection extends React.Component {
             this.scrollViewRef.scrollTo(p);
         }
     };
-    //
+
     renderSubCategoriesCheckbox =(index)=> {
         if(index!==null){
             let subCategories = this.state.categories[index].subCategory;
@@ -197,11 +194,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 15,
         padding:5,
-    },
-    centerButton:{
-        alignSelf:'center',
-        padding:20,
-        margin:5
+
     },
     title:{
         color: 'black',
