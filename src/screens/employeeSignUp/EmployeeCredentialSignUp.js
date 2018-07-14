@@ -2,7 +2,7 @@ import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
 import {ScrollView, StyleSheet} from "react-native";
-import {Button, Container, Text} from "native-base";
+import {Container} from "native-base";
 import {
     NextButton,
     SignUpForm,
@@ -20,7 +20,9 @@ import {CredentialAuthentication} from "../../api/authentication"
 class EmployeeCredentialSignUp extends React.Component {
 
     static propTypes = {
-
+        credential: PropTypes.object,
+        error: PropTypes.object,
+        dummyPassword: PropTypes.string
     };
 
     state = {
@@ -51,13 +53,13 @@ class EmployeeCredentialSignUp extends React.Component {
     };
 
     handleChange = (name) => (event) => {
-        const {credential} = this.state;
+        const credential = {...this.state.credential};
         credential[name] = event.nativeEvent.text;
         this.setState({credential});
     };
 
     setError = (errorField, message) => {
-        const {error} = this.state;
+        const error = {...this.state.error};
         if (message !== null) {
             error.flags[errorField] = true;
             error.message[errorField] = message;

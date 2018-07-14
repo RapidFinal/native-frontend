@@ -9,7 +9,7 @@ import {withContext} from "../../context/withContext";
 class EmployeeCategorySelect extends React.Component {
 
     static propTypes = {
-
+        selectedCategories: PropTypes.object
     };
 
     state = {
@@ -18,11 +18,11 @@ class EmployeeCategorySelect extends React.Component {
 
     componentDidMount(){
         this.setState({
-            selectedCategories:this.props.context.selectedCategories
+            selectedCategories: this.props.context.selectedCategories
         })
     }
 
-    submit(){
+    submit = () => {
         const {context, navigation} = this.props;
 
         if (Object.keys(context.selectedCategories).length === 0){
@@ -35,10 +35,10 @@ class EmployeeCategorySelect extends React.Component {
         else {
             navigation.navigate("employeeInfo");
         }
-    }
+    };
 
     render(){
-        const {selectedCategories} =this.state;
+        const {selectedCategories} = this.state;
         return (
             <Container style={{flex:1}} >
                 <Stepper
@@ -49,8 +49,7 @@ class EmployeeCategorySelect extends React.Component {
                     selectedCategories={selectedCategories}
                 />
                 <NextButton
-                    onPress={()=>this.submit()}
-                    info
+                    onPress={this.submit}
                     style={styles.submitButton}>
 
                 </NextButton>

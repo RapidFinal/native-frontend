@@ -2,7 +2,7 @@ import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
-import {FlatList, ScrollView, StyleSheet, View} from "react-native";
+import {ScrollView, StyleSheet, View} from "react-native";
 import {
     Button,
     Container, Content,
@@ -45,8 +45,12 @@ const SuggestedTags = ({suggestedTags, func}) => (
 class EmployeeInfo extends React.Component {
 
     static propTypes = {
-
-    }
+        // tags: PropTypes.array,
+        // degree: PropTypes.string,
+        // error: PropTypes.object,
+        // suggestionTags: PropTypes.array,
+        // statusId: PropTypes.string
+    };
 
     state = {
         tags: [
@@ -55,6 +59,7 @@ class EmployeeInfo extends React.Component {
             ""
         ],
         degree: "",
+        statusId: "",
         error: {
             message: "Required",
             tags: [
@@ -63,10 +68,9 @@ class EmployeeInfo extends React.Component {
                 false
             ],
             degree: false,
-            status: false,
+            statusId: false,
         },
         suggestionTags: [],
-        statusId: "",
     };
 
 
@@ -94,10 +98,9 @@ class EmployeeInfo extends React.Component {
 
     handleChange = (name) => (event) => {
         if (typeof name === "number") {
-            const {tags} = this.state;
+            const tags = this.state.tags.slice();
             tags[name] = event.nativeEvent.text;
             this.setState({tags})
-            this.validate(name)
         }
         else {
             this.setState({
@@ -107,26 +110,20 @@ class EmployeeInfo extends React.Component {
     };
 
     validate = (errorField) => {
-        const {error, tags, degree, statusId} = this.state;
+        const {tags, error} = this.state;
 
         if (typeof errorField === "number" && tags[errorField] === '') {
             error.tags[errorField] = true;
         }
-        else if (errorField === "degree" && degree === '') {
-            error.degree = true;
-        }
-        else if (statusId === "") {
-            error.status = true;
+        else if (this.state[errorField] === "") {
+            error[errorField] = true;
         }
         else {
             if (typeof errorField === "number") {
                 error.tags[errorField] = false
             }
-            else if (errorField === "degree") {
-                error.degree = false
-            }
             else {
-                error.status = false
+                error[errorField] = false
             }
         }
         this.setState({error})
@@ -136,32 +133,32 @@ class EmployeeInfo extends React.Component {
         const {tags, degree, statusId} = this.state;
         let flag = true;
         for (let index = 0; index < tags.length; index++) {
-            if (tags[index] === '') {
+            if (tags[index] === "") {
                 this.validate(index);
                 flag = false;
             }
-        };
-        if (degree === '') {
+        }
+        if (degree === "") {
             this.validate("degree");
             flag = false
         }
         if (statusId === "") {
-            this.validate("status")
+            this.validate("statusId");
             flag = false
         }
-
         return flag;
     };
 
     attemptSubmit = () => {
         const {tags, degree, statusId} = this.state;
         const {navigation, setContext, context} = this.props;
+        const employee = {...context.employee};
 
         if (this.passAllFlags()) {
-            context.employee.tags = tags;
-            context.employee.degree = degree;
+            employee.tags = tags;
+            employee.degree = degree;
             setContext({
-                employee: context.employee,
+                employee: employee,
                 statusId: statusId
             });
 
@@ -170,18 +167,19 @@ class EmployeeInfo extends React.Component {
     }
 
     setStatusState = (statusId) => {
-        const {error} = this.state;
-        error.status = false;
+        const error = {...this.state.error};
+        error.statusId = false;
         this.setState({
             statusId: statusId,
             error: error
         });
-    }
+    };
 
 
 
     putTagInTextInput = (tag) => {
-        const {tags, error} = this.state
+        const error = {...this.state.error};
+        const tags = this.state.tags.splice();
         for (let index = 0; index < tags.length; index++) {
             if (tags[index] === tag) {
                 break;
@@ -210,7 +208,6 @@ class EmployeeInfo extends React.Component {
                             <H3>Your top skills</H3>
                             <Text style={styles.text}>Suggestion of popular tags</Text>
 
-
                             <SuggestedTags suggestedTags={suggestionTags} func={this.putTagInTextInput}/>
 
                             {tags.map((tag, index) => (
@@ -228,7 +225,7 @@ class EmployeeInfo extends React.Component {
                             <View style={styles.marginVertical}>
                                 <TextInputWithLabel
                                     label={"Degree"}
-                                    placeholder={"e.g. B.S. in Marketing"}
+                                    placeholder={"B.S. in Marketing"}
                                     value={degree}
                                     onChange={this.handleChange("degree")}
                                     hasError={error.degree}
@@ -237,8 +234,8 @@ class EmployeeInfo extends React.Component {
                                 />
                             </View>
                             <Text>Status</Text>
-                            <StatusDropdown func={this.setStatusState} hasError={error.status}/>
-                            {error.status ? <Text style={styles.error}>{error.message}</Text> : null}
+                            <StatusDropdown func={this.setStatusState} hasError={error.statusId}/>
+                            {error.statusId ? <Text style={styles.error}>{error.message}</Text> : null}
                             <NextButton
                                 onPress={() => this.attemptSubmit()}
                             />

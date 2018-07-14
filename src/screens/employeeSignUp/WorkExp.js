@@ -24,7 +24,7 @@ import {CredentialAuthentication} from "../../api/authentication"
 class WorkExp extends React.Component {
 
     static propTypes = {
-
+        experiences: PropTypes.array
     }
 
     state = {
@@ -37,16 +37,18 @@ class WorkExp extends React.Component {
     }
 
     removeExperience = (idx) => {
-        this.state.experiences.splice(idx, 1);
+        const experiences = this.state.experiences.slice();
+        experiences.splice(idx, 1);
         this.setState({
-            experiences: this.state.experiences
+            experiences: experiences
         })
     }
 
     handleExperienceChange = (idx, name) => (event) => {
-        this.state.experiences[idx][name] = event.nativeEvent.text;
+        const experiences = this.state.experiences.slice();
+        experiences[idx][name] = event.nativeEvent.text;
         this.setState({
-            experiences: this.state.experiences
+            experiences: experiences
         })
     }
 
@@ -83,7 +85,7 @@ class WorkExp extends React.Component {
     );
 
     addMoreWorkExp = () => {
-        const {experiences} = this.state;
+        const experiences = this.state.experiences.slice();
 
         if (this.checkCanAdd()) {
             this.setState({
@@ -111,8 +113,8 @@ class WorkExp extends React.Component {
     }
 
     submit = async () => {
-        const {experiences} = this.state
-        const {employee, statusId, selectedCategories} = this.props.context
+        const experiences = this.state.experiences.slice();
+        const {employee, statusId, selectedCategories} = this.props.context;
         const {navigation, setContext} = this.props;
         let exps = experiences.filter((exp) => {
             return exp.title !== "" && exp.desc !== ""
@@ -131,6 +133,7 @@ class WorkExp extends React.Component {
         try {
             const auth = await CredentialAuthentication.signup({email, password});
             // uid, firstName, lastName, desc, statusId, tags, imgUrl, categories, experiences, degree
+            // uid, firstName, lastName, desc, statusId, tags, categories, experiences, major
             DatabaseService.createEmployeeInfo(
                 auth.user._user.uid,
                 employee.firstName,
@@ -138,16 +141,15 @@ class WorkExp extends React.Component {
                 "",
                 statusId,
                 employee.tags,
-                "",
                 selectedCategories,
                 workExps,
-                employee.degree
+                employee.degree,
             )
             setContext({employee: null});
             navigation.navigate("MainCandidate")
         }
         catch (error) {
-            console.log(error.code)
+            console.log(error)
         }
     }
 
