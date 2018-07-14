@@ -19,6 +19,7 @@ import {
 } from "../../components";
 import {withContext} from "../../context/withContext";
 import DatabaseService from "../../api/databaseService";
+import {CredentialAuthentication} from "../../api/authentication"
 
 class WorkExp extends React.Component {
 
@@ -109,44 +110,45 @@ class WorkExp extends React.Component {
         return true
     }
 
-    submit = () => {
+    submit = async () => {
         const {experiences} = this.state
-        const {employee, currentUser, statusId, selectedCategories} = this.props.context
+        const {employee, statusId, selectedCategories} = this.props.context
+        const {navigation, setContext} = this.props;
         let exps = experiences.filter((exp) => {
             return exp.title !== "" && exp.desc !== ""
-        })
+        });
 
         let workExps = null
         if (exps.length !== 0) {
             workExps = exps
         }
-        console.log(
-            currentUser,
-            employee.firstName,
-            employee.lastName,
-            "",
-            statusId,
-            employee.tags,
-            "NO_IMAGE",
-            selectedCategories,
-            workExps,
-            employee.degree
-        )
 
-        //uid, firstName, lastName, desc, statusId, tags, imgUrl, categories, experiences, degree
-        // DatabaseService.createEmployeeInfo(
-        //     currentUser.uid,
-        //     employee.firstName,
-        //     employee.lastName,
-        //     "",
-        //     statusId,
-        //     employee.tags,
-        //     "",
-        //     selectedCategories,
-        //     workExps,
-        //     employee.degree
-        // )
-        this.props.navigation.navigate("MainCandidate")
+        const {email, password} = {
+            email: employee.email,
+            password: employee.password
+        };
+
+        try {
+            const auth = await CredentialAuthentication.signup({email, password});
+            // uid, firstName, lastName, desc, statusId, tags, imgUrl, categories, experiences, degree
+            DatabaseService.createEmployeeInfo(
+                auth.user._user.uid,
+                employee.firstName,
+                employee.lastName,
+                "",
+                statusId,
+                employee.tags,
+                "",
+                selectedCategories,
+                workExps,
+                employee.degree
+            )
+            setContext({employee: null});
+            navigation.navigate("MainCandidate")
+        }
+        catch (error) {
+            console.log(error.code)
+        }
     }
 
 
