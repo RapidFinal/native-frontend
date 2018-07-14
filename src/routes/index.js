@@ -1,6 +1,6 @@
 import Edit_Test from "../screens/Edit_Test";
 import LikeScreen from "../screens/Like";
-import ViewProfile from "../screens/ViewProfile";
+import ViewCandidateProfile from "../screens/ViewProfile";
 import Signup from "../screens/Signup";
 import SearchResult from "../screens/SearchResult";
 import AccountWrapper from "../screens/accountmanagement/AccountWrapper"
@@ -8,7 +8,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Home from '../screens/Home';
-import {createBottomTabNavigator, createStackNavigator, createSwitchNavigator, createDrawerNavigator} from "react-navigation";
+import {createBottomTabNavigator, createStackNavigator, createSwitchNavigator} from "react-navigation";
 import React from "react";
 import {
     EmployeeCategorySelect,
@@ -16,7 +16,6 @@ import {
     EmployeeInfo,
     WorkExp
 } from "../screens/employeeSignUp";
-import ProjectDetail from '../components/ProjectDetail';
 import {
     EmployerCategorySelect,
     EmployerCredentialSignUp,
@@ -52,17 +51,6 @@ const headerOptions = ({navigation}) => ({
     headerTitleStyle: {flex: 1, textAlign: 'center'}
 });
 
-const ViewStack = createStackNavigator(
-    {
-        ViewProfile: ViewProfile,
-        ViewEmployerProfile : ViewEmployerProfile,
-        ProjectDetail: ProjectDetail
-    },
-    {
-        initialRouteName: 'ViewProfile',
-    }
-);
-
 const SideMenuStack = createStackNavigator (
     {
         SideMenu: SideMenu,
@@ -82,7 +70,7 @@ const SideMenuStack = createStackNavigator (
 
 const EmployerTabStack = createBottomTabNavigator(
     {
-        View: ViewStack,
+        ViewEmployer: ViewEmployerProfile,
         Home: Home,
         Like: LikeScreen
     },
@@ -91,7 +79,7 @@ const EmployerTabStack = createBottomTabNavigator(
             tabBarIcon: ({focused, tintColor}) => {
                 const {routeName} = navigation.state;
                 let iconName;
-                if (routeName === 'View') {
+                if (routeName === 'ViewEmployer') {
                     iconName = `ios-contact${focused ? '' : '-outline'}`;
                 } else if (routeName === 'Home') {
                     iconName = `ios-home${focused ? '' : '-outline'}`;
@@ -109,7 +97,7 @@ const EmployerTabStack = createBottomTabNavigator(
 
 const CandidateTabStack = createBottomTabNavigator(
     {
-        View: ViewStack,
+        View: ViewCandidateProfile,
         Home: Home,
         Edit: Edit_Test,
     },
@@ -140,6 +128,7 @@ const EmployerMainStack = createStackNavigator(
         SideMenu: SideMenuStack,
         AccountWrapper: AccountWrapper,
         SearchResult: SearchResult,
+        View: ViewCandidateProfile, // View on tabbar for employer, will go to their profile
     },
     {
         navigationOptions: headerOptions
@@ -203,6 +192,7 @@ CandidateTabStack.navigationOptions = ({navigation}) => {
 function setHeaderToRouteName(navigation) {
     let {routeName} = navigation.state.routes[navigation.state.index];
     let headerTitle = routeName;
+    if (headerTitle === "ViewEmployer") headerTitle = "View";
     return {
         headerTitle,
     };
