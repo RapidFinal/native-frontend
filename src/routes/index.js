@@ -178,6 +178,22 @@ const AuthenticationMainStack = createStackNavigator(
     }
 );
 
+// Workaround to redirect user correctly without having to signout and login
+const AuthenticationInitialStack = createStackNavigator(
+    {
+        Signin: Signin,
+        Signup: SignupStack,
+        CredentialSignin: CredentialSignin,
+        ForgotPassword: ForgotPassword,
+        InitialAccountWrapper: AccountWrapper,
+        ChangePassword: ChangePassword,
+        ChangeEmail: ChangeEmail
+    },
+    {
+        initialRouteName: 'InitialAccountWrapper',
+    }
+);
+
 EmployerTabStack.navigationOptions = ({ navigation }) => {
     return setHeaderTabItems(navigation);
 };
@@ -225,7 +241,7 @@ MainStackNavigator = createSwitchNavigator(
     {
         MainEmployer: EmployerMainStack,
         MainCandidate: CandidateMainStack,
-        Auth: AuthenticationMainStack,
+        Auth: AuthenticationInitialStack,
     },
     {
         initialRouteName: 'Auth',
