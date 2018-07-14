@@ -25,7 +25,6 @@ class AccountManagement extends React.Component {
                 FacebookAuthentication.facebookLogout();
                 break;
         }
-        this.props.navigation.navigate("Auth");
     };
 
     changeEmail = () => {

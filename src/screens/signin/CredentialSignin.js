@@ -39,12 +39,6 @@ class CredentialSignin extends React.Component {
         const {email, password} = this.state;
         try {
             const auth = await CredentialAuthentication.signin({email, password})
-            if (auth !== null){
-                this.props.navigation.navigate("MainEmployer")
-                // this.props.setContext({
-                //     currentUser: auth
-                // })
-            }
         } catch (e) {
             Alert.alert("There was an error signing in")
             console.log(e)
