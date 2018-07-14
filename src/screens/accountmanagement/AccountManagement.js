@@ -10,6 +10,7 @@ import {
 import {
     Alert, StyleSheet
 } from 'react-native'
+import { withNavigation } from 'react-navigation';
 
 
 // TODO: Fix proxy component problem
@@ -41,6 +42,7 @@ class AccountManagement extends React.Component {
                 FacebookAuthentication.facebookLogout();
                 break;
         }
+        this.props.navigation.navigate("Auth");
     };
 
     changeEmail = () => {
@@ -108,4 +110,4 @@ const styles = StyleSheet.create({
 
 })
 
-export default hoistStatics(compose(withContext)) (AccountManagement)
+export default hoistStatics(compose(withContext)) (withNavigation(AccountManagement))
