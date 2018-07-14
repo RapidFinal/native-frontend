@@ -1,24 +1,20 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import {StyleSheet, Text, View, ScrollView} from "react-native";
-import {Body, CheckBox, ListItem, Button, Container} from "native-base";
-import Modal from "react-native-modal";
+import {StyleSheet, Text,} from "react-native";
+import {Toast, Button, Container} from "native-base";
 import Stepper from "../../components/Stepper";
 import CategoriesSelection from "../../components/CategoriesSelection";
 import {withContext} from "../../context/withContext";
 
 import DatabaseService from "../../api/databaseService";
 import hoistStatics from "recompose/hoistStatics";
+import {CredentialAuthentication} from "../../api/authentication";
 
 class EmployerCategorySelect extends React.Component {
 
     static propTypes = {
     };
-
-    state = {
-        selectedCategories:{}
-    }
 
     componentDidMount(){
        this.setState({
@@ -33,30 +29,53 @@ class EmployerCategorySelect extends React.Component {
         })
     };
 
-    submit(){
-        const {employer,currentUser} = this.props.context;
-        const uid = currentUser.uid;
-        const selectedCategories = this.props.context.selectedCategories;
-        DatabaseService.createEmployerInfo(
-            uid,employer.firstName,
-            employer.lastName,
-            employer.companyName,
-            selectedCategories);
+    submit = async () =>{
+        
+        const {employer, selectedCategories} = this.props.context
+        const {navigation, setContext} = this.props;
+        
+        if (Object.keys(selectedCategories).length ===0){
+            Toast.show({
+                text: "Please select at least one category!",
+                buttonText: "Okay",
+                duration: 3000,
+            })
+            return;
+        }
 
-        this.props.navigation.navigate("MainEmployer");
+        const {email, password} = {
+            email: employer.email,
+            password: employer.password,
+        };
+
+        try {
+            const auth = await CredentialAuthentication.signup({email, password})
+            const uid = this.props.context.currentUser.uid
+            console.log('auth')
+            console.log(auth)
+            DatabaseService.createEmployerInfo(
+                uid,
+                employer.firstName,
+                employer.lastName,
+                employer.companyName,
+                selectedCategories
+            )
+            setContext({employer: null});
+            navigation.navigate("MainEmployer")
+        }
+        catch (error) {
+            console.log(error.code)
+        }
     }
 
     render(){
-        const {selectedCategories} =this.state;
         return (
             <Container style={{flex:1}} >
                 <Stepper
                     currentPosition={1}
                     stepCount={2}
                 />
-                <CategoriesSelection
-                    selectedCategories={selectedCategories}
-                    />
+                <CategoriesSelection/>
                 <Button
                     onPress={()=>this.submit()}
                     info
