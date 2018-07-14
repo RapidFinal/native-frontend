@@ -20,12 +20,6 @@ class Home extends React.Component {
         searchText: PropTypes.string
     };
 
-    static navigationOptions = ({navigation}) => {
-        return ({
-            title: 'Home'
-        })
-    }
-
     state = {
         searchText: ''
     }

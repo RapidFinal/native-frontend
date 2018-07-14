@@ -36,6 +36,14 @@ class ViewProfile extends React.Component {
 
     };
 
+    static navigationOptions = ({navigation}) => {
+        return ({
+            title: 'View',
+            headerTitleStyle: {flex: 1, textAlign: 'center'},
+            headerRight: () => <View></View>,
+        })
+    };
+
     componentWillMount() {
         let db = new DatabaseService
         let uid = this.props.uid
