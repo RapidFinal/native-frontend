@@ -7,11 +7,6 @@ import DatabaseService from "../api/databaseService";
 import {Authentication} from '../api'
 import {Content, Spinner} from "native-base";
 
-let deleteSnackbarTimer;
-let restoreSnackbarTimer;
-
-// TODO: Remove action sheet, reordering
-
 class Like extends React.Component {
 
     static propTypes = {
@@ -23,14 +18,6 @@ class Like extends React.Component {
         this.state = {
             profiles : [],
             loading: true,
-            // Undo related
-            undoPressed: false,
-            lastRemovedIndex: -1,
-            profileBackup: null,
-            deleteSnackbarMessage: "",
-            restoreSnackbarMessage: "",
-            showDeleteSnackbar: false,
-            showRestoreSnackbar: false
         };
     }
 
