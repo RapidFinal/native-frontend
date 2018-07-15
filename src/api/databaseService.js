@@ -112,11 +112,20 @@ class DatabaseService {
     });
   }
 
-  CreateEmployeeSkillSet(uid, skill) {
+  createEmployeeSkillSet(uid, skill) {
     this.getEmployeeSkillSet(uid).then(skills => {
-      // console.log(skills.val());
-      skills[skill] = true;
-      firebase.database().ref("employeeInfo/" + uid + "/skillSet/").set(skills);
+      let val = {}
+      if (skills === null) {
+        console.log("new");
+        val[skill] = true;
+      } else {
+        console.log("not new");
+        val = skills;
+        if (typeof(val[skill]) === 'undefined') {
+          val[skill] = true;
+        }
+      }
+      firebase.database().ref("employeeInfo/" + uid + "/skillSet/").set(val);
     })
   }
 
