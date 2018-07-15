@@ -115,9 +115,9 @@ const AuthLoaded = ({}) => (
 
 const AuthLoading = ({}) => (
 
-        <Content>
+        <Container>
             <Spinner color={"black"} />
-        </Content>
+        </Container>
 );
 
 const styles = StyleSheet.create({
