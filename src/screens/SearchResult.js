@@ -29,8 +29,13 @@ class SearchResult extends React.Component {
     componentDidMount() {
         //console.log(this.props.navigation.state.params);
         console.log(this.props.navigation.getParam("textInput", ""));
-        console.log('search: ', Search);
-        Search.search("java, react").then((d) => {this.setState({results: d, loading: false}, () => {console.log('newstate', this.state)})} ).catch((e)=> console.error(e));
+        const searchTerm = this.props.navigation.getParam("textInput", "");
+        console.log('search: ', searchTerm);
+        Search.search(searchTerm)
+        .then((d) => {
+            this.setState({results: d, loading: false, textInput: searchTerm},
+                () => {console.log('newstate', this.state)})
+        }).catch((e) => console.error(e));
     }
 
     render(){
