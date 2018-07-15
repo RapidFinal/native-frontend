@@ -4,7 +4,7 @@ import hoistStatics from 'recompose/hoistStatics'
 import {Alert} from 'react-native'
 import PropTypes from 'prop-types'
 import {StyleSheet} from "react-native";
-import {Container, Content, Form, Input, Spinner, Text, View} from "native-base";
+import {Container, Input, Toast, View} from "native-base";
 import {Item} from "native-base";
 import {CredentialAuthentication} from "../../api/authentication"
 import IonIcons from 'react-native-vector-icons/Ionicons'
@@ -53,28 +53,31 @@ class ForgotPassword extends React.Component {
     };
 
     handleClick = async () => {
-        const {email} = this.state
+        const {email} = this.state;
         try {
-            CredentialAuthentication.forgotPassword({email})
-                .then(() => {
-                    Alert.alert(
-                        'Success',
-                        `Password reset email has been sent to ${email}`,
-                        [
-                            {text: 'OK'},
-                        ],
-                        { cancelable: false }
-                    )
-                })
+            const send = await CredentialAuthentication.forgotPassword({email})
+            Toast.show({
+                text: "Password reset email has been sent!",
+                buttonText: "Okay",
+                type: "success",
+                duration: 3500
+            })
+
         } catch (e) {
-            Alert.alert(
-                'Failure',
-                `There was an error`,
-                [
-                    {text: 'OK'},
-                ],
-                { cancelable: false }
-            )
+
+            let message = "Password reset email has been sent!"
+            let type = "success"
+            if (e.code === "auth/invalid-email"){
+                message = "Incorrect email format"
+                type = "warning"
+            }
+
+            Toast.show({
+                text: message,
+                buttonText: "Okay",
+                type: type,
+                duration: 3500
+            })
             console.log(e)
         }
     }

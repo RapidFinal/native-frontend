@@ -84,7 +84,7 @@ class CredentialSignin extends React.Component {
         const {email, password} = this.state;
         return (
             <Container style={{paddingTop: "20%"}}>
-                <TextInput text={"EMail"} onChange={this.handleStateChange("email")} value={email} />
+                <TextInput text={"Email"} onChange={this.handleStateChange("email")} value={email} />
                 <TextInput text={"Password"} onChange={this.handleStateChange("password")} value={password} secureTextEntry={true} />
                 <Container style={styles.buttonContainer}>
                     <ClickButton rounded onPress={this.handleSigin}>Signin</ClickButton>
