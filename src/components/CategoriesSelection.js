@@ -1,8 +1,8 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import {StyleSheet, Text, View, ScrollView} from "react-native";
-import {Body, CheckBox, ListItem, Button, Container} from "native-base";
+import {StyleSheet, View, ScrollView, Text} from "react-native";
+import {Body, CheckBox, ListItem, Button} from "native-base";
 import Modal from "react-native-modal";
 import {withContext} from "../context/withContext";
 import DatabaseService from "../api/databaseService";
@@ -74,17 +74,7 @@ class CategoriesSelection extends React.Component {
         this.props.setContext({selectedCategories:selectedCategories})
     };
 
-    _handleOnScroll = event => {
-        this.setState({
-            scrollOffset: event.nativeEvent.contentOffset.y
-        });
-    };
 
-    _handleScrollTo = p => {
-        if (this.scrollViewRef) {
-            this.scrollViewRef.scrollTo(p);
-        }
-    };
 
     renderSubCategoriesCheckbox =(index)=> {
         if(index!==null){
@@ -124,36 +114,29 @@ class CategoriesSelection extends React.Component {
     render(){
         const {categories, currentCategoryIndex} =this.state
         return (
-            <Container>
-                <View style={
-                    styles.categoryContainer}>
-                    {this.renderCategoriesButton(categories)}
-
-                </View>
+            <View>
+                <ScrollView>
+                    <View style={styles.categoryContainer}
+                    >
+                        {this.renderCategoriesButton(categories)}
+                    </View>
+                </ScrollView>
 
                 <Modal
                     isVisible={currentCategoryIndex !== null}
                     onBackdropPress={()=>this.closeModal()}
-                    scrollTo={this._handleScrollTo}
-                    scrollOffset={this.state.scrollOffset}
                     style={styles.bottomModal}
                 >
                     <View style={styles.scrollableModal}>
-                        <ScrollView
-                            ref={ref => (this.scrollViewRef = ref)}
-                            onScroll={this._handleOnScroll}
-                            scrollEventThrottle={16}
-                        >
+                        <ScrollView>
                             <View style={styles.modalContent}>
                                 {this.renderSubCategoriesCheckbox(currentCategoryIndex)}
-
                             </View>
                         </ScrollView>
                     </View>
 
-                </Modal>
-
-            </Container>
+                    </Modal>
+            </View>
         )
     }
 }
@@ -176,17 +159,14 @@ const styles = StyleSheet.create({
     categoryContainer:{
         flex: 1,
         flexDirection: "row",
-        justifyContent: 'space-between',
         flexWrap: 'wrap',
-        alignItems: 'flex-start',
+        marginHorizontal: '5%',
     },
 
     categoryButton: {
-        width:'45%',
-        padding:5,
-        margin:5,
-        justifyContent:'center',
-        alignItems:'center',
+        width:'42%',
+        padding: '1%',
+        margin: '3%',
     },
 
     categoryTitle:{
@@ -196,13 +176,6 @@ const styles = StyleSheet.create({
         padding:5,
 
     },
-    title:{
-        color: 'black',
-        fontWeight: 'bold',
-        fontSize: 25,
-        alignSelf:'center',
-    },
-
 });
 
 export default compose(withContext) (CategoriesSelection)

@@ -1,7 +1,8 @@
 import React from 'react';
 import compose from 'recompose/compose'
+import PropTypes from 'prop-types'
 import {ScrollView, StyleSheet, View} from "react-native";
-import {Button, Container, Text} from "native-base";
+import {Container} from "native-base";
 import {
     NextButton,
     SignUpForm,
@@ -13,15 +14,13 @@ import {withContext} from "../../context/withContext";
 import {CredentialAuthentication} from "../../api/authentication";
 import hoistStatics from "recompose/hoistStatics";
 
-String.prototype.capitalize = function() {
-    return this.charAt(0).toUpperCase() + this.slice(1);
-};
-
 class EmployerCredentialSignUp extends React.Component {
 
     static propTypes = {
-
-    }
+        credential: PropTypes.object,
+        error: PropTypes.object,
+        dummyPassword: PropTypes.string
+    };
 
     static navigationOptions = () => {
         return ({
@@ -57,7 +56,8 @@ class EmployerCredentialSignUp extends React.Component {
                 password: "Required",
                 confirmPassword: "Required",
             }
-        }
+        },
+        dummyPassword : "000000"
     };
 
     handleChange = (name) => (event) => {
@@ -109,14 +109,13 @@ class EmployerCredentialSignUp extends React.Component {
     }
 
     attemptSignUp = async () => {
-        const {credential} = this.state;
-
+        const {credential, dummyPassword} = this.state;
         const {navigation} = this.props;
 
         if (this.passAllFlags()) {
             const {email, password} = {
                 email: credential.email,
-                password: credential.password,
+                password: dummyPassword
             };
 
             CredentialAuthentication.signin({email, password}).
@@ -222,7 +221,6 @@ class EmployerCredentialSignUp extends React.Component {
                         />
                         <NextButton
                             onPress={this.attemptSignUp}
-                            // onPress={()=>this.props.navigation.navigate("employerCategorySelect")}
                         />
                     </SignUpForm>
                 </ScrollView>
