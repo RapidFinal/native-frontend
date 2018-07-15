@@ -8,7 +8,7 @@ import IonIcons from 'react-native-vector-icons/Ionicons'
 import compose from 'recompose/compose'
 import hoistStatics from "recompose/hoistStatics";
 import {withContext} from "../../context/withContext";
-import {Body, Container, Left, Toast} from "native-base";
+import {Body, Container, Left, Toast, Icon} from "native-base";
 
 const FacebookLoginButton = ({children, ...rest}) => (
     <FontAwesome.Button name="facebook" backgroundColor="#3b5998" {...rest}>
@@ -16,16 +16,12 @@ const FacebookLoginButton = ({children, ...rest}) => (
     </FontAwesome.Button>
 );
 
-const SpanTextButton = ({children, icon, iconSize=30,...rest}) => (
+const SpanTextButton = ({children, icon, font, fonttype, iconSize=30,...rest}) => (
     <ClickButton {...rest}>
 
         {
             icon && iconSize && (
-                <Container>
-                    <Left>
-                        <FontAwesome name={icon} size={iconSize} color={"white"}/>
-                    </Left>
-                </Container>
+                <Icon name={icon} type={fonttype} style={{color: "white"}} color="white" size={iconSize} />
             )
         }
         <Text>{children}</Text>
@@ -74,14 +70,19 @@ class Signin extends React.Component {
                         Forgot Password?
                     </SpanTextButton>
                 </Container>
+
+                <View style={{flexDirection: 'row', paddingLeft: "8%",paddingRight: "8%"}}>
+                    <View style={{backgroundColor: 'grey', height: 2, flex: 1, alignSelf: 'center'}} />
+                    <Text style={{ alignSelf:'center', paddingHorizontal:5, fontSize: 24 }}>OR</Text>
+                    <View style={{backgroundColor: 'grey', height: 2, flex: 1, alignSelf: 'center'}} />
+                </View>
                 <Container style={[styles.button]} >
-
-
                     <SpanTextButton
                         rounded
                         onPress={this.facebookAuth}
+                        fonttype={"FontAwesome"}
                         icon={"facebook"}>
-                        Login with Facebook
+                        {"   Login with Facebook"}
                     </SpanTextButton>
                 </Container>
             </Container>

@@ -2,10 +2,8 @@ import React from 'react';
 import compose from 'recompose/compose'
 import hoistStatics from 'recompose/hoistStatics'
 import PropTypes from 'prop-types'
-import {StyleSheet, Alert} from "react-native";
-import {Container,Input, View, Toast} from "native-base";
+import {Container,Input, Toast} from "native-base";
 import {StyleSheet, View} from "react-native";
-import {Container, Input} from "native-base";
 import {Item} from "native-base";
 import {CredentialAuthentication} from "../../api/authentication"
 import {withContext} from "../../context/withContext";
