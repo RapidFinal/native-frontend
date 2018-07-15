@@ -23,7 +23,6 @@ class EmployeeCredentialSignUp extends React.Component {
     static propTypes = {
         credential: PropTypes.object,
         error: PropTypes.object,
-        dummyPassword: PropTypes.string
     };
 
     static navigationOptions = () => {
@@ -57,8 +56,7 @@ class EmployeeCredentialSignUp extends React.Component {
                 password: "Required",
                 confirmPassword: "Required",
             }
-        },
-        dummyPassword: "iCV5Uz8rnnO5o6jnp72giCV5Uz8rnnO5o6jnp72giCV5Uz8rnnO5o6jnp72g"
+        }
     };
 
     handleChange = (name) => (event) => {
@@ -110,40 +108,33 @@ class EmployeeCredentialSignUp extends React.Component {
     }
 
     attemptSignUp = async () => {
-        const {credential, dummyPassword} = this.state;
+        const {credential} = this.state;
 
         const {navigation} = this.props;
 
         if (this.passAllFlags()) {
-            const {email, password} = {
-                email: credential.email,
-                password: dummyPassword
-            };
-
-            CredentialAuthentication.signin({email, password}).
-                then(() => {
-                    // dummyPassword matches the real user password
+            const email = {email: credential.email};
+            try {
+                const result = await CredentialAuthentication.fetchSignInMethodsForEmail(email);
+                if (result.length === 0) {
+                    const employee = {
+                        firstName: credential.firstName,
+                        lastName: credential.lastName,
+                        email: credential.email,
+                        password: credential.password
+                    };
+                    this.props.setContext({employee: employee});
+                    navigation.navigate("employeeCategorySelect")
+                }
+                else {
                     this.setError("email", "Email already in use")
-                    CredentialAuthentication.signout();
-                }).
-                catch(error => {
-                    if (error.code === "auth/user-not-found") {
-                        const employee = {
-                            firstName: credential.firstName,
-                            lastName: credential.lastName,
-                            email: credential.email,
-                            password: credential.password
-                        };
-                        this.props.setContext({employee: employee});
-                        navigation.navigate("employeeCategorySelect")
-                    }
-                    else if (error.code === "auth/invalid-email") {
-                        this.setError("email", "Email is not valid")
-                    }
-                    else {
-                        this.setError("email", "Email already in use")
-                    }
-                })
+                }
+            }
+            catch (error) {
+                if (error.code === "auth/invalid-email") {
+                    this.setError("email", "Email is not valid")
+                }
+            }
         }
     };
 

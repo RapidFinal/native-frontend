@@ -48,3 +48,7 @@ export const sendEmailVerification = async () => {
     return RNFirebase.auth().currentUser.sendEmailVerification()
 
 }
+
+export const fetchSignInMethodsForEmail = async ({email}) => {
+    return RNFirebase.auth().fetchSignInMethodsForEmail(email)
+}
