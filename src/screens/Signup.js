@@ -1,7 +1,7 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import {StyleSheet} from "react-native";
+import {StyleSheet, View} from "react-native";
 import {Body, Button, Container, Header, Icon, Left, Right, Text} from "native-base";
 
 class Signup extends React.Component {
@@ -9,6 +9,14 @@ class Signup extends React.Component {
     static propTypes = {
 
     }
+
+    static navigationOptions = () => {
+        return ({
+            title: 'Sign up',
+            headerTitleStyle: {flex: 1, textAlign: 'center'},
+            headerRight: () => <View></View>,
+        })
+    };
 
     state = {
         isModalVisible:false,
@@ -20,16 +28,6 @@ class Signup extends React.Component {
         const {navigation} = this.props
         return (
             <Container style={styles.container}>
-                <Button
-                    transparent
-                    style={styles.closeButton}
-                    onPress={()=>navigation.goBack()}>
-                    <Icon name="close" style={{fontSize : 30}}/>
-                </Button>
-                <Text
-                    style={styles.title}>
-                    Sign Up
-                </Text>
                 <Button
                     info
                     style={styles.centerButton}
@@ -65,12 +63,6 @@ const styles = StyleSheet.create({
         alignSelf:'center',
         padding:20,
         margin:5
-    },
-    title:{
-        color: 'black',
-        fontWeight: 'bold',
-        fontSize: 30,
-        padding:20,
     },
     closeButton:{
         top : 10,

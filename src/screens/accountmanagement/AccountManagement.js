@@ -10,26 +10,9 @@ import {
 import {
     Alert, StyleSheet
 } from 'react-native'
-import { withNavigation } from 'react-navigation';
-
 
 // TODO: Fix proxy component problem
 class AccountManagement extends React.Component {
-
-    static navigationOptions = ({navigation}) => {
-        return ({
-            title: 'Account Management',
-            headerLeft: (
-                <IonIcons.Button name="ios-arrow-back"
-                                 backgroundColor="transparent"
-                                 color={"black"}
-                                 onPress={() => navigation.pop()} />
-            ),
-            headerRight: (
-                null
-            )
-        })
-    }
 
     logout = () => {
         const {authProvider} = this.props.context;
@@ -42,7 +25,6 @@ class AccountManagement extends React.Component {
                 FacebookAuthentication.facebookLogout();
                 break;
         }
-        this.props.navigation.navigate("Auth");
     };
 
     changeEmail = () => {
@@ -110,4 +92,4 @@ const styles = StyleSheet.create({
 
 })
 
-export default hoistStatics(compose(withContext)) (withNavigation(AccountManagement))
+export default hoistStatics(compose(withContext)) (AccountManagement)

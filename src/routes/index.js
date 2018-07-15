@@ -33,38 +33,11 @@ import ViewEmployerProfile from "../screens/ViewEmployerProfile"
 import {View} from "react-native";
 import Initial from "../screens/Initial";
 
-/* Changes both EmployerMainStack & CandidateMainStack */
-const headerOptions = ({navigation}) => ({
-    headerLeft: (
-        <View>
-        </View>
-    ),
-    headerRight: (
-        <MaterialCommunityIcons.Button
-            name="account"
-            backgroundColor="transparent"
-            color="black"
-            onPress={() => navigation.push("AccountWrapper")}/>
-    ),
+/* REQUIRED in both EmployerMainStack & CandidateMainStack  */
+const headerOptions = () => ({
+    headerRight: () => <View></View>,
     headerTitleStyle: {flex: 1, textAlign: 'center'}
 });
-
-const SideMenuStack = createStackNavigator (
-    {
-        SideMenu: SideMenu,
-        SubCategorySideMenu: SubCategorySideMenu
-    },
-    {
-
-        navigationOptions: {
-            headerTitleStyle: {
-                flex: 1,
-                textAlign: 'center'
-            },
-            title: "Category"
-        }
-    }
-);
 
 const EmployerTabStack = createBottomTabNavigator(
     {
@@ -123,9 +96,12 @@ const CandidateTabStack = createBottomTabNavigator(
 const EmployerMainStack = createStackNavigator(
     {
         MainEmployer: EmployerTabStack,
-        SideMenu: SideMenuStack,
+        SideMenu: SideMenu,
+        SubCategorySideMenu: SubCategorySideMenu,
         AccountWrapper: AccountWrapper,
         SearchResult: SearchResult,
+        ChangePassword: ChangePassword,
+        ChangeEmail: ChangeEmail,
         View: ViewCandidateProfile, // View on tabbar for employer, will go to their profile
     },
     {
@@ -136,43 +112,33 @@ const EmployerMainStack = createStackNavigator(
 const CandidateMainStack = createStackNavigator(
     {
         MainCandidate: CandidateTabStack,
-        SideMenu: SideMenuStack,
+        SideMenu: SideMenu,
+        SubCategorySideMenu: SubCategorySideMenu,
         AccountWrapper: AccountWrapper,
         SearchResult: SearchResult,
+        ChangePassword: ChangePassword,
+        ChangeEmail: ChangeEmail
     },
     {
         navigationOptions: headerOptions
-
-    }
-);
-
-
-const SignupStack = createStackNavigator(
-    {
-        employeeCategorySelect: EmployeeCategorySelect,
-        employeeCredentialSignUp: EmployeeCredentialSignUp,
-        employeeInfo: EmployeeInfo,
-        workExp: WorkExp,
-        employerCredentialSignUp : EmployerCredentialSignUp,
-        employerCategorySelect : EmployerCategorySelect,
-        signUp: Signup
-    },
-    {
-        initialRouteName: 'signUp',
-        headerMode: "none"
-
     }
 );
 
 const AuthenticationMainStack = createStackNavigator(
     {
         Signin: Signin,
-        Signup: SignupStack,
+        /*  Sign up related */
+        Signup: Signup,
+        employeeCategorySelect: EmployeeCategorySelect,
+        employeeCredentialSignUp: EmployeeCredentialSignUp,
+        employeeInfo: EmployeeInfo,
+        workExp: WorkExp,
+        employerCredentialSignUp : EmployerCredentialSignUp,
+        employerCategorySelect : EmployerCategorySelect,
+        /*********************/
         CredentialSignin: CredentialSignin,
         ForgotPassword: ForgotPassword,
         AccountWrapper: AccountWrapper,
-        ChangePassword: ChangePassword,
-        ChangeEmail: ChangeEmail
     },
     {
         initialRouteName: 'AccountWrapper'
@@ -216,9 +182,21 @@ function setHeaderTabItems(navigation) {
         ),
         headerTitleStyle: {flex: 1, textAlign: 'center'}
     };
-    // Otherwise, simply set header title to route name
+    // For all other screens, do not show category menu icon
     else return {
         headerTitle,
+        headerLeft: (
+            <View>
+            </View>
+        ),
+        headerRight: (
+            <MaterialCommunityIcons.Button
+                name="account"
+                backgroundColor="transparent"
+                color="black"
+                onPress={() => navigation.push("AccountWrapper")}/>
+        ),
+        headerTitleStyle: {flex: 1, textAlign: 'center'}
     };
 }
 

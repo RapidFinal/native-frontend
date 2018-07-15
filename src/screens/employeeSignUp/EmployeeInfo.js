@@ -2,7 +2,7 @@ import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
-import {FlatList, ScrollView, StyleSheet, View} from "react-native";
+import {ScrollView, StyleSheet, View} from "react-native";
 import {
     Button,
     Container, Content,
@@ -19,6 +19,8 @@ import {
 } from "../../components/";
 import {withContext} from "../../context/withContext";
 import DatabaseService from "../../api/databaseService";
+import Tags from "react-native-tags";
+import hoistStatics from "recompose/hoistStatics";
 
 const MyAwesomeButton = ({onPress, children}) => (
     <Button
@@ -30,11 +32,34 @@ const MyAwesomeButton = ({onPress, children}) => (
     </Button>
 )
 
+const SuggestedTags = ({suggestedTags, func}) => (
+    <Tags
+        readonly
+        initialTags={suggestedTags}
+        onTagPress={(index, tagLabel, event) => func(tagLabel)}
+        containerStyle={{justifyContent: "center"}}
+        tagContainerStyle={{width: "30%", alignItems: 'center', height: 40}}
+        tagTextStyle={{fontSize: 16}}
+    />
+)
+
 class EmployeeInfo extends React.Component {
 
     static propTypes = {
+        // tags: PropTypes.array,
+        // degree: PropTypes.string,
+        // error: PropTypes.object,
+        // suggestionTags: PropTypes.array,
+        // statusId: PropTypes.string
+    };
 
-    }
+    static navigationOptions = () => {
+        return ({
+            title: 'Sign up (Employee)',
+            headerTitleStyle: {flex: 1, textAlign: 'center'},
+            headerRight: () => <View></View>,
+        })
+    };
 
     state = {
         tags: [
@@ -43,6 +68,7 @@ class EmployeeInfo extends React.Component {
             ""
         ],
         degree: "",
+        statusId: "",
         error: {
             message: "Required",
             tags: [
@@ -51,10 +77,9 @@ class EmployeeInfo extends React.Component {
                 false
             ],
             degree: false,
-            status: false,
+            statusId: false,
         },
         suggestionTags: [],
-        statusId: "",
     };
 
 
@@ -82,10 +107,9 @@ class EmployeeInfo extends React.Component {
 
     handleChange = (name) => (event) => {
         if (typeof name === "number") {
-            const {tags} = this.state;
+            const tags = this.state.tags.slice();
             tags[name] = event.nativeEvent.text;
             this.setState({tags})
-            this.validate(name)
         }
         else {
             this.setState({
@@ -95,26 +119,20 @@ class EmployeeInfo extends React.Component {
     };
 
     validate = (errorField) => {
-        const {error, tags, degree, statusId} = this.state;
+        const {tags, error} = this.state;
 
         if (typeof errorField === "number" && tags[errorField] === '') {
             error.tags[errorField] = true;
         }
-        else if (errorField === "degree" && degree === '') {
-            error.degree = true;
-        }
-        else if (statusId === "") {
-            error.status = true;
+        else if (this.state[errorField] === "") {
+            error[errorField] = true;
         }
         else {
             if (typeof errorField === "number") {
                 error.tags[errorField] = false
             }
-            else if (errorField === "degree") {
-                error.degree = false
-            }
             else {
-                error.status = false
+                error[errorField] = false
             }
         }
         this.setState({error})
@@ -124,32 +142,32 @@ class EmployeeInfo extends React.Component {
         const {tags, degree, statusId} = this.state;
         let flag = true;
         for (let index = 0; index < tags.length; index++) {
-            if (tags[index] === '') {
+            if (tags[index] === "") {
                 this.validate(index);
                 flag = false;
             }
-        };
-        if (degree === '') {
+        }
+        if (degree === "") {
             this.validate("degree");
             flag = false
         }
         if (statusId === "") {
-            this.validate("status")
+            this.validate("statusId");
             flag = false
         }
-
         return flag;
     };
 
     attemptSubmit = () => {
         const {tags, degree, statusId} = this.state;
         const {navigation, setContext, context} = this.props;
+        const employee = {...context.employee};
 
         if (this.passAllFlags()) {
-            context.employee.tags = tags;
-            context.employee.degree = degree;
+            employee.tags = tags;
+            employee.degree = degree;
             setContext({
-                employee: context.employee,
+                employee: employee,
                 statusId: statusId
             });
 
@@ -158,25 +176,24 @@ class EmployeeInfo extends React.Component {
     }
 
     setStatusState = (statusId) => {
-        const {error} = this.state;
-        error.status = false;
+        const error = {...this.state.error};
+        error.statusId = false;
         this.setState({
             statusId: statusId,
             error: error
         });
-    }
+    };
 
 
 
-    putTagInTextInput = (tag) => (e) => {
-        const {tags, error} = this.state
-        let flag = false;
+    putTagInTextInput = (tag) => {
+        const error = {...this.state.error};
+        const tags = this.state.tags.splice();
         for (let index = 0; index < tags.length; index++) {
             if (tags[index] === tag) {
                 break;
             }
             else if (tags[index] === '') {
-                flag = true;
                 tags[index] = tag
 
                 error.tags[index] = false;
@@ -198,14 +215,9 @@ class EmployeeInfo extends React.Component {
                     <ScrollView>
                         <SignUpForm>
                             <H3>Your top skills</H3>
-                            <Text style={styles.text}>Suggestion of popular tags for </Text>
+                            <Text style={styles.text}>Suggestion of popular tags</Text>
 
-                            <View style={styles.container}>
-                                {
-                                    suggestionTags.map(v => (<MyAwesomeButton
-                                         onPress={this.putTagInTextInput}>{v}</MyAwesomeButton>))
-                                }
-                            </View>
+                            <SuggestedTags suggestedTags={suggestionTags} func={this.putTagInTextInput}/>
 
                             {tags.map((tag, index) => (
                                 <TextInput
@@ -222,7 +234,7 @@ class EmployeeInfo extends React.Component {
                             <View style={styles.marginVertical}>
                                 <TextInputWithLabel
                                     label={"Degree"}
-                                    placeholder={"Degree"}
+                                    placeholder={"B.S. in Marketing"}
                                     value={degree}
                                     onChange={this.handleChange("degree")}
                                     hasError={error.degree}
@@ -231,8 +243,8 @@ class EmployeeInfo extends React.Component {
                                 />
                             </View>
                             <Text>Status</Text>
-                            <StatusDropdown func={this.setStatusState} hasError={error.status}/>
-                            {error.status ? <Text style={styles.error}>{error.message}</Text> : null}
+                            <StatusDropdown func={this.setStatusState} hasError={error.statusId}/>
+                            {error.statusId ? <Text style={styles.error}>{error.message}</Text> : null}
                             <NextButton
                                 onPress={() => this.attemptSubmit()}
                             />
@@ -270,4 +282,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default compose(withContext) (EmployeeInfo)
+export default hoistStatics(compose(withContext)) (EmployeeInfo)
