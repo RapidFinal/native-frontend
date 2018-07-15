@@ -48,13 +48,15 @@ class ViewProfile extends React.Component {
                 navigation.state.params.scrollToTop()
             }
             else {
-                navigation.navigate('View', { uid: Authentication.currentUser().uid});
+                console.log('else')
+                navigation.navigate('View', { uid: Authentication.currentUser().uid, update: Math.random()});
             }
         }
     });
 
     componentDidMount() {
         this.props.navigation.setParams({
+            fetchData: this.fetchData.bind(this),
             scrollToTop: this.scrollToTop.bind(this)
         })
     }
@@ -63,7 +65,8 @@ class ViewProfile extends React.Component {
         this.scrollView.scrollTo({x: 0, y: 0, animated: true})
     }
 
-    componentWillMount() {
+    fetchData() {
+        console.log("fetching data..")
         let db = new DatabaseService
         let uid = ""
         let paramUid = this.props.navigation.getParam('uid')
@@ -85,11 +88,36 @@ class ViewProfile extends React.Component {
                 skillSets: result.skillSet,
                 ready: true
             })
-
         }).catch((error) => {
             console.log(error)
         })
     }
+
+    resetState() {
+        this.setState({
+            ready: false,
+            imgUrl: "",
+            fullName: "",
+            description: "",
+            status: "",
+            experiences: [],
+            skillSets: [],
+            projects: [],
+            tags: [],
+        })
+    }
+
+    initializeState() {
+        this.resetState()
+        this.fetchData()
+    }
+
+    didBlurSubscription = this.props.navigation.addListener(
+        'didFocus',
+        payload => {
+            this.initializeState()
+        }
+    );
 
     getAllTags(tagIds) {
         let db = new DatabaseService
@@ -104,10 +132,8 @@ class ViewProfile extends React.Component {
         })
     }
 
-
     render() {
         const {imgUrl, fullName, status, description, experiences, skillSets, projects, tags, ready} = this.state;
-
         return (
             <ScrollView contentContainerStyle={styles.ScrollContainer} ref={scrollView => this.scrollView = scrollView}>
                 {
