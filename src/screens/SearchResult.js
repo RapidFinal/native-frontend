@@ -17,13 +17,17 @@ class SearchResult extends React.Component {
             title: 'Search Results',
             headerTitleStyle: {flex: 1, textAlign: 'center'},
             headerRight: <View></View>,
-        })
+        });
     };
 
     state = {
         textInput: "",
         loading: true,
         results: [],
+    }
+
+    goToProfile = (userID) => {
+	this.props.navigation.navigate("View", {userID});
     }
 
     componentDidMount() {
@@ -34,7 +38,7 @@ class SearchResult extends React.Component {
         Search.search(searchTerm)
         .then((d) => {
             this.setState({results: d, loading: false, textInput: searchTerm},
-                () => {console.log('newstate', this.state)})
+			  () => {console.log('newstate', this.state);});
         }).catch((e) => console.error(e));
     }
 
@@ -43,18 +47,18 @@ class SearchResult extends React.Component {
         return (
             <Content contentContainerStyle={styles.ScrollContainer}>
                 {
-                    !loading ? <DataLoaded results={results} /> : <DataLoading />
+                    !loading ? <DataLoaded results={results} onPress={this.goToProfile} /> : <DataLoading />
                 }
             </Content>
-        )
+        );
     }
 
 }
 
-const DataLoaded = ({results}) => (
+const DataLoaded = ({results, onPress}) => (
     <View style={styles.MainContainer}>
         <Text>Search Results</Text>
-        <SearchCard results={results}/>
+        <SearchCard results={results} onPress={onPress}/>
     </View>
 )
 
