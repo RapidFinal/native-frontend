@@ -73,19 +73,21 @@ class DatabaseService {
     firebase.database().ref("employeeInfo/" + uid + "/experiences/").push(value)
   }
 
-  // tags = ["java", "python"]
-  createEmployeeProjects(uid, progName, progDesc, date, tags) {
+  // links: {youtube: www.youtube.com
+  //         website: www.helloworld.com}
+  // tag: ["java", "python"]
+  createEmployeeProjects(uid, progName, progDesc, date, tags, links) {
     this.getAllTags().then((allTags) => {
       let progId = firebase.database().ref("employeeInfo/" + uid + "/projects/").push().key;
       let tagIds = [];
       tags.forEach(tag => {
-        if ( allTags[tag] !== null) {
-          let tagId = allTags[tag];
+        if ( typeof(allTags[tag]) !== 'undefined') {
+          let tagId = allTags[tag]
           tagIds.push(tagId);
           this.addProjectIdToTag(uid, progId, tagId);
         } else {
           let tagId = firebase.database().ref("tags/").push().key;
-          tagIds.push(allTags[tag]);
+          tagIds.push(tagId);
           firebase.database().ref("tags/" + tagId + "/").set({tagName: tag});
           this.addProjectIdToTag(uid, progId, tagId)
         }
@@ -98,6 +100,15 @@ class DatabaseService {
         tagIds: tagIds
       };
       firebase.database().ref("employeeInfo/" + uid + "/projects/" + progId +"/").set(value);
+
+      if (links !== null) {
+        Object.entries(links).forEach(
+          ([type, link]) => {
+            let val = {type: type,
+              link: link};
+            firebase.database().ref("employeeInfo/" + uid + "/projects/" + progId + "/links/").push(val);
+          })
+      }
     });
   }
 
