@@ -11,7 +11,7 @@ class Initial extends React.Component {
     componentDidMount() {
         const db = new DatabaseService;
         const navigation = this.props.navigation;
-        Authentication.onAuthStateChanged((currentUser) => {
+        this.unsubscribe = Authentication.onAuthStateChanged((currentUser) => {
             if (currentUser) db.getUserRole(currentUser.uid).then((result) => {
                 if (result === "employer") navigation.navigate("MainEmployer");
                 else if (result === "employee") navigation.navigate("MainCandidate");
@@ -26,6 +26,10 @@ class Initial extends React.Component {
             });
             else navigation.navigate("Auth");
         })
+    }
+
+    componentWillUnmount(){
+        this.unsubscribe()
     }
 
     render(){

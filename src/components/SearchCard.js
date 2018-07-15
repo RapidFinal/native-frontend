@@ -3,7 +3,7 @@ import compose from 'recompose/compose';
 import PropTypes from 'prop-types';
 import { StyleSheet, SafeAreaView, View } from 'react-native';
 import { Container, Content, Card, CardItem, Thumbnail, Text, Button, Left, Body, Right } from 'native-base';
-import Icon from 'react-native-vector-icons/FontAwesome'
+import Icon from 'react-native-vector-icons/FontAwesome';
 import Tags from 'react-native-tags';
 
 class SearchCard extends Component {
@@ -39,13 +39,13 @@ class SearchCard extends Component {
                     <CardItem bordered>
                         <Left>
                             <Thumbnail style={{width: 105, height: 105, borderRadius: 105/2}}
-                                       source={{uri: i.imgUrl}}/>
+                                       source={ (i.imgUrl) ? {uri: i.imgUrl} : require('../static/placeholder.png')}/>
                             <Body>
                                 <Text>{i.firstName} {i.lastName}</Text>
                                 <Text note style={{fontSize: 12, color: "black"}}>{i.status} <Icon name='circle' color='green' style={{fontSize: 12, color: 'green'}}/></Text>
                                 <Text note style={{fontSize: 12}}>{i.major}</Text>
                                 <Tags
-                                    initialTags={["java", "css"]}
+                                    initialTags={(i.tags) ? i.tags : []}
                                     readonly={true}
                                     tagTextStyle={{fontSize: 11}}
                                     onTagPress={() => {return null;}}

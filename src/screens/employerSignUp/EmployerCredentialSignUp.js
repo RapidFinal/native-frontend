@@ -1,6 +1,5 @@
 import React from 'react';
 import compose from 'recompose/compose'
-import PropTypes from 'prop-types'
 import {ScrollView, StyleSheet, View} from "react-native";
 import {Container} from "native-base";
 import {
@@ -17,10 +16,8 @@ import hoistStatics from "recompose/hoistStatics";
 class EmployerCredentialSignUp extends React.Component {
 
     static propTypes = {
-        credential: PropTypes.object,
-        error: PropTypes.object,
-        dummyPassword: PropTypes.string
-    };
+
+    }
 
     static navigationOptions = () => {
         return ({
@@ -56,8 +53,7 @@ class EmployerCredentialSignUp extends React.Component {
                 password: "Required",
                 confirmPassword: "Required",
             }
-        },
-        dummyPassword : "000000"
+        }
     };
 
     handleChange = (name) => (event) => {
@@ -109,22 +105,15 @@ class EmployerCredentialSignUp extends React.Component {
     }
 
     attemptSignUp = async () => {
-        const {credential, dummyPassword} = this.state;
+        const {credential} = this.state;
+
         const {navigation} = this.props;
 
         if (this.passAllFlags()) {
-            const {email, password} = {
-                email: credential.email,
-                password: dummyPassword
-            };
-
-            CredentialAuthentication.signin({email, password}).
-            then(() => {
-                this.setError("email", "Email already in use")
-                CredentialAuthentication.signout();
-            }).
-            catch(error => {
-                if (error.code === "auth/user-not-found") {
+            const email = {email: credential.email};
+            try {
+                const result = await CredentialAuthentication.fetchSignInMethodsForEmail(email);
+                if (result.length === 0) {
                     const employer = {
                         firstName: credential.firstName,
                         lastName: credential.lastName,
@@ -135,13 +124,15 @@ class EmployerCredentialSignUp extends React.Component {
                     this.props.setContext({employer: employer});
                     navigation.navigate("employerCategorySelect")
                 }
-                else if (error.code === "auth/invalid-email") {
-                    this.setError("email", "Email is not valid")
-                }
                 else {
                     this.setError("email", "Email already in use")
                 }
-            })
+            }
+            catch (error) {
+                if (error.code === "auth/invalid-email") {
+                    this.setError("email", "Email is not valid")
+                }
+            }
         }
     };
 
@@ -221,6 +212,7 @@ class EmployerCredentialSignUp extends React.Component {
                         />
                         <NextButton
                             onPress={this.attemptSignUp}
+                            // onPress={()=>this.props.navigation.navigate("employerCategorySelect")}
                         />
                     </SignUpForm>
                 </ScrollView>

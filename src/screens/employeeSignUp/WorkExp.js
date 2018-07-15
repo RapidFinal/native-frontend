@@ -141,7 +141,6 @@ class WorkExp extends React.Component {
 
         try {
             const auth = await CredentialAuthentication.signup({email, password});
-            // uid, firstName, lastName, desc, statusId, tags, imgUrl, categories, experiences, degree
             // uid, firstName, lastName, desc, statusId, tags, categories, experiences, major
             DatabaseService.createEmployeeInfo(
                 auth.user._user.uid,
@@ -152,7 +151,7 @@ class WorkExp extends React.Component {
                 employee.tags,
                 selectedCategories,
                 workExps,
-                employee.degree,
+                employee.major,
             )
             setContext({employee: null});
             navigation.navigate("MainCandidate")
