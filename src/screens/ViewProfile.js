@@ -40,7 +40,7 @@ class ViewProfile extends React.Component {
         return ({
             title: 'View',
             headerTitleStyle: {flex: 1, textAlign: 'center'},
-            headerRight: () => <View></View>,
+            headerRight: <View></View>,
         })
     };
 

@@ -11,7 +11,6 @@ class AccountWrapper extends React.Component {
         return ({
             title: 'Account Management',
             headerTitleStyle: {flex: 1, textAlign: 'center'},
-            //headerRight: () => <View></View>,, /* Will not center properly after pressing logout */
         })
     };
 

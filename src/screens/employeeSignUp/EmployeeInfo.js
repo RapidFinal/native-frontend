@@ -57,7 +57,7 @@ class EmployeeInfo extends React.Component {
         return ({
             title: 'Sign up (Employee)',
             headerTitleStyle: {flex: 1, textAlign: 'center'},
-            headerRight: () => <View></View>,
+            headerRight: <View></View>,
         })
     };
 

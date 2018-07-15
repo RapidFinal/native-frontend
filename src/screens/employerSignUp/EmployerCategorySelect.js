@@ -1,7 +1,7 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import {StyleSheet, Text,} from "react-native";
+import {StyleSheet, Text, View} from "react-native";
 import {Toast, Button, Container} from "native-base";
 import Stepper from "../../components/Stepper";
 import CategoriesSelection from "../../components/CategoriesSelection";
@@ -25,7 +25,7 @@ class EmployerCategorySelect extends React.Component {
         return ({
             title: 'Sign up (Employer)',
             headerTitleStyle: {flex: 1, textAlign: 'center'},
-            headerRight: () => <View></View>,
+            headerRight: <View></View>,
         })
     };
 

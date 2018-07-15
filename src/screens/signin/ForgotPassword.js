@@ -31,7 +31,7 @@ class ForgotPassword extends React.Component {
         return ({
             title: 'Forgot Password',
             headerTitleStyle: {flex: 1, textAlign: 'center'},
-            headerRight: () => <View></View>,
+            headerRight: <View></View>,
         })
     };
 
