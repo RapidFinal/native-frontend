@@ -98,6 +98,8 @@ class ViewProfile extends React.Component {
                 this.setState(prevState => ({
                     tags: [...prevState.tags, tagName]
                 }))
+            }).catch((error) => {
+                console.log(error)
             })
         })
     }
