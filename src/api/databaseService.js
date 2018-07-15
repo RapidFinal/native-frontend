@@ -43,7 +43,8 @@ class DatabaseService {
         statusId: statusId,
         tagIds: tagIds,
         major: major,
-        role: "employee"
+        role: "employee",
+        liked: 0
       };
       firebase.database().ref("employeeInfo/" + uid + "/").set(value);
       firebase.database().ref("userRole/" + uid + "/").set({role: "employee"});
