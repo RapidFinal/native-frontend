@@ -6,13 +6,12 @@ import CategoryCard from "../components/CategoryCard";
 import DatabaseService from "../api/databaseService";
 import CircularProfilePhoto from "../components/CircularProfilePhoto";
 import {Authentication} from '../api'
+import EditButton from "../components/EditButton";
 
-class ViewEmployerProfile extends React.Component {
 
-    static navigationOptions = () => ({
-        title: 'View'
-    });
+class EditEmployerProfile extends React.Component {
 
+    //Copy from ViewEmployer Profile
     static propTypes = {
         imgUrl: PropTypes.string,
         fullName: PropTypes.string,
@@ -26,7 +25,6 @@ class ViewEmployerProfile extends React.Component {
         companyName:"",
         categories:[],
         ready:false, //for setting spinner
-
     };
 
     componentWillMount() {
@@ -54,11 +52,12 @@ class ViewEmployerProfile extends React.Component {
                 <View style={styles.MainContainer}>
                     <CircularProfilePhoto url={imgUrl} diameter={150}/>
 
-                    <Text style={styles.ProfileName}>{fullName}</Text>
-                    <Text style={
-                        {fontWeight:'bold'}}
-                    >
-                        Work at : {companyName}
+                    <Text style={styles.ProfileName}>
+                        {fullName}
+                    </Text>
+
+                    <Text style={styles.Description}>
+                        Work at {companyName}
                     </Text>
 
                     <CategoryCard categories={categories}/>
@@ -70,14 +69,11 @@ class ViewEmployerProfile extends React.Component {
 }
 
 const styles = StyleSheet.create({
-    ScrollContainer: {
-        paddingVertical: 20,
-    },
-
     MainContainer: {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
+
     },
 
     ProfileName: {
@@ -85,6 +81,11 @@ const styles = StyleSheet.create({
         fontSize: 26,
     },
 
+    Description: {
+        marginTop: 20,
+        maxWidth: '90%',
+        textAlign: 'center'
+    }
 });
 
-export default compose()(ViewEmployerProfile)
+export default compose()(EditEmployerProfile)

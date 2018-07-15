@@ -2,7 +2,7 @@ import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
 import {StyleSheet, Text, View, Button} from "react-native";
-import SubCategoryItem from './SubCategoryItem'
+import SubCategoryItem from './SubCategoryList'
 
 class CategoryCard extends React.Component {
 
@@ -13,7 +13,7 @@ class CategoryCard extends React.Component {
         return (
             <View style={styles.MainContainer}>
                 <Text style={styles.Title}>Categories</Text>
-                {/*{console.log(categories)}*/}
+
                 {categories.map((value, index) => {
                     if (index === this.props.categories.length -1) {
                         return (
