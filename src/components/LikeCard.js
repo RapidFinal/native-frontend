@@ -56,20 +56,20 @@ class LikeCard extends Component {
         );
         else {
             return (
-                <SafeAreaView style={{
-                    flex: 1,
-                }}>
-                    <Content style={{flex: 1}}>
+                <SafeAreaView style={styles.container}>
+                    <Content style={styles.container}>
                         { this.state.profiles.map( (i, d) =>
                             <Card key={d}>
                                 <CardItem bordered button onPress={this.showActionSheet.bind(this,d)}>
                                     <Left>
-                                        <Thumbnail style={{width: 105, height: 105, borderRadius: 105/2}}
+                                        <Thumbnail style={styles.thumbnail}
                                                    source={ (i.imgUrl) ? {uri: i.imgUrl} : require('../static/placeholder.png')}/>
                                         <Body>
                                         <Text>{i.firstName} {i.lastName}</Text>
-                                        <Text note style={{fontSize: 12, color: "black"}}>{i.status} <Icon name='circle' color='green' style={{fontSize: 12, color: 'green'}}/></Text>
-                                        <Text note style={{fontSize: 12}}>{i.major}</Text>
+                                        <Text note style={styles.statusText}>
+                                            {i.status} <Icon name='circle' color='green' style={{fontSize: 12, color: 'green'}}/>
+                                        </Text>
+                                        <Text note style={styles.majorText}>{i.major}</Text>
                                         <Tags
                                             initialTags={(i.tags) ? i.tags : []}
                                             readonly={true}
@@ -166,6 +166,24 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    container: {
+        flex: 1
+    },
+    thumbnail: {
+        width: 105,
+        height: 105,
+        borderRadius: 105/2
+    },
+    statusText:{
+        fontSize: 12,
+        color: 'black'
+    },
+    majorText: {
+        fontSize: 12
+    },
+    tagText: { // Not currently used due to throwing warning
+        fontSize: 11
     }
 });
 
