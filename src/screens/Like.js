@@ -24,17 +24,42 @@ class Like extends React.Component {
     componentDidMount() {
         const db = new DatabaseService;
         const currentUser = Authentication.currentUser();
-        const likeProfilesInfo = [];
+
         //db.likedEmployee(currentUser.uid, "woHMJwCUIigvifkWduoRAzedYS93");
         //db.likedEmployee(currentUser.uid, "xsxm38N1FrbRKdUzYSmUZX9NlqN2");
+
         db.getLikedEmployee(currentUser.uid).then(async (likeProfiles) => {
+            /*** BEGIN infoTasks ***/
+            // Create infoTasks (promises) to get likeProfileInfo for all uid
+            const infoTasks = [];
             for (let uid in likeProfiles) {
-                let employeeInfo = await db.getEmployeeInfo(uid);
-                employeeInfo["uid"] = uid;
-                likeProfilesInfo.push(employeeInfo);
+                let infoTask = new Promise(async (resolve) => {
+                    const likeProfileInfo = await db.getEmployeeInfo(uid); // Must get employeeInfo first, before you can get tagIds
+                    likeProfileInfo["uid"] = uid;
+                    /*** BEGIN tagTasks ***/
+                    // Create tagTasks (promises) to get tagName for all tagsIds (for currentUid)
+                    const tagTasks = [];
+                    for (let tagId in likeProfileInfo.tagIds) {
+                        let tagTask = new Promise ((resolve) => {
+                            resolve(db.getTagName(likeProfileInfo.tagIds[tagId]));
+                        });
+                        tagTasks.push(tagTask);
+                    }
+                    // After adding all tagTasks (promises) to the list, wait for all of them to resolve
+                    // Return a list of tagNames, which is stored in employeeInfo
+                    await Promise.all(tagTasks).then((tagNames) => likeProfileInfo["tags"] = tagNames);
+                    /*** END tagTask ***/
+                    resolve(likeProfileInfo);
+                });
+                infoTasks.push(infoTask);
             }
+            // After adding all infoTasks (promises) to the list, wait for all of them to resolve
+            // Return a list of profileInfos
+            let likeProfileInfos = [];
+            await Promise.all(infoTasks).then((infos) => likeProfileInfos = infos);
+            /*** END infoTasks ***/
             this.setState({
-                profiles: likeProfilesInfo,
+                profiles: likeProfileInfos,
                 loading: false
             });
         });
