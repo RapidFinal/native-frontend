@@ -16,8 +16,10 @@ class Initial extends React.Component {
                 if (result === "employer") navigation.navigate("MainEmployer");
                 else if (result === "employee") navigation.navigate("MainCandidate");
                 else /* invalid or null */ {
-                    alert("Invalid user role for current user");
-                    navigation.navigate("AccountWrapper")
+                    if (!currentUser.additionalUserInfo.isNewUser) {
+                        alert("Invalid user role for current user");
+                        navigation.navigate("AccountWrapper")
+                    }
                 }
             }).catch((error) => {
                 console.log(error);
