@@ -288,8 +288,18 @@ class DatabaseService {
     return ret;
   }
 
-  updateEmployeeLiked(uid, val){
-    firebase.database().ref("employeeInfo/" + uid + "/liked/").set(val);
+  /* All employeeInfo must be created with the node "liked: 0"*/
+  updateEmployeeLiked(uid, operator){
+    firebase.database().ref("employeeInfo/" + uid + "/liked/").transaction((currentVal) => {
+      if (currentVal !== null) {
+        if (operator === "increment") currentVal++;
+        else if (operator === "decrement") currentVal--
+      }
+      else {
+        // run commitSuicide.exe
+      }
+      return currentVal;
+    });
   }
 
   getEmployeeLiked(uid) {
@@ -411,9 +421,7 @@ class DatabaseService {
 
   likedEmployee(employerUid, employeeUid){
     this.getLikedEmployee(employerUid).then((list) => {
-      this.getEmployeeLiked(employeeUid).then((liked) => {
-        this.updateEmployeeLiked(employeeUid, liked+1)
-      });
+      this.updateEmployeeLiked(employeeUid, "increment");
       if (typeof(list[employeeUid]) === 'undefined'){
         list[employeeUid] = true;
         firebase.database().ref("employerInfo/" + employerUid + "/likedEmployee/").set(list);
@@ -424,14 +432,8 @@ class DatabaseService {
 
   unLikedEmployee(employerUid, employeeUid){
     this.getLikedEmployee(employerUid).then((list) => {
-      this.getEmployeeLiked(employeeUid).then((liked) => {
-        this.updateEmployeeLiked(employeeUid, liked-1)
-      });
+      this.updateEmployeeLiked(employeeUid, "decrement");
       firebase.database().ref("employerInfo/" + employerUid + "/likedEmployee/" + employeeUid + "/").remove();
-    });
-
-    this.getEmployeeLiked(employeeUid).then((liked) => {
-      this.updateEmployeeLiked(uid, liked-1)
     });
   }
 
