@@ -5,6 +5,8 @@ import {StyleSheet, Image, View, Text, ScrollView} from "react-native";
 import CategoryCard from "../components/CategoryCard";
 import DatabaseService from "../api/databaseService";
 import CircularProfilePhoto from "../components/CircularProfilePhoto";
+import {Authentication} from '../api'
+
 
 class ViewEmployerProfile extends React.Component {
 
@@ -30,7 +32,8 @@ class ViewEmployerProfile extends React.Component {
 
     componentWillMount() {
         let db = new DatabaseService
-        let uid = this.props.uid
+        // let uid = this.props.uid //Discuss with Hart(for now)
+        let uid = Authentication.currentUser().uid
         db.getEmployerInfo(uid).then((result) => {
             this.setState({
                 imgUrl: result.imgUrl,
