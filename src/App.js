@@ -34,7 +34,7 @@ class App extends React.Component {
             email: "",
             password: "",
             tags: [],
-            degree: "",
+            major: "",
         },
         statusId: "",
         selectedCategories:{},

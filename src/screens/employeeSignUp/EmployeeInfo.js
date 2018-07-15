@@ -47,7 +47,7 @@ class EmployeeInfo extends React.Component {
 
     static propTypes = {
         tags: PropTypes.array,
-        degree: PropTypes.string,
+        major: PropTypes.string,
         error: PropTypes.object,
         suggestionTags: PropTypes.array,
         statusId: PropTypes.string
@@ -67,7 +67,7 @@ class EmployeeInfo extends React.Component {
             "",
             ""
         ],
-        degree: "",
+        major: "",
         statusId: "",
         error: {
             message: "Required",
@@ -76,7 +76,7 @@ class EmployeeInfo extends React.Component {
                 false,
                 false
             ],
-            degree: false,
+            major: false,
             statusId: false,
         },
         suggestionTags: [],
@@ -139,7 +139,7 @@ class EmployeeInfo extends React.Component {
     };
 
     passAllFlags = () => {
-        const {tags, degree, statusId} = this.state;
+        const {tags, major, statusId} = this.state;
         let flag = true;
         for (let index = 0; index < tags.length; index++) {
             if (tags[index] === "") {
@@ -147,8 +147,8 @@ class EmployeeInfo extends React.Component {
                 flag = false;
             }
         }
-        if (degree === "") {
-            this.validate("degree");
+        if (major === "") {
+            this.validate("major");
             flag = false
         }
         if (statusId === "") {
@@ -159,13 +159,13 @@ class EmployeeInfo extends React.Component {
     };
 
     attemptSubmit = () => {
-        const {tags, degree, statusId} = this.state;
+        const {tags, major, statusId} = this.state;
         const {navigation, setContext, context} = this.props;
         const employee = {...context.employee};
 
         if (this.passAllFlags()) {
             employee.tags = tags;
-            employee.degree = degree;
+            employee.major = major;
             setContext({
                 employee: employee,
                 statusId: statusId
@@ -203,7 +203,7 @@ class EmployeeInfo extends React.Component {
     }
 
     render() {
-        const {tags, degree, error, suggestionTags} = this.state; // to easily access state put desire variable in the curly brace so it may become const {variable} = this.state;
+        const {tags, major, error, suggestionTags} = this.state; // to easily access state put desire variable in the curly brace so it may become const {variable} = this.state;
         return (
             <Container>
                 <Content>
@@ -232,13 +232,13 @@ class EmployeeInfo extends React.Component {
 
                             <View style={styles.marginVertical}>
                                 <TextInputWithLabel
-                                    label={"Degree"}
-                                    placeholder={"B.S. in Marketing"}
-                                    value={degree}
-                                    onChange={this.handleChange("degree")}
-                                    hasError={error.degree}
+                                    label={"Major"}
+                                    placeholder={"Major"}
+                                    value={major}
+                                    onChange={this.handleChange("major")}
+                                    hasError={error.major}
                                     errorMessage={error.message}
-                                    onBlur={() => this.validate("degree")}
+                                    onBlur={() => this.validate("major")}
                                 />
                             </View>
                             <Text>Status</Text>
