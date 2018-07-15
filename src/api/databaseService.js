@@ -576,22 +576,27 @@ class DatabaseService {
   //     }]
   static getAllCategories() {
     return new Promise((resolve, reject) => {
-      firebase.database().ref("categories/").once('value').then(function(snapshot) {
-        // console.log(snapshot.val());
-        let ret = [];
-        snapshot.forEach(cat => {
-          let tmpObj = {};
-          let tmpArray = [];
-          Object.entries(cat.val().subCategories).forEach(([key, info]) => {
-            tmpArray.push({subCategoryId: key, subCategoryName: info.subCategoryName})
-          });
-          tmpObj.subCategory = tmpArray;
-          tmpObj.categoryId = cat.key;
-          tmpObj.categoryName = cat.val().categoryName;
-          ret.push(tmpObj);
-        });
-        resolve(ret);
-      });
+      firebase.database().ref("categories/").once('value')
+          .then(function(snapshot) {
+            // console.log(snapshot.val());
+            const ret = [];
+            snapshot.forEach(cat => {
+              const tmpObj = {};
+              const tmpArray = [];
+              Object.entries(cat.val().subCategories).forEach(([key, info]) => {
+                tmpArray.push({subCategoryId: key, subCategoryName: info.subCategoryName})
+              });
+              tmpObj.subCategory = tmpArray;
+              tmpObj.categoryId = cat.key;
+              tmpObj.categoryName = cat.val().categoryName;
+              ret.push(tmpObj);
+            });
+            resolve(ret);
+          })
+          .catch((e) => {
+            // TODO: Handle error
+              reject(e)
+          })
     });
   }
 
