@@ -361,8 +361,19 @@ class DatabaseService {
     firebase.database().ref("employerInfo/" + uid + "/deacription").set(desc);
   }
 
+  // cat = map of categoey-subcategory that selected
+  // {
+  //   "categoryId1": ["subcategoryId1", "subcategoryId2", "subcategoryId3"],
+  //   "categoryId2": ["subcategoryId1", "subcategoryId2", "subcategoryId3"]
+  // }
   updateEmployerCategories(uid, cat) {
-
+    Object.entries(cat).forEach(
+      ([categoryId, subCatIds]) => {
+        let val = {};
+        val[categoryId] = {subCategoryIds: subCatIds};
+        firebase.database().ref("employerInfo/" + uid + "/categories/").set(val);
+      }
+    );
   }
 
   // ret = {firstName: "Alice", lastName:"Smith", companyName: "MUIC", imgUrl,
