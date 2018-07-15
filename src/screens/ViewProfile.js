@@ -1,7 +1,8 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import {StyleSheet, Image, View, Text, ScrollView} from "react-native";
+import {StyleSheet, View, Text, ScrollView} from "react-native";
+import {Spinner} from 'native-base';
 import StatusText from '../components/StatusText';
 import ExperiencesCard from '../components/ExperiencesCard';
 import SkillSetsCard from '../components/SkillSetsCard';
@@ -33,7 +34,8 @@ class ViewProfile extends React.Component {
         experiences: [],
         skillSets: [],
         projects: [],
-        tags: []
+        tags: [],
+        scrollView: null
 
     };
 
@@ -43,17 +45,36 @@ class ViewProfile extends React.Component {
         headerRight: <View></View>,
         tabBarOnPress: () => {
             if(navigation.isFocused()){
-                // Do nothing
+                navigation.state.params.scrollToTop()
             }
             else {
-                navigation.navigate('View', { userID: Authentication.currentUser().uid});
+                console.log('else')
+                navigation.navigate('View', { uid: Authentication.currentUser().uid, update: Math.random()});
             }
         }
     });
 
-    componentWillMount() {
+    componentDidMount() {
+        this.props.navigation.setParams({
+            fetchData: this.fetchData.bind(this),
+            scrollToTop: this.scrollToTop.bind(this)
+        })
+    }
+
+    scrollToTop() {
+        this.scrollView.scrollTo({x: 0, y: 0, animated: true})
+    }
+
+    fetchData() {
+        console.log("fetching data..")
         let db = new DatabaseService
-        let uid = this.props.uid
+        let uid = ""
+        let paramUid = this.props.navigation.getParam('uid')
+        if (paramUid !== null || paramUid !== "" || typeof(paramUid) !== "undefined") {
+            uid = paramUid
+        } else {
+            uid = this.props.uid
+        }
         db.getEmployeeInfo(uid).then((result) => {
             console.log(result)
             this.getAllTags(result.tagIds)
@@ -67,11 +88,36 @@ class ViewProfile extends React.Component {
                 skillSets: result.skillSet,
                 ready: true
             })
-
         }).catch((error) => {
             console.log(error)
         })
     }
+
+    resetState() {
+        this.setState({
+            ready: false,
+            imgUrl: "",
+            fullName: "",
+            description: "",
+            status: "",
+            experiences: [],
+            skillSets: [],
+            projects: [],
+            tags: [],
+        })
+    }
+
+    initializeState() {
+        this.resetState()
+        this.fetchData()
+    }
+
+    didBlurSubscription = this.props.navigation.addListener(
+        'didFocus',
+        payload => {
+            this.initializeState()
+        }
+    );
 
     getAllTags(tagIds) {
         let db = new DatabaseService
@@ -80,34 +126,46 @@ class ViewProfile extends React.Component {
                 this.setState(prevState => ({
                     tags: [...prevState.tags, tagName]
                 }))
+            }).catch((error) => {
+                console.log(error)
             })
         })
     }
 
-
     render() {
-        const {imgUrl, fullName, status, description, experiences, skillSets, projects, tags} = this.state;
-
+        const {imgUrl, fullName, status, description, experiences, skillSets, projects, tags, ready} = this.state;
         return (
-            <ScrollView contentContainerStyle={styles.ScrollContainer}>
-                <View style={styles.MainContainer}>
-                    <CircularProfilePhoto url={imgUrl} diameter={150}/>
-                    <Text style={styles.ProfileName}>
-                        {fullName}
-                    </Text>
-                    <StatusText status={status}/>
-                    <Text style={styles.Description}>
-                        {description}
-                    </Text>
-                    <TagsSection tags={tags}/>
-                    <ExperiencesCard experiences={experiences}/>
-                    <SkillSetsCard skills={skillSets}/>
-                    <ProjectSection projects={projects} navigation={this.props.navigation}/>
-                </View>
+            <ScrollView contentContainerStyle={styles.ScrollContainer} ref={scrollView => this.scrollView = scrollView}>
+                {
+                    ready ? (
+                        <View style={styles.MainContainer}>
+                            <CircularProfilePhoto url={imgUrl} diameter={150}/>
+                            <Text style={styles.ProfileName}>
+                                {fullName}
+                            </Text>
+                            <StatusText status={status}/>
+                            <Text style={styles.Description}>
+                                {description}
+                            </Text>
+                            <TagsSection tags={tags}/>
+                            <ExperiencesCard experiences={experiences}/>
+                            <SkillSetsCard skills={skillSets}/>
+                            <ProjectSection projects={projects} navigation={this.props.navigation}/>
+                        </View>
+                    ) : (
+                        <DataLoading/>
+                    )
+                }
             </ScrollView>
         )
     }
 }
+
+const DataLoading = ({}) => (
+    <View style={styles.MainContainer}>
+        <Spinner color={"black"} />
+    </View>
+);
 
 const styles = StyleSheet.create({
     ScrollContainer: {
