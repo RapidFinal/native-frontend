@@ -38,7 +38,7 @@ const SuggestedTags = ({suggestedTags, func}) => (
         initialTags={suggestedTags}
         onTagPress={(index, tagLabel, event) => func(tagLabel)}
         containerStyle={{justifyContent: "center"}}
-        tagContainerStyle={{width: "30%", alignItems: 'center', height: 40}}
+        tagContainerStyle={{alignItems: 'center', height: 40}}
         tagTextStyle={{fontSize: 16}}
     />
 )
@@ -46,11 +46,11 @@ const SuggestedTags = ({suggestedTags, func}) => (
 class EmployeeInfo extends React.Component {
 
     static propTypes = {
-        // tags: PropTypes.array,
-        // degree: PropTypes.string,
-        // error: PropTypes.object,
-        // suggestionTags: PropTypes.array,
-        // statusId: PropTypes.string
+        tags: PropTypes.array,
+        degree: PropTypes.string,
+        error: PropTypes.object,
+        suggestionTags: PropTypes.array,
+        statusId: PropTypes.string
     };
 
     static navigationOptions = () => {
@@ -187,8 +187,7 @@ class EmployeeInfo extends React.Component {
 
 
     putTagInTextInput = (tag) => {
-        const error = {...this.state.error};
-        const tags = this.state.tags.splice();
+        const {error, tags} = this.state;
         for (let index = 0; index < tags.length; index++) {
             if (tags[index] === tag) {
                 break;
