@@ -45,9 +45,21 @@ class Edit_Test extends React.Component {
     }
 
     handleTagsChange = (tags) => {
-
-      console.log("tags:", tags);
       this.setState({ projectTags: tags })
+    }
+
+    handleTagTextChange = (tag) => {
+      this.setState({ projectTag: tag })
+
+      const lastTyped = tag.charAt(tag.length - 1);
+      const parseWhen = [',', ' ', ';', '\n'];
+
+      if (parseWhen.indexOf(lastTyped) > -1) {
+        this.setState({
+          projectTags: [...this.state.projectTags, this.state.projectTag],
+          projectTag: "",
+        });
+      }
     }
 
     render(){
@@ -109,7 +121,7 @@ class Edit_Test extends React.Component {
                   onChange={this.handleTagsChange}
                   labelExtractor={(tag) => tag}
                   text={this.state.projectTag}
-                  onChangeText={(projectTag) => this.setState({ projectTag })}
+                  onChangeText={this.handleTagTextChange}
                   tagContainerStyle={{justifyContent: "center"}}
               />
             </View>
