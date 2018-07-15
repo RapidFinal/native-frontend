@@ -29,7 +29,7 @@ class EmployerCategorySelect extends React.Component {
         const {employer, selectedCategories} = this.props.context
         const {navigation, setContext} = this.props;
         
-        if (Object.keys(selectedCategories).length ===0){
+        if (Object.keys(selectedCategories).length <1){
             Toast.show({
                 text: "Please select at least one category!",
                 buttonText: "Okay",
