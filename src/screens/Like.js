@@ -1,7 +1,7 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import {StyleSheet, Text, View} from "react-native";
+import {StyleSheet, View} from "react-native";
 import LikeCard from "../components/LikeCard";
 import DatabaseService from "../api/databaseService";
 import {Authentication} from '../api'
@@ -83,26 +83,11 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingVertical: 20,
     },
-    NothingContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-    }
-
 });
 
-const DataLoaded = ({results}) => {
-    if (results.length === 0) return (
-        <View style = {styles.NothingContainer}>
-            <Text>
-                Nothing here, but us chickens
-            </Text>
-        </View>
-    );
-     else {
-        return (<LikeCard results={results}/>)
-    }
-};
+const DataLoaded = ({results}) => (
+    <LikeCard results={results}/>
+);
 
 const DataLoading = ({}) => (
     <View>
