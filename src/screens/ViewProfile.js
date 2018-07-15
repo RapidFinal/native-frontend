@@ -44,16 +44,24 @@ class ViewProfile extends React.Component {
         tabBarOnPress: () => {
             if(navigation.isFocused()){
                 // Do nothing
+                console.log("focused")
             }
             else {
-                navigation.navigate('View', { userID: Authentication.currentUser().uid});
+                console.log("else")
+                navigation.navigate('View', { uid: Authentication.currentUser().uid});
             }
         }
     });
 
     componentWillMount() {
         let db = new DatabaseService
-        let uid = this.props.uid
+        let uid = ""
+        let paramUid = this.props.navigation.getParam('uid')
+        if (paramUid !== null || paramUid !== "" || typeof(paramUid) !== "undefined") {
+            uid = paramUid
+        } else {
+            uid = this.props.uid
+        }
         db.getEmployeeInfo(uid).then((result) => {
             console.log(result)
             this.getAllTags(result.tagIds)
