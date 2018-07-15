@@ -3,12 +3,21 @@ import compose from 'recompose/compose'
 import hoistStatics from 'recompose/hoistStatics'
 import PropTypes from 'prop-types'
 import {Alert, StyleSheet, View} from "react-native";
-import {Container, Content, Form, Input, Spinner} from "native-base";
+import {Container, Toast, Input} from "native-base";
 import {Item} from "native-base";
 import {CredentialAuthentication} from "../../api/authentication"
 import IonIcons from 'react-native-vector-icons/Ionicons'
 import {withContext} from "../../context/withContext";
 import ClickButton from "../../components/ClickButton";
+
+
+const TextInput = ({text, onChange, value, ...rest}) => (
+    <View style={styles.textInput}>
+        <Item regular>
+            <Input placeholder={text} onChange={onChange} value={value} {...rest}/>
+        </Item>
+    </View>
+);
 
 class ChangeEmail extends React.Component {
 
@@ -36,52 +45,57 @@ class ChangeEmail extends React.Component {
         })
     };
 
+    showToast = ({text, duration=3500, type="success", buttonText="Okey"}) => {
+        Toast.show({
+            text,
+            duration,
+            type,
+            buttonText
+        });
+    }
+
     handleClick = async () => {
         const {password, newEmail, confirmEmail} = this.state
         try {
-            CredentialAuthentication.changeEmail({password, newEmail, confirmEmail})
-                .then(() => {
-                    Alert.alert(
-                        'Success',
-                        `Email has been updated`,
-                        [
-                            {text: 'OK'},
-                        ],
-                        { cancelable: false }
-                    );
-                })
+            const result = await CredentialAuthentication.changeEmail({password, newEmail, confirmEmail})
+            this.showToast({
+                text: "Email address has been updated",
+            })
         } catch (e) {
-            Alert.alert(
-                'Failure',
-                `There was an error`,
-                [
-                    {text: 'OK'},
-                ],
-                { cancelable: false }
-            );
 
-            console.log(e)
+            if (e.code === undefined && e.message != null){
+                this.showToast({
+                    text: e.message,
+                    type: "warning",
+                });
+            }else if (e.code === "auth/wrong-password"){
+                this.showToast({
+                    text: e.message,
+                    type: "warning",
+                });
+            } else {
+                this.showToast({
+                    text: "There was an error updating email address",
+                    type: "warning",
+                });
+            }
+
+
+            console.log(e.code)
+            console.log(e.message)
         }
-    }
+    };
 
     render(){
         const {password, newEmail, confirmEmail} = this.state;
         return (
-            <Container>
-                <Content>
-                    <Form>
-                        <Item>
-                            <Input placeholder="Password" style={styles.input}  value={password} onChange={this.handleStateChange("password")}/>
-                        </Item>
-                        <Item>
-                            <Input placeholder="New Email"  value={newEmail} onChange={this.handleStateChange("newEmail")}/>
-                        </Item>
-                        <Item>
-                            <Input placeholder="Confirm Eamil"  value={confirmEmail} onChange={this.handleStateChange("confirmEmail")}/>
-                        </Item>
-                    </Form>
-                    <ClickButton onPress={this.handleClick}>Change Email</ClickButton>
-                </Content>
+            <Container style={{paddingTop: "20%"}}>
+                <TextInput text={"New Email Address"} onChange={this.handleStateChange("newEmail")} value={newEmail} />
+                <TextInput text={"Confirm Email Address"} onChange={this.handleStateChange("confirmEmail")} value={confirmEmail} />
+                <TextInput text={"Current Password"} onChange={this.handleStateChange("password")} value={password} secureTextEntry={true} />
+                <Container style={styles.buttonContainer}>
+                    <ClickButton rounded onPress={this.handleClick}>Change Email Address</ClickButton>
+                </Container>
             </Container>
         )
     }
@@ -89,14 +103,23 @@ class ChangeEmail extends React.Component {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        paddingLeft: '2.5%',
-        paddingRight: '2.5%',
-        paddingTop: "4%"
+    form: {
+        paddingTop: '15%'
     },
-    input: {
-        backgroundColor: 'white'
+    textInput: {
+        marginBottom: "2%",
+        marginLeft: "0%",
+        backgroundColor: "white"
+    },
+    container: {
+        paddingLeft: "10%",
+        paddingRight: "10%"
+    },
+    buttonContainer: {
+        paddingLeft: "10%",
+        paddingRight: "10%"
     }
+
 });
 
 export default hoistStatics(compose(withContext)) (ChangeEmail)
