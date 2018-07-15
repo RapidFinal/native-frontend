@@ -3,7 +3,7 @@ import compose from 'recompose/compose'
 import hoistStatics from 'recompose/hoistStatics'
 import PropTypes from 'prop-types'
 import {StyleSheet, Alert} from "react-native";
-import {Container, Content, Form, Input, Spinner, Text, View} from "native-base";
+import {Container,Input, View, Toast} from "native-base";
 import {Item} from "native-base";
 import {CredentialAuthentication} from "../../api/authentication"
 import IonIcons from 'react-native-vector-icons/Ionicons'
@@ -62,10 +62,23 @@ class CredentialSignin extends React.Component {
                 this.props.navigation.navigate("MainEmployer")
             }
         } catch (e) {
-            Alert.alert("There was an error signing in")
+
             console.log(e.code)
+
+            let message = "Incorrect Email or Password"
+            if (e.code === "auth/invalid-email"){
+                message = "Incorrect email format"
+            }
+
+            Toast.show({
+                text: message,
+                buttonText: "Okay",
+                type: "warning",
+                duration: 3500
+            })
+
         }
-    }
+    };
 
     render(){
         const {email, password} = this.state;
