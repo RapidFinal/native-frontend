@@ -28,6 +28,7 @@ class ProjectDetail extends React.Component {
 const styles = StyleSheet.create({
     MainContainer: {
         marginTop: 15,
+        width: '100%',
         paddingTop: 10,
         paddingBottom: 10,
         paddingRight: 10,
@@ -37,7 +38,7 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 5,
         borderBottomLeftRadius: 5,
         borderWidth: 1,
-        borderColor: '#15BBCF'
+        borderColor: '#15BBCF',
         backgroundColor: '#F3F3F3',
     },
 
