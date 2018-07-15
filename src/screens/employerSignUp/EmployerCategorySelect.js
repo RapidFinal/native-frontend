@@ -16,11 +16,6 @@ class EmployerCategorySelect extends React.Component {
     static propTypes = {
     };
 
-    componentDidMount(){
-       this.setState({
-           selectedCategories:this.props.context.selectedCategories
-       })
-    }
     static navigationOptions = () => {
         return ({
             title: 'Sign up (Employer)',
