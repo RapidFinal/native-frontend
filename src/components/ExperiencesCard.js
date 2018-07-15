@@ -22,7 +22,7 @@ class ExperiencesCard extends React.Component {
                                 style={styles.Item}
                                 title={value.title}
                                 desc={value.description}
-                                key={value.title}
+                                key={index.toString()}
                             />
                         )
                     } else {
@@ -31,7 +31,7 @@ class ExperiencesCard extends React.Component {
                                 style={[styles.Item, styles.DividerLine]}
                                 title={value.title}
                                 desc={value.description}
-                                key={value.title}
+                                key={index.toString()}
                             />
                         )
                     }
