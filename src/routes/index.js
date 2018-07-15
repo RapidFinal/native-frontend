@@ -1,6 +1,6 @@
 import Edit_Test from "../screens/Edit_Test";
 import LikeScreen from "../screens/Like";
-import ViewProfile from "../screens/ViewProfile";
+import ViewCandidateProfile from "../screens/ViewProfile";
 import Signup from "../screens/Signup";
 import SearchResult from "../screens/SearchResult";
 import AccountWrapper from "../screens/accountmanagement/AccountWrapper"
@@ -8,7 +8,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Home from '../screens/Home';
-import {createBottomTabNavigator, createStackNavigator, createSwitchNavigator, createDrawerNavigator} from "react-navigation";
+import {createBottomTabNavigator, createStackNavigator, createSwitchNavigator} from "react-navigation";
 import React from "react";
 import {
     EmployeeCategorySelect,
@@ -16,7 +16,6 @@ import {
     EmployeeInfo,
     WorkExp
 } from "../screens/employeeSignUp";
-import ProjectDetail from '../components/ProjectDetail';
 import {
     EmployerCategorySelect,
     EmployerCredentialSignUp,
@@ -31,58 +30,18 @@ import SubCategorySideMenu from "../components/SubCategorySideMenu"
 import ChangeEmail from "../screens/accountmanagement/ChangeEmail"
 import ChangePassword from "../screens/accountmanagement/ChangePassword"
 import ViewEmployerProfile from "../screens/ViewEmployerProfile"
+import {View} from "react-native";
+import Initial from "../screens/Initial";
 
-/* Changes both EmployerMainStack & CandidateMainStack */
-const headerOptions = ({navigation}) => ({
-    headerLeft: (
-        <FontAwesome.Button
-            name="navicon"
-            backgroundColor="transparent"
-            color="black"
-            onPress={() => navigation.push("SideMenu")}
-        />
-    ),
-    headerRight: (
-        <MaterialCommunityIcons.Button
-            name="account"
-            backgroundColor="transparent"
-            color="black"
-            onPress={() => navigation.push("AccountWrapper")}/>
-    ),
+/* REQUIRED in both EmployerMainStack & CandidateMainStack  */
+const headerOptions = () => ({
+    headerRight: <View></View>,
     headerTitleStyle: {flex: 1, textAlign: 'center'}
 });
 
-const ViewStack = createStackNavigator(
-    {
-        ViewProfile: ViewProfile,
-        ViewEmployerProfile : ViewEmployerProfile,
-        ProjectDetail: ProjectDetail
-    },
-    {
-        initialRouteName: 'ViewProfile',
-    }
-);
-
-const SideMenuStack = createStackNavigator (
-    {
-        SideMenu: SideMenu,
-        SubCategorySideMenu: SubCategorySideMenu
-    },
-    {
-
-        navigationOptions: {
-            headerTitleStyle: {
-                flex: 1,
-                textAlign: 'center'
-            },
-            title: "Category"
-        }
-    }
-);
-
 const EmployerTabStack = createBottomTabNavigator(
     {
-        View: ViewStack,
+        ViewEmployer: ViewEmployerProfile,
         Home: Home,
         Like: LikeScreen
     },
@@ -91,7 +50,7 @@ const EmployerTabStack = createBottomTabNavigator(
             tabBarIcon: ({focused, tintColor}) => {
                 const {routeName} = navigation.state;
                 let iconName;
-                if (routeName === 'View') {
+                if (routeName === 'ViewEmployer') {
                     iconName = `ios-contact${focused ? '' : '-outline'}`;
                 } else if (routeName === 'Home') {
                     iconName = `ios-home${focused ? '' : '-outline'}`;
@@ -109,7 +68,7 @@ const EmployerTabStack = createBottomTabNavigator(
 
 const CandidateTabStack = createBottomTabNavigator(
     {
-        View: ViewStack,
+        View: ViewCandidateProfile,
         Home: Home,
         Edit: Edit_Test,
     },
@@ -137,9 +96,13 @@ const CandidateTabStack = createBottomTabNavigator(
 const EmployerMainStack = createStackNavigator(
     {
         MainEmployer: EmployerTabStack,
-        SideMenu: SideMenuStack,
+        SideMenu: SideMenu,
+        SubCategorySideMenu: SubCategorySideMenu,
         AccountWrapper: AccountWrapper,
         SearchResult: SearchResult,
+        ChangePassword: ChangePassword,
+        ChangeEmail: ChangeEmail,
+        View: ViewCandidateProfile, // View on tabbar for employer, will go to their profile
     },
     {
         navigationOptions: headerOptions
@@ -149,62 +112,91 @@ const EmployerMainStack = createStackNavigator(
 const CandidateMainStack = createStackNavigator(
     {
         MainCandidate: CandidateTabStack,
-        SideMenu: SideMenuStack,
+        SideMenu: SideMenu,
+        SubCategorySideMenu: SubCategorySideMenu,
         AccountWrapper: AccountWrapper,
         SearchResult: SearchResult,
+        ChangePassword: ChangePassword,
+        ChangeEmail: ChangeEmail
     },
     {
         navigationOptions: headerOptions
-
-    }
-);
-
-
-const SignupStack = createStackNavigator(
-    {
-        employeeCategorySelect: EmployeeCategorySelect,
-        employeeCredentialSignUp: EmployeeCredentialSignUp,
-        employeeInfo: EmployeeInfo,
-        workExp: WorkExp,
-        employerCredentialSignUp : EmployerCredentialSignUp,
-        employerCategorySelect : EmployerCategorySelect,
-        signUp: Signup
-    },
-    {
-        initialRouteName: 'signUp',
-        headerMode: "none"
-
     }
 );
 
 const AuthenticationMainStack = createStackNavigator(
     {
         Signin: Signin,
-        Signup: SignupStack,
+        /*  Sign up related */
+        Signup: Signup,
+        employeeCategorySelect: EmployeeCategorySelect,
+        employeeCredentialSignUp: EmployeeCredentialSignUp,
+        employeeInfo: EmployeeInfo,
+        workExp: WorkExp,
+        employerCredentialSignUp : EmployerCredentialSignUp,
+        employerCategorySelect : EmployerCategorySelect,
+        /*********************/
         CredentialSignin: CredentialSignin,
         ForgotPassword: ForgotPassword,
         AccountWrapper: AccountWrapper,
-        ChangePassword: ChangePassword,
-        ChangeEmail: ChangeEmail
     },
     {
-        initialRouteName: 'AccountWrapper',
+        initialRouteName: 'AccountWrapper'
     }
 );
 
 EmployerTabStack.navigationOptions = ({ navigation }) => {
-    return setHeaderToRouteName(navigation);
+    return setHeaderTabItems(navigation);
 };
 
 CandidateTabStack.navigationOptions = ({navigation}) => {
-    return setHeaderToRouteName(navigation);
+    return setHeaderTabItems(navigation);
 };
 
-function setHeaderToRouteName(navigation) {
+/* Set each screen in the tab navigator to the route name.
+ * It'll adjust the route name if necessary.
+ * For home page, it'll show the side menu button on the top left.
+ */
+function setHeaderTabItems(navigation) {
     let {routeName} = navigation.state.routes[navigation.state.index];
     let headerTitle = routeName;
-    return {
+    // Adjust header title if necessary
+    if (routeName === "ViewEmployer") headerTitle = "View";
+    // Show category menu icon if in home page (+ set route name)
+    if (routeName === "Home") return {
         headerTitle,
+        headerLeft: (
+            <FontAwesome.Button
+                name="navicon"
+                backgroundColor="transparent"
+                color="black"
+                onPress={() => navigation.push("SideMenu")}
+            />
+        ),
+        headerRight: (
+            <MaterialCommunityIcons.Button
+                name="account"
+                backgroundColor="transparent"
+                color="black"
+                onPress={() => navigation.push("AccountWrapper")}/>
+        ),
+        headerTitleStyle: {flex: 1, textAlign: 'center'}
+    };
+    // For all other screens, do not show category menu icon
+    else return {
+        headerTitle,
+        headerLeft: (
+            <View>
+            </View>
+        ),
+        headerRight: (
+            <MaterialCommunityIcons.Button
+                name="account"
+                backgroundColor="transparent"
+                color="black"
+                onPress={() => navigation.push("AccountWrapper")}/>
+        ),
+        headerTitleStyle: {flex: 1, textAlign: 'center'}
     };
 }
 
@@ -213,9 +205,10 @@ MainStackNavigator = createSwitchNavigator(
         MainEmployer: EmployerMainStack,
         MainCandidate: CandidateMainStack,
         Auth: AuthenticationMainStack,
+        Initial: Initial
     },
     {
-        initialRouteName: 'Auth',
+        initialRouteName: 'Initial',
     }
 );
 

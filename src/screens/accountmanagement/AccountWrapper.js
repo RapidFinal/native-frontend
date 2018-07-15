@@ -6,6 +6,14 @@ import AccountManagement from './AccountManagement'
 import {Signin} from "../signin/index"
 
 class AccountWrapper extends React.Component {
+
+    static navigationOptions = () => {
+        return ({
+            title: 'Account Management',
+            headerTitleStyle: {flex: 1, textAlign: 'center'},
+        })
+    };
+
     render(){
         const { context: {authenticated}, ...rest } = this.props;
         if (authenticated) {

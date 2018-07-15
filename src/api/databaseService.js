@@ -24,13 +24,13 @@ class DatabaseService {
     this.getAllTags().then((allTags) => {
       let tagIds = [];
       tags.forEach(tag => {
-        if ( allTags[tag] !== null) {
+        if (typeof(allTags[tag]) !== 'undefined') {
           let tagId = allTags[tag];
           tagIds.push(tagId);
           this.addUidToTag(uid, tagId);
         } else {
           let tagId = firebase.database().ref("tags/").push().key;
-          tagIds.push(allTags[tag]);
+          tagIds.push(tagId);
           firebase.database().ref("tags/" + tagId + "/").set({tagName: tag});
           this.addUidToTag(uid, tagId)
         }
@@ -57,7 +57,7 @@ class DatabaseService {
 
       if (experiences !== null) {
         experiences.forEach(exp => {
-          this.createEmployeeExperiences(uid, exp);
+          this.createEmployeeExperiences(uid, exp.title, exp.desc);
         })
       }
     });
@@ -127,7 +127,7 @@ class DatabaseService {
           let ex = [];
           if (typeof(val.experiences) !== 'undefined'){
             Object.entries(val.experiences).forEach( ([id, info]) => {
-              ex.push({title: info.title, description: info.desc});
+              ex.push({title: info.experience_title, description: info.experience_description});
             });
           } else {
             ex = [];
@@ -512,14 +512,14 @@ class DatabaseService {
       this.getEmployeeFromSubCategory(catId).then(employeeIds => {
         if (typeof(employeeIds[uid]) === 'undefined'){
           employeeIds[uid] = true;
-          firebase.database().ref("categories/" + catId + "/subCategories/" + subCatId + "/").set({employeeIds: employeeIds});
+          firebase.database().ref("categories/" + catId + "/subCategories/" + subCatId + "/").update({employeeIds: employeeIds});
         }
       });
     });
   }
 
   // return array of uids
-  getEmployeeFromSubCategory(catId, subCatId) {
+  static getEmployeeFromSubCategory(catId, subCatId) {
     return new Promise((resolve, reject) => {
       firebase.database().ref("categories/" + catId + "/subCategories/" + subCatId + "/").once('value').then(function(snapshot) {
         if (snapshot.hasChild("employeeIds")){

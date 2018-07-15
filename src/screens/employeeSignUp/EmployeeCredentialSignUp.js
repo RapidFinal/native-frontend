@@ -1,8 +1,8 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import {ScrollView, StyleSheet} from "react-native";
-import {Button, Container, Text} from "native-base";
+import {ScrollView, StyleSheet, View} from "react-native";
+import {Container} from "native-base";
 import {
     NextButton,
     SignUpForm,
@@ -11,20 +11,27 @@ import {
 } from "../../components";
 import {withContext} from "../../context/withContext";
 import {CredentialAuthentication} from "../../api/authentication"
+import hoistStatics from "recompose/hoistStatics";
 
 // To set context:
 // this.props.setContext({authenticated: false});
 // To get context state:
 // this.props.context.authenticated
 
-String.prototype.capitalize = function() {
-    return this.charAt(0).toUpperCase() + this.slice(1);
-};
-
 class EmployeeCredentialSignUp extends React.Component {
 
     static propTypes = {
+        credential: PropTypes.object,
+        error: PropTypes.object,
+        dummyPassword: PropTypes.string
+    };
 
+    static navigationOptions = () => {
+        return ({
+            title: 'Sign up (Employee)',
+            headerTitleStyle: {flex: 1, textAlign: 'center'},
+            headerRight: <View></View>,
+        })
     };
 
     state = {
@@ -43,32 +50,33 @@ class EmployeeCredentialSignUp extends React.Component {
                 password: false,
                 confirmPassword: false,
             },
-            errorMessageFirstName: "Required",
-            errorMessageLastName: "Required",
-            errorMessageEmail: "Required",
-            errorMessagePassword: "Required",
-            errorMessageConfirmPassword: "Required",
-        }
+            message: {
+                firstName: "Required",
+                lastName: "Required",
+                email: "Required",
+                password: "Required",
+                confirmPassword: "Required",
+            }
+        },
+        dummyPassword: "000000"
     };
 
     handleChange = (name) => (event) => {
-        const {credential} = this.state;
+        const credential = {...this.state.credential};
         credential[name] = event.nativeEvent.text;
         this.setState({credential});
     };
 
     setError = (errorField, message) => {
-        const {error} = this.state;
-        const capErrorField = String(errorField).capitalize();
+        const error = {...this.state.error};
         if (message !== null) {
             error.flags[errorField] = true;
-            const errorMessage = "errorMessage".concat(capErrorField);
-            error[errorMessage] = message;
+            error.message[errorField] = message;
             this.setState({error})
         }
         else {
             error.flags[errorField] = false;
-            this.setError({error})
+            this.setState({error})
         }
     };
 
@@ -102,47 +110,52 @@ class EmployeeCredentialSignUp extends React.Component {
     }
 
     attemptSignUp = async () => {
-        const {
-            firstName,
-            email,
-            lastName,
-            password
-        } = this.state.credential;
+        const {credential, dummyPassword} = this.state;
 
         const {navigation} = this.props;
 
         if (this.passAllFlags()) {
-            try {
-                const signup = await CredentialAuthentication.signup({email, password});
-                const employee = {
-                    firstName: firstName,
-                    lastName: lastName,
-                    email: email,
-                    password: password
-                };
-                this.props.setContext({employee: employee});
-                navigation.navigate("employeeCategorySelect")
-            } catch (error) {
-                if (error.code === "auth/invalid-email") {
-                    this.setError("email", "Email is not valid")
-                }
-                else if (error.code === "auth/email-already-in-use") {
+            const {email, password} = {
+                email: credential.email,
+                password: dummyPassword
+            };
+
+            CredentialAuthentication.signin({email, password}).
+                then(() => {
+                    // dummyPassword matches the real user password
                     this.setError("email", "Email already in use")
-                }
-            }
+                    CredentialAuthentication.signout();
+                }).
+                catch(error => {
+                    if (error.code === "auth/user-not-found") {
+                        const employee = {
+                            firstName: credential.firstName,
+                            lastName: credential.lastName,
+                            email: credential.email,
+                            password: credential.password
+                        };
+                        this.props.setContext({employee: employee});
+                        navigation.navigate("employeeCategorySelect")
+                    }
+                    else if (error.code === "auth/invalid-email") {
+                        this.setError("email", "Email is not valid")
+                    }
+                    else {
+                        this.setError("email", "Email already in use")
+                    }
+                })
         }
     };
 
     render(){
-        const {firstName, lastName, email, password, confirmPassword} = this.state.credential; // to easily access state put desire variable in the curly brace so it may become const {variable} = this.state;
         const {
-            errorMessageFirstName,
-            errorMessageLastName,
-            errorMessageEmail,
-            errorMessagePassword,
-            errorMessageConfirmPassword,
-            flags
-        } = this.state.error;
+            firstName,
+            lastName,
+            email,
+            password,
+            confirmPassword
+        } = this.state.credential; // to easily access state put desire variable in the curly brace so it may become const {variable} = this.state;
+        const {message, flags} = this.state.error;
         return (
             <Container>
                 <Stepper
@@ -158,7 +171,7 @@ class EmployeeCredentialSignUp extends React.Component {
                             hasError={flags.firstName}
                             onBlur={() => this.validate("firstName")}
                             onChange={this.handleChange("firstName")}
-                            errorMessage={errorMessageFirstName}
+                            errorMessage={message.firstName}
                         />
                         <TextInputWithLabel
                             label="Last name"
@@ -167,7 +180,7 @@ class EmployeeCredentialSignUp extends React.Component {
                             hasError={flags.lastName}
                             onBlur={() => this.validate("lastName")}
                             onChange={this.handleChange("lastName")}
-                            errorMessage={errorMessageLastName}
+                            errorMessage={message.lastName}
                         />
                         <TextInputWithLabel
                             label="Email"
@@ -176,7 +189,7 @@ class EmployeeCredentialSignUp extends React.Component {
                             hasError={flags.email}
                             onBlur={() => this.validate("email")}
                             onChange={this.handleChange("email")}
-                            errorMessage={errorMessageEmail}
+                            errorMessage={message.email}
                         />
                         <TextInputWithLabel
                             label="Password"
@@ -186,7 +199,7 @@ class EmployeeCredentialSignUp extends React.Component {
                             hasError={flags.password}
                             onBlur={() => this.validate("password")}
                             onChange={this.handleChange("password")}
-                            errorMessage={errorMessagePassword}
+                            errorMessage={message.password}
                         />
                         <TextInputWithLabel
                             label="Confirm Password"
@@ -196,7 +209,7 @@ class EmployeeCredentialSignUp extends React.Component {
                             hasError={flags.confirmPassword}
                             onBlur={() => this.validate("confirmPassword")}
                             onChange={this.handleChange("confirmPassword")}
-                            errorMessage={errorMessageConfirmPassword}
+                            errorMessage={message.confirmPassword}
                         />
                         <NextButton
                             onPress={this.attemptSignUp}
@@ -213,4 +226,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default compose(withContext) (EmployeeCredentialSignUp)
+export default hoistStatics(compose(withContext)) (EmployeeCredentialSignUp)

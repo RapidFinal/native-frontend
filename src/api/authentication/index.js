@@ -6,6 +6,10 @@ export const onAuthStateChanged = (cb) => {
     return firebase.auth().onAuthStateChanged(cb);
 };
 
+export const currentUser = () => {
+    return firebase.auth().currentUser;
+};
+
 export {
     CredentialAuthentication,
     FacebookAuthentication

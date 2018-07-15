@@ -1,7 +1,7 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import hoistStatics from 'recompose/hoistStatics'
-import {Alert} from 'react-native'
+import {Alert, View} from 'react-native'
 import PropTypes from 'prop-types'
 import {StyleSheet} from "react-native";
 import {Container, Input, Toast, View} from "native-base";
@@ -38,17 +38,8 @@ class ForgotPassword extends React.Component {
     static navigationOptions = ({navigation}) => {
         return ({
             title: 'Forgot Password',
-            headerLeft: (
-                <IonIcons.Button
-                    name="ios-arrow-back"
-                    backgroundColor="transparent"
-                    color={"black"}
-                    onPress={() => navigation.pop()}
-                />
-            ),
-            headerRight: (
-                null
-            )
+            headerTitleStyle: {flex: 1, textAlign: 'center'},
+            headerRight: <View></View>,
         })
     };
 

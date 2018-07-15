@@ -7,6 +7,7 @@ import Signup from './Signup'
 import ViewProfile from './ViewProfile'
 import ViewTimeline from './ViewTimeline'
 import AccountWrapper from './accountmanagement/AccountWrapper'
+import Initial from './Initial'
 
 export {
     AccountWrapper,
@@ -17,5 +18,6 @@ export {
     Signup,
     Signin,
     ViewTimeline,
-    ViewProfile
+    ViewProfile,
+    Initial
 }

@@ -7,96 +7,69 @@ import Modal from "react-native-modal";
 import {withContext} from "../context/withContext";
 import DatabaseService from "../api/databaseService";
 
-let categories=[];
-DatabaseService.getAllCategories().then(data=>{
-    categories = data;
-});
 
 class CategoriesSelection extends React.Component {
 
     static propTypes = {
-
     };
 
     state = {
         currentCategoryIndex : null,
         currentCategoryId :'',
-        isModalVisible:false,
-        // categories : [
-        //     {
-        //         categoryId: "cat1",
-        //         categoryName:"Graphic and Design",
-        //         subCategory:[
-        //             {
-        //                 subCategoryId: "subCat1",
-        //                 subCategoryName: "Logo"
-        //             },
-        //             {
-        //                 subCategoryId: "subCat2",
-        //                 subCategoryName: "Character Design"
-        //             },
-        //             {
-        //                 subCategoryId: "subCat3",
-        //                 subCategoryName: "Advertising Banner"
-        //             },
-        //         ]
-        //     },
-        //     {
-        //         categoryId: "cat2",
-        //         categoryName:"Web and Programming",
-        //         subCategory:[
-        //             {
-        //                 subCategoryId: "subCat1",
-        //                 subCategoryName: "HTML/CSS"
-        //             },
-        //             {
-        //                 subCategoryId: "subCat2",
-        //                 subCategoryName: "Web Development"
-        //             },
-        //             {
-        //                 subCategoryId: "subCat3",
-        //                 subCategoryName: "Mobile Application"
-        //             },
-        //         ]
-        //     }
-        // ],
-        categories: categories,
-
-        selectedCategories:this.props.context.selectedCategories
+        categories: [],
+        selectedCategories:{}
     };
 
+    componentWillMount(){
+        DatabaseService.getAllCategories().then(result=>{
+            this.setState({categories: result})
+        })
+    }
 
+    componentDidMount(){
+        let {selectedCategories}=this.props.context;
+        this.setState({
+            selectedCategories: selectedCategories,
+        })
+    }
 
-    _toggleModal = () =>
-        this.setState({ isModalVisible: !this.state.isModalVisible });
+    openModal=(index,categoryId)=>{
+        this.setState({
+            currentCategoryIndex: index,
+            currentCategoryId : categoryId,
+        })
+    }
+
+    closeModal=()=>{
+        this.setState({
+            currentCategoryIndex: null,
+            currentCategoryId : '',
+        })
+    }
+
 
     isSelectedKeyExist=(subKey)=>{
-        let selectedCategories = this.state.selectedCategories;
-        const categoryId = this.state.currentCategoryId; //check the currentCategory exist
-        if (selectedCategories.hasOwnProperty(categoryId)){
-            if(selectedCategories[categoryId].indexOf(subKey)>-1){
+        const {selectedCategories, currentCategoryId}= this.state;
+        if (selectedCategories.hasOwnProperty(currentCategoryId)){
+            if(selectedCategories[currentCategoryId].indexOf(subKey)>-1){
                 return true
             }
-            return false
         }
         return false
     }
 
     _toggleCheckbox = (subKey) =>{
-        const categoryId = this.state.currentCategoryId; //check the currentCategory exist
-        let selectedCategories = this.state.selectedCategories;
-        console.log(selectedCategories);
-        if(this.isSelectedKeyExist(subKey)){
-            const index = selectedCategories[categoryId].indexOf(subKey);
-            selectedCategories[categoryId].splice(index,1);
+        let {selectedCategories,currentCategoryId} = this.state;
+        if (selectedCategories.hasOwnProperty(currentCategoryId)){
+            const index = selectedCategories[currentCategoryId].indexOf(subKey);
+            if(selectedCategories[currentCategoryId].indexOf(subKey)>-1){
+                selectedCategories[currentCategoryId].splice(index,1);
+            }
+            else{selectedCategories[currentCategoryId].push(subKey)
+            }
         }
         else{
-            if(selectedCategories.hasOwnProperty(categoryId)){
-                selectedCategories[categoryId].push(subKey)
-            }
-            else{
-                selectedCategories[categoryId]=[subKey];
-            }
+            selectedCategories[currentCategoryId]=[subKey];
         }
         this.props.setContext({selectedCategories:selectedCategories})
     };
@@ -113,36 +86,24 @@ class CategoriesSelection extends React.Component {
         }
     };
 
-    displaySubCategoriesCheckbox =()=> {
-        let key = this.state.currentCategoryIndex; //now key = index of categories
-        let subCategories = this.state.categories[key].subCategory;
-        return subCategories.map((subCategory, index)=>(
-            <ListItem key={index}>
-                <CheckBox
-                    checked={this.isSelectedKeyExist(subCategory.subCategoryId)}
-                    onPress={()=>this._toggleCheckbox(subCategory.subCategoryId)}
-                />
-                <Body>
-                <Text> {subCategory.subCategoryName}</Text>
-                </Body>
-            </ListItem>
-
-        ));
-    };
-
-    displayModalContent = () =>{
-        if (this.state.isModalVisible){
-            return (
-                <View style={styles.modalContent}>
-                    {this.displaySubCategoriesCheckbox()}
-                </View>
-            );
+    renderSubCategoriesCheckbox =(index)=> {
+        if(index!==null){
+            let subCategories = this.state.categories[index].subCategory;
+            return subCategories.map((subCategory, idx)=>(
+                <ListItem key={idx}>
+                    <CheckBox
+                        checked={this.isSelectedKeyExist(subCategory.subCategoryId)}
+                        onPress={()=>this._toggleCheckbox(subCategory.subCategoryId)}
+                    />
+                    <Body>
+                    <Text> {subCategory.subCategoryName}</Text>
+                    </Body>
+                </ListItem>
+            ))
         }
     };
 
-    displayCategoriesButton= ()=>{
-        let categories = this.state.categories;
-
+    renderCategoriesButton= (categories)=>{
         return categories.map((category, index)=>(
             <Button
                 info
@@ -150,11 +111,7 @@ class CategoriesSelection extends React.Component {
                 key={index}
                 style={styles.categoryButton}
                 onPress={()=>{
-                    this.setState({
-                        currentCategoryIndex : index,
-                        currentCategoryId : category.categoryId
-                    });
-                    this._toggleModal();
+                    this.openModal(index,category.categoryId)
                 }}>
                 <Text style={styles.categoryTitle}>
                     {category.categoryName}
@@ -163,17 +120,20 @@ class CategoriesSelection extends React.Component {
         ));
     }
 
+
     render(){
+        const {categories, currentCategoryIndex} =this.state
         return (
             <Container>
                 <View style={
                     styles.categoryContainer}>
-                    {this.displayCategoriesButton()}
+                    {this.renderCategoriesButton(categories)}
+
                 </View>
 
                 <Modal
-                    isVisible={this.state.isModalVisible}
-                    onBackdropPress={this._toggleModal}
+                    isVisible={currentCategoryIndex !== null}
+                    onBackdropPress={()=>this.closeModal()}
                     scrollTo={this._handleScrollTo}
                     scrollOffset={this.state.scrollOffset}
                     style={styles.bottomModal}
@@ -184,8 +144,9 @@ class CategoriesSelection extends React.Component {
                             onScroll={this._handleOnScroll}
                             scrollEventThrottle={16}
                         >
-                            <View>
-                                {this.displayModalContent()}
+                            <View style={styles.modalContent}>
+                                {this.renderSubCategoriesCheckbox(currentCategoryIndex)}
+
                             </View>
                         </ScrollView>
                     </View>
@@ -233,11 +194,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 15,
         padding:5,
-    },
-    centerButton:{
-        alignSelf:'center',
-        padding:20,
-        margin:5
+
     },
     title:{
         color: 'black',

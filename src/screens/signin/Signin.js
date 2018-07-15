@@ -8,7 +8,7 @@ import IonIcons from 'react-native-vector-icons/Ionicons'
 import compose from 'recompose/compose'
 import hoistStatics from "recompose/hoistStatics";
 import {withContext} from "../../context/withContext";
-import {Body, Container, Left} from "native-base";
+import {Body, Container, Left, Toast} from "native-base";
 
 const FacebookLoginButton = ({children, ...rest}) => (
     <FontAwesome.Button name="facebook" backgroundColor="#3b5998" {...rest}>
@@ -41,25 +41,14 @@ class Signin extends React.Component {
         try {
             const currentUser = await FacebookAuthentication.facebookLogin();
         } catch (e) {
-            // TODO: Handle error
-            console.error(e)
+            if (e.code === "auth/account-exists-with-different-credential")
+                Toast.show({
+                    text: "Please login using email authentication",
+                    buttonText: "Okay",
+                    type: "danger"
+                })
+
         }
-    };
-
-    static navigationOptions = ({navigation}) => {
-        return ({
-            title: 'Signin',
-            headerLeft: (
-                <IonIcons.Button name="ios-arrow-back"
-                                 backgroundColor="transparent"
-                                 color={"black"}
-                                 onPress={() => navigation.pop()} />
-            ),
-            headerRight: (
-                null
-            )
-        })
-
     };
 
     render() {

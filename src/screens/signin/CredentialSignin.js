@@ -4,9 +4,10 @@ import hoistStatics from 'recompose/hoistStatics'
 import PropTypes from 'prop-types'
 import {StyleSheet, Alert} from "react-native";
 import {Container,Input, View, Toast} from "native-base";
+import {StyleSheet, View} from "react-native";
+import {Container, Input} from "native-base";
 import {Item} from "native-base";
 import {CredentialAuthentication} from "../../api/authentication"
-import IonIcons from 'react-native-vector-icons/Ionicons'
 import {withContext} from "../../context/withContext";
 import ClickButton from "../../components/ClickButton";
 
@@ -37,20 +38,11 @@ class CredentialSignin extends React.Component {
         })
     }
 
-    static navigationOptions = ({navigation}) => {
+    static navigationOptions = () => {
         return ({
-            title: 'Signin',
-            headerLeft: (
-                <IonIcons.Button
-                    name="ios-arrow-back"
-                    backgroundColor="transparent"
-                    color={"black"}
-                    onPress={() => navigation.pop()}
-                />
-            ),
-            headerRight: (
-                null
-            )
+            title: 'Sign in',
+            headerTitleStyle: {flex: 1, textAlign: 'center'},
+            headerRight: <View></View>,
         })
     };
 
