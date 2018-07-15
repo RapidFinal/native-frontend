@@ -8,12 +8,9 @@ import CircularProfilePhoto from "../components/CircularProfilePhoto";
 import {Authentication} from '../api'
 
 
-class ViewEmployerProfile extends React.Component {
+class EditEmployerProfile extends React.Component {
 
-    static navigationOptions = () => ({
-        title: 'View'
-    });
-
+    //Copy from ViewEmployer Profile
     static propTypes = {
         imgUrl: PropTypes.string,
         fullName: PropTypes.string,
@@ -27,7 +24,6 @@ class ViewEmployerProfile extends React.Component {
         companyName:"",
         categories:[],
         ready:false, //for setting spinner
-
     };
 
     componentWillMount() {
@@ -57,14 +53,10 @@ class ViewEmployerProfile extends React.Component {
                     <Text style={styles.ProfileName}>
                         {fullName}
                     </Text>
-                    <View style={{flex:1}}>
-                        <Text style={
-                            {fontWeight:'bold'}
-                        }>
-                            Work at : {companyName}
-                        </Text>
-                    </View>
 
+                    <Text style={styles.Description}>
+                        Work at {companyName}
+                    </Text>
 
                     <CategoryCard categories={categories}/>
                 </View>
@@ -75,14 +67,11 @@ class ViewEmployerProfile extends React.Component {
 }
 
 const styles = StyleSheet.create({
-    ScrollContainer: {
-        paddingVertical: 20,
-    },
-
     MainContainer: {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
+
     },
 
     ProfileName: {
@@ -97,4 +86,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default compose()(ViewEmployerProfile)
+export default compose()(EditEmployerProfile)
