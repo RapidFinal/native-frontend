@@ -7,11 +7,7 @@ import com.facebook.appevents.AppEventsLogger;
 import com.facebook.react.ReactApplication;
 import io.invertase.firebase.RNFirebasePackage;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
-import io.invertase.firebase.RNFirebasePackage;
-import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
-import io.invertase.firebase.RNFirebasePackage;
-import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import io.invertase.firebase.auth.RNFirebaseAuthPackage;
 import io.invertase.firebase.database.RNFirebaseDatabasePackage;
 

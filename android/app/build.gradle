@@ -137,10 +137,6 @@ android {
 }
 
 dependencies {
-    compile(project(':react-native-firebase')) {
-        transitive = false
-    }
-    compile project(':react-native-fbsdk')
     compile project(':react-native-vector-icons')
 
     implementation project(':react-native-fbsdk')
