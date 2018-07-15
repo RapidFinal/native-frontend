@@ -212,7 +212,6 @@ class EmployerCredentialSignUp extends React.Component {
                         />
                         <NextButton
                             onPress={this.attemptSignUp}
-                            // onPress={()=>this.props.navigation.navigate("employerCategorySelect")}
                         />
                     </SignUpForm>
                 </ScrollView>
