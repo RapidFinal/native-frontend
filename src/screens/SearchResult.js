@@ -27,7 +27,8 @@ class SearchResult extends React.Component {
     }
 
     goToProfile = (userID) => {
-	this.props.navigation.navigate("View", {userID});
+        console.log('navigateTo:', userID);
+        this.props.navigation.navigate("View", {userID});
     }
 
     componentDidMount() {

@@ -24,7 +24,7 @@ class SearchCard extends Component {
                 <Content style={styles.container}>
             { results.map( (i, d) =>
                 <Card key={d}>
-                    <CardItem button onPress={onPress}>
+                    <CardItem button onPress={() => onPress(i.uid)}>
                         <Left>
                             <Thumbnail style={styles.thumbnail}
                                        source={ (i.imgUrl) ? {uri: i.imgUrl} : require('../static/placeholder.png')}/>
