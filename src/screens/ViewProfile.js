@@ -9,6 +9,7 @@ import CircularProfilePhoto from '../components/CircularProfilePhoto';
 import ProjectSection from '../components/ProjectSection';
 import DatabaseService from '../api/databaseService';
 import TagsSection from '../components/TagsSection';
+import {Authentication} from '../api'
 
 class ViewProfile extends React.Component {
 
@@ -36,13 +37,19 @@ class ViewProfile extends React.Component {
 
     };
 
-    static navigationOptions = ({navigation}) => {
-        return ({
-            title: 'View',
-            headerTitleStyle: {flex: 1, textAlign: 'center'},
-            headerRight: () => <View></View>,
-        })
-    };
+    static navigationOptions = ({navigation}) => ({
+        title: 'View',
+        headerTitleStyle: {flex: 1, textAlign: 'center'},
+        headerRight: <View></View>,
+        tabBarOnPress: () => {
+            if(navigation.isFocused()){
+                // Do nothing
+            }
+            else {
+                navigation.navigate('View', { userID: Authentication.currentUser().uid});
+            }
+        }
+    });
 
     componentWillMount() {
         let db = new DatabaseService

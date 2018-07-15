@@ -127,7 +127,7 @@ class DatabaseService {
           let ex = [];
           if (typeof(val.experiences) !== 'undefined'){
             Object.entries(val.experiences).forEach( ([id, info]) => {
-              ex.push({title: info.title, description: info.desc});
+              ex.push({title: info.experience_title, description: info.experience_description});
             });
           } else {
             ex = [];
@@ -512,7 +512,7 @@ class DatabaseService {
       this.getEmployeeFromSubCategory(catId).then(employeeIds => {
         if (typeof(employeeIds[uid]) === 'undefined'){
           employeeIds[uid] = true;
-          firebase.database().ref("categories/" + catId + "/subCategories/" + subCatId + "/").set({employeeIds: employeeIds});
+          firebase.database().ref("categories/" + catId + "/subCategories/" + subCatId + "/").update({employeeIds: employeeIds});
         }
       });
     });

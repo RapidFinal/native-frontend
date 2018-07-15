@@ -31,7 +31,7 @@ class CredentialSignin extends React.Component {
         return ({
             title: 'Sign in',
             headerTitleStyle: {flex: 1, textAlign: 'center'},
-            headerRight: () => <View></View>,
+            headerRight: <View></View>,
         })
     };
 

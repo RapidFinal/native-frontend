@@ -1,6 +1,6 @@
 import React from 'react';
 import compose from 'recompose/compose'
-import {ScrollView, StyleSheet} from "react-native";
+import {ScrollView, StyleSheet, View} from "react-native";
 import {Button, Container, Text} from "native-base";
 import {
     NextButton,
@@ -27,7 +27,7 @@ class EmployerCredentialSignUp extends React.Component {
         return ({
             title: 'Sign up (Employer)',
             headerTitleStyle: {flex: 1, textAlign: 'center'},
-            headerRight: () => <View></View>,
+            headerRight: <View></View>,
         })
     };
 

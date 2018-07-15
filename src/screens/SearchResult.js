@@ -16,7 +16,7 @@ class SearchResult extends React.Component {
         return ({
             title: 'Search Results',
             headerTitleStyle: {flex: 1, textAlign: 'center'},
-            headerRight: () => <View></View>,
+            headerRight: <View></View>,
         })
     };
 

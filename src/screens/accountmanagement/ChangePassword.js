@@ -2,7 +2,7 @@ import React from 'react';
 import compose from 'recompose/compose'
 import hoistStatics from 'recompose/hoistStatics'
 import PropTypes from 'prop-types'
-import {Alert, StyleSheet} from "react-native";
+import {Alert, StyleSheet, View} from "react-native";
 import {Container, Content, Form, Input, Spinner} from "native-base";
 import {Item} from "native-base";
 import {CredentialAuthentication} from "../../api/authentication"
@@ -32,7 +32,7 @@ class ChangeEmail extends React.Component {
         return ({
             title: 'Change Password',
             headerTitleStyle: {flex: 1, textAlign: 'center'},
-            headerRight: () => <View></View>,
+            headerRight: <View></View>,
         })
     };
 

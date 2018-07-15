@@ -35,7 +35,7 @@ import Initial from "../screens/Initial";
 
 /* REQUIRED in both EmployerMainStack & CandidateMainStack  */
 const headerOptions = () => ({
-    headerRight: () => <View></View>,
+    headerRight: <View></View>,
     headerTitleStyle: {flex: 1, textAlign: 'center'}
 });
 

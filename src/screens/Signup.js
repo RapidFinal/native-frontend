@@ -14,7 +14,7 @@ class Signup extends React.Component {
         return ({
             title: 'Sign up',
             headerTitleStyle: {flex: 1, textAlign: 'center'},
-            headerRight: () => <View></View>,
+            headerRight: <View></View>,
         })
     };
 
