@@ -33,7 +33,8 @@ class ViewProfile extends React.Component {
         experiences: [],
         skillSets: [],
         projects: [],
-        tags: []
+        tags: [],
+        scrollView: null
 
     };
 
@@ -43,8 +44,7 @@ class ViewProfile extends React.Component {
         headerRight: <View></View>,
         tabBarOnPress: () => {
             if(navigation.isFocused()){
-                // Do nothing
-                console.log("focused")
+                navigation.state.params.scrollToTop()
             }
             else {
                 console.log("else")
@@ -52,6 +52,16 @@ class ViewProfile extends React.Component {
             }
         }
     });
+
+    componentDidMount() {
+        this.props.navigation.setParams({
+            scrollToTop: this.scrollToTop.bind(this)
+        })
+    }
+
+    scrollToTop() {
+        this.scrollView.scrollTo({x: 0, y: 0, animated: true})
+    }
 
     componentWillMount() {
         let db = new DatabaseService
@@ -97,7 +107,7 @@ class ViewProfile extends React.Component {
         const {imgUrl, fullName, status, description, experiences, skillSets, projects, tags} = this.state;
 
         return (
-            <ScrollView contentContainerStyle={styles.ScrollContainer}>
+            <ScrollView contentContainerStyle={styles.ScrollContainer} ref={scrollView => this.scrollView = scrollView}>
                 <View style={styles.MainContainer}>
                     <CircularProfilePhoto url={imgUrl} diameter={150}/>
                     <Text style={styles.ProfileName}>
