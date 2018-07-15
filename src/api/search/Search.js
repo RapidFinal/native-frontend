@@ -39,7 +39,7 @@ const searchByTag = async (tags, snapshot) => {
 const searchByName = async (name) => {
     let db = new DatabaseService;
     console.log(name);
-    return null;
+    return [];
 };
 
 export const search = async (searchString) => {
