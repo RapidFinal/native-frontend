@@ -85,7 +85,7 @@ class LikeCard extends Component {
                                     title= {i.firstName + " " + i.lastName}
                                     cancelButtonIndex={0}
                                     onPress={(buttonIndex) => {
-                                        if (buttonIndex === 1) this.goToProfile();
+                                        if (buttonIndex === 1) this.goToProfile(i.uid);
                                         if (buttonIndex === 2) this.showDeleteAlert(d);
                                     }}
                                 />
@@ -105,8 +105,8 @@ class LikeCard extends Component {
         this.actionSheetRefs[index].show()
     };
 
-    goToProfile = () => {
-        this.props.navigation.navigate("View");
+    goToProfile = (uid) => {
+        this.props.navigation.navigate('View', { uid: uid});
     };
 
     restoreProfileToDB = () => {
