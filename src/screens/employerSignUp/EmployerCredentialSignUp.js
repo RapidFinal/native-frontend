@@ -1,7 +1,7 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import {ScrollView, StyleSheet, View} from "react-native";
-import {Button, Container, Text} from "native-base";
+import {Container} from "native-base";
 import {
     NextButton,
     SignUpForm,
@@ -12,10 +12,6 @@ import {
 import {withContext} from "../../context/withContext";
 import {CredentialAuthentication} from "../../api/authentication";
 import hoistStatics from "recompose/hoistStatics";
-
-String.prototype.capitalize = function() {
-    return this.charAt(0).toUpperCase() + this.slice(1);
-};
 
 class EmployerCredentialSignUp extends React.Component {
 
@@ -114,18 +110,10 @@ class EmployerCredentialSignUp extends React.Component {
         const {navigation} = this.props;
 
         if (this.passAllFlags()) {
-            const {email, password} = {
-                email: credential.email,
-                password: credential.password,
-            };
-
-            CredentialAuthentication.signin({email, password}).
-            then(() => {
-                this.setError("email", "Email already in use")
-                CredentialAuthentication.signout();
-            }).
-            catch(error => {
-                if (error.code === "auth/user-not-found") {
+            const email = {email: credential.email};
+            try {
+                const result = await CredentialAuthentication.fetchSignInMethodsForEmail(email);
+                if (result.length === 0) {
                     const employer = {
                         firstName: credential.firstName,
                         lastName: credential.lastName,
@@ -136,13 +124,15 @@ class EmployerCredentialSignUp extends React.Component {
                     this.props.setContext({employer: employer});
                     navigation.navigate("employerCategorySelect")
                 }
-                else if (error.code === "auth/invalid-email") {
-                    this.setError("email", "Email is not valid")
-                }
                 else {
                     this.setError("email", "Email already in use")
                 }
-            })
+            }
+            catch (error) {
+                if (error.code === "auth/invalid-email") {
+                    this.setError("email", "Email is not valid")
+                }
+            }
         }
     };
 
