@@ -73,19 +73,21 @@ class DatabaseService {
     firebase.database().ref("employeeInfo/" + uid + "/experiences/").push(value)
   }
 
-  // tags = ["java", "python"]
-  createEmployeeProjects(uid, progName, progDesc, date, tags) {
+  // links: {youtube: www.youtube.com
+  //         website: www.helloworld.com}
+  // tag: ["java", "python"]
+  createEmployeeProjects(uid, progName, progDesc, date, tags, links) {
     this.getAllTags().then((allTags) => {
       let progId = firebase.database().ref("employeeInfo/" + uid + "/projects/").push().key;
       let tagIds = [];
       tags.forEach(tag => {
-        if ( allTags[tag] !== null) {
+        if ( typeof(allTags[tag]) !== 'undefined') {
           let tagId = allTags[tag];
           tagIds.push(tagId);
           this.addProjectIdToTag(uid, progId, tagId);
         } else {
           let tagId = firebase.database().ref("tags/").push().key;
-          tagIds.push(allTags[tag]);
+          tagIds.push(tagId);
           firebase.database().ref("tags/" + tagId + "/").set({tagName: tag});
           this.addProjectIdToTag(uid, progId, tagId)
         }
@@ -98,6 +100,15 @@ class DatabaseService {
         tagIds: tagIds
       };
       firebase.database().ref("employeeInfo/" + uid + "/projects/" + progId +"/").set(value);
+
+      if (links !== null) {
+        Object.entries(links).forEach(
+          ([type, link]) => {
+            let val = {type: type,
+              link: link};
+            firebase.database().ref("employeeInfo/" + uid + "/projects/" + progId + "/links/").push(val);
+          })
+      }
     });
   }
 
@@ -117,14 +128,12 @@ class DatabaseService {
     });
   }
 
-
   getEmployeeInfo(uid) {
     return new Promise((resolve, reject) => {
       firebase.database().ref("employeeInfo/" + uid + "/").once('value').then((snapshot) => {
         this.getStatus(snapshot.val().statusId).then(status => {
           const ret = {};
           let val = snapshot.val();
-
           let ex = [];
           if (typeof(val.experiences) !== 'undefined'){
             Object.entries(val.experiences).forEach( ([id, info]) => {
@@ -135,11 +144,14 @@ class DatabaseService {
           }
 
           let prog = [];
-          // console.log(val.projects);
           if (typeof(val.projects) !== 'undefined'){
+            let tmp = []
             Object.entries(val.projects).forEach( ([id, info]) => {
+              Object.entries(info.links).forEach(([id, val]) => {
+                tmp.push(val);
+              });
               prog.push({name: info.projectName, description: info.projectDescription,
-                date: info.date, tags: info.tagIds});
+                date: info.date, tags: info.tagIds, links: tmp});
             });
           } else {
             prog = [];
@@ -172,7 +184,7 @@ class DatabaseService {
           ret.skillSet = skills;
           ret.major = val.major;
           resolve(ret)
-        })
+        });
       });
     });
   }
