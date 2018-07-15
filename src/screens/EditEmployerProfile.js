@@ -6,6 +6,7 @@ import CategoryCard from "../components/CategoryCard";
 import DatabaseService from "../api/databaseService";
 import CircularProfilePhoto from "../components/CircularProfilePhoto";
 import {Authentication} from '../api'
+import EditButton from "../components/EditButton";
 
 
 class EditEmployerProfile extends React.Component {
@@ -50,6 +51,7 @@ class EditEmployerProfile extends React.Component {
             <ScrollView contentContainerStyle={styles.ScrollContainer}>
                 <View style={styles.MainContainer}>
                     <CircularProfilePhoto url={imgUrl} diameter={150}/>
+
                     <Text style={styles.ProfileName}>
                         {fullName}
                     </Text>

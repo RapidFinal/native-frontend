@@ -7,7 +7,6 @@ import DatabaseService from "../api/databaseService";
 import CircularProfilePhoto from "../components/CircularProfilePhoto";
 import {Authentication} from '../api'
 
-
 class ViewEmployerProfile extends React.Component {
 
     static navigationOptions = () => ({
@@ -54,17 +53,13 @@ class ViewEmployerProfile extends React.Component {
             <ScrollView contentContainerStyle={styles.ScrollContainer}>
                 <View style={styles.MainContainer}>
                     <CircularProfilePhoto url={imgUrl} diameter={150}/>
-                    <Text style={styles.ProfileName}>
-                        {fullName}
-                    </Text>
-                    <View style={{flex:1}}>
-                        <Text style={
-                            {fontWeight:'bold'}
-                        }>
-                            Work at : {companyName}
-                        </Text>
-                    </View>
 
+                    <Text style={styles.ProfileName}>{fullName}</Text>
+                    <Text style={
+                        {fontWeight:'bold'}}
+                    >
+                        Work at : {companyName}
+                    </Text>
 
                     <CategoryCard categories={categories}/>
                 </View>
@@ -90,11 +85,6 @@ const styles = StyleSheet.create({
         fontSize: 26,
     },
 
-    Description: {
-        marginTop: 20,
-        maxWidth: '90%',
-        textAlign: 'center'
-    }
 });
 
 export default compose()(ViewEmployerProfile)

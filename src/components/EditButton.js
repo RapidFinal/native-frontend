@@ -17,9 +17,9 @@ class EditButton extends React.Component {
     render(){
         const {} = this.state;
         return (
-            <Button transparent={}
+            <Button
+                transparent
                 style={styles.button}
-                iconLeft
                 onPress={this.props.onPress}
             >
                 <Icon type="FontAwesome" name='edit' />
