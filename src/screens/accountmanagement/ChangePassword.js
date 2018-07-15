@@ -2,7 +2,7 @@ import React from 'react';
 import compose from 'recompose/compose'
 import hoistStatics from 'recompose/hoistStatics'
 import PropTypes from 'prop-types'
-import {Alert, StyleSheet} from "react-native";
+import {Alert, StyleSheet, View} from "react-native";
 import {Container, Content, Form, Input, Spinner} from "native-base";
 import {Item} from "native-base";
 import {CredentialAuthentication} from "../../api/authentication"
@@ -31,17 +31,8 @@ class ChangeEmail extends React.Component {
     static navigationOptions = ({navigation}) => {
         return ({
             title: 'Change Password',
-            headerLeft: (
-                <IonIcons.Button
-                    name="ios-arrow-back"
-                    backgroundColor="transparent"
-                    color={"black"}
-                    onPress={() => navigation.pop()}
-                />
-            ),
-            headerRight: (
-                null
-            )
+            headerTitleStyle: {flex: 1, textAlign: 'center'},
+            headerRight: <View></View>,
         })
     };
 

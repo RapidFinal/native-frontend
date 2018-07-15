@@ -11,24 +11,8 @@ import {
     Alert, StyleSheet
 } from 'react-native'
 
-
 // TODO: Fix proxy component problem
 class AccountManagement extends React.Component {
-
-    static navigationOptions = ({navigation}) => {
-        return ({
-            title: 'Account Management',
-            headerLeft: (
-                <IonIcons.Button name="ios-arrow-back"
-                                 backgroundColor="transparent"
-                                 color={"black"}
-                                 onPress={() => navigation.pop()} />
-            ),
-            headerRight: (
-                null
-            )
-        })
-    }
 
     logout = () => {
         const {authProvider} = this.props.context;

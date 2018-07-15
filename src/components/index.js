@@ -3,6 +3,7 @@ import AccountSidebarLogin from './AccountSidebarLogin'
 import AccountSidebarNotLogin from './AccountSidebarNotLogin'
 import BackButton from './BackButton'
 import Carousel from './Carousel'
+import CategoriesSelection from './CategoriesSelection'
 import CategoryCard from './CategoryCard'
 import CircularProfilePhoto from './CircularProfilePhoto'
 import HeaderBar from './HeaderBar'
@@ -32,6 +33,7 @@ export {
     AccountSidebarLogin,
     BackButton,
     Carousel,
+    CategoriesSelection,
     CategoryCard,
     CircularProfilePhoto,
     ClickButton,

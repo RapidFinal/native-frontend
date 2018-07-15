@@ -5,8 +5,14 @@ import {StyleSheet, Image, View, Text, ScrollView} from "react-native";
 import CategoryCard from "../components/CategoryCard";
 import DatabaseService from "../api/databaseService";
 import CircularProfilePhoto from "../components/CircularProfilePhoto";
+import {Authentication} from '../api'
 
-class ViewProfile extends React.Component {
+
+class ViewEmployerProfile extends React.Component {
+
+    static navigationOptions = () => ({
+        title: 'View'
+    });
 
     static propTypes = {
         imgUrl: PropTypes.string,
@@ -20,17 +26,21 @@ class ViewProfile extends React.Component {
         fullName: "",
         companyName:"",
         categories:[],
+        ready:false, //for setting spinner
 
     };
 
     componentWillMount() {
         let db = new DatabaseService
-        db.getEmployerInfo('uid').then((result) => {
+        // let uid = this.props.uid //Discuss with Hart(for now)
+        let uid = Authentication.currentUser().uid
+        db.getEmployerInfo(uid).then((result) => {
             this.setState({
                 imgUrl: result.imgUrl,
                 fullName: result.firstName + ' ' + result.lastName,
                 companyName: result.companyName,
-                categories: result.categories
+                categories: result.categories,
+                ready:true,
             })
         }).catch((error) => {
             console.log(error)
@@ -80,4 +90,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default compose()(ViewProfile)
+export default compose()(ViewEmployerProfile)
