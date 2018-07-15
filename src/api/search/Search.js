@@ -26,7 +26,7 @@ const searchByTag = async (tags, snapshot) => {
     const infos = await Promise.all(ids.map( async (id) => {
         var info = await db.getEmployeeInfo(id);
         info.tags = info.tagIds.map( id => snapshot[id].tagName );
-	
+	info.uid = id;
 	console.log(id, '->', info);
 	
         return info;
@@ -39,7 +39,7 @@ const searchByTag = async (tags, snapshot) => {
 const searchByName = async (name) => {
     let db = new DatabaseService;
     console.log(name);
-    return null;
+    return [];
 };
 
 export const search = async (searchString) => {

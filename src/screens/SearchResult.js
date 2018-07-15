@@ -17,7 +17,7 @@ class SearchResult extends React.Component {
             title: 'Search Results',
             headerTitleStyle: {flex: 1, textAlign: 'center'},
             headerRight: <View></View>,
-        })
+        });
     };
 
     state = {
@@ -26,11 +26,21 @@ class SearchResult extends React.Component {
         results: [],
     }
 
+    goToProfile = (uid) => {
+        console.log('navigateTo:', uid);
+        this.props.navigation.navigate("View", {uid});
+    }
+
     componentDidMount() {
         //console.log(this.props.navigation.state.params);
         console.log(this.props.navigation.getParam("textInput", ""));
-        console.log('search: ', Search);
-        Search.search("java, react").then((d) => {this.setState({results: d, loading: false}, () => {console.log('newstate', this.state)})} ).catch((e)=> console.error(e));
+        const searchTerm = this.props.navigation.getParam("textInput", "");
+        console.log('search: ', searchTerm);
+        Search.search(searchTerm)
+        .then((d) => {
+            this.setState({results: d, loading: false, textInput: searchTerm},
+			  () => {console.log('newstate', this.state);});
+        }).catch((e) => console.error(e));
     }
 
     render(){
@@ -38,18 +48,18 @@ class SearchResult extends React.Component {
         return (
             <Content contentContainerStyle={styles.ScrollContainer}>
                 {
-                    !loading ? <DataLoaded results={results} /> : <DataLoading />
+                    !loading ? <DataLoaded results={results} onPress={this.goToProfile} /> : <DataLoading />
                 }
             </Content>
-        )
+        );
     }
 
 }
 
-const DataLoaded = ({results}) => (
+const DataLoaded = ({results, onPress}) => (
     <View style={styles.MainContainer}>
         <Text>Search Results</Text>
-        <SearchCard results={results}/>
+        <SearchCard results={results} onPress={onPress}/>
     </View>
 )
 
