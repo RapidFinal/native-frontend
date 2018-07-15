@@ -1,7 +1,8 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import {StyleSheet, Image, View, Text, ScrollView} from "react-native";
+import {StyleSheet, View, Text, ScrollView} from "react-native";
+import {Spinner} from 'native-base';
 import StatusText from '../components/StatusText';
 import ExperiencesCard from '../components/ExperiencesCard';
 import SkillSetsCard from '../components/SkillSetsCard';
@@ -47,7 +48,6 @@ class ViewProfile extends React.Component {
                 navigation.state.params.scrollToTop()
             }
             else {
-                console.log("else")
                 navigation.navigate('View', { uid: Authentication.currentUser().uid});
             }
         }
@@ -104,28 +104,40 @@ class ViewProfile extends React.Component {
 
 
     render() {
-        const {imgUrl, fullName, status, description, experiences, skillSets, projects, tags} = this.state;
+        const {imgUrl, fullName, status, description, experiences, skillSets, projects, tags, ready} = this.state;
 
         return (
             <ScrollView contentContainerStyle={styles.ScrollContainer} ref={scrollView => this.scrollView = scrollView}>
-                <View style={styles.MainContainer}>
-                    <CircularProfilePhoto url={imgUrl} diameter={150}/>
-                    <Text style={styles.ProfileName}>
-                        {fullName}
-                    </Text>
-                    <StatusText status={status}/>
-                    <Text style={styles.Description}>
-                        {description}
-                    </Text>
-                    <TagsSection tags={tags}/>
-                    <ExperiencesCard experiences={experiences}/>
-                    <SkillSetsCard skills={skillSets}/>
-                    <ProjectSection projects={projects} navigation={this.props.navigation}/>
-                </View>
+                {
+                    ready ? (
+                        <View style={styles.MainContainer}>
+                            <CircularProfilePhoto url={imgUrl} diameter={150}/>
+                            <Text style={styles.ProfileName}>
+                                {fullName}
+                            </Text>
+                            <StatusText status={status}/>
+                            <Text style={styles.Description}>
+                                {description}
+                            </Text>
+                            <TagsSection tags={tags}/>
+                            <ExperiencesCard experiences={experiences}/>
+                            <SkillSetsCard skills={skillSets}/>
+                            <ProjectSection projects={projects} navigation={this.props.navigation}/>
+                        </View>
+                    ) : (
+                        <DataLoading/>
+                    )
+                }
             </ScrollView>
         )
     }
 }
+
+const DataLoading = ({}) => (
+    <View style={styles.MainContainer}>
+        <Spinner color={"black"} />
+    </View>
+);
 
 const styles = StyleSheet.create({
     ScrollContainer: {
