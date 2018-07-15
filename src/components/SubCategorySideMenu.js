@@ -71,8 +71,8 @@ class SubCategorySideMenu extends React.Component {
         })
     };
 
-    handleClicked = (key) => (e) => {
-        alert(key)
+    handleClicked = (key) => () => {
+        this.props.navigation.navigate("SearchResult", {"textInput": key})
     }
 
     render(){
@@ -85,7 +85,7 @@ class SubCategorySideMenu extends React.Component {
                             subCategories.map(({subCategoryId: key, subCategoryName: name}) => (
                                 <CategoryItem
                                     key={key}
-                                    onPress={this.handleClicked(key)}>
+                                    onPress={this.handleClicked(name)}>
                                     {name}
                                 </CategoryItem>
                             ))
