@@ -48,8 +48,7 @@ class ViewProfile extends React.Component {
                 navigation.state.params.scrollToTop()
             }
             else {
-                console.log('else')
-                navigation.navigate('View', { uid: Authentication.currentUser().uid, update: Math.random()});
+                navigation.navigate('View', { uid: Authentication.currentUser().uid});
             }
         }
     });
