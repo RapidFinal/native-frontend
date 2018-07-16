@@ -1,18 +1,19 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import {StyleSheet, View} from "react-native";
-import {Item, Picker, Text} from "native-base";
+import {StyleSheet, View, Platform} from "react-native";
+import {Icon, Item, Picker} from "native-base";
 import DatabaseService from "../api/databaseService";
 
 class StatusDropdown extends React.Component {
 
     static propTypes = {
-
+        selectedStatus: PropTypes.string,
+        allStatus: PropTypes.object
     }
 
     state = {
-        selectedStatus: undefined,
+        selectedStatus: "",
         allStatus: {}
     }
 
@@ -46,21 +47,28 @@ class StatusDropdown extends React.Component {
         return (
             <View>
                 <Item picker regular style={styles.view} error={hasError}>
-                    <Picker mode="dropdown"
-                            selectedValue={selectedStatus}
-                            onValueChange={this.changeStatus}
+                    <Picker
+                        mode="dropdown"
+                        iosIcon={<Icon name="ios-arrow-down-outline" />}
+                        placeholder="Select Status..."
+                        selectedValue={selectedStatus}
+                        onValueChange={this.changeStatus}
                     >
-                        <Picker.Item
-                            label="Select Status..."
-                            value={null}/>
                         {
-                            Object.keys(allStatus).map((item, index)=>{
-                                return <Picker.Item
+                            Platform.OS === "android" ?
+                            <Picker.Item
+                                label="Select Status..."
+                                value={null}
+                            /> : null
+                        }
+                        {
+                            Object.keys(allStatus).map((item, index) =>
+                                <Picker.Item
                                     key={index}
                                     label={allStatus[item]}
                                     value={item}
-                                />;
-                            })
+                                />
+                            )
                         }
                     </Picker>
                 </Item>
