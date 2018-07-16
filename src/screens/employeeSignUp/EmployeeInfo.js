@@ -237,7 +237,7 @@ class EmployeeInfo extends React.Component {
                             currentPosition={2}
                             stepCount={4}
                         />
-                        <ScrollView>
+                        <ScrollView contentContainerStyle={styles.contentContainer}>
                             <SignUpForm>
                                 <H3>Your top skills</H3>
                                 <Text style={styles.text}>Suggestion of popular tags</Text>
@@ -314,6 +314,9 @@ const styles = StyleSheet.create({
     TagsContainer: {
         marginBottom: 10,
         justifyContent: "center"
+    },
+    contentContainer: {
+        paddingBottom: 70
     }
 });
 
