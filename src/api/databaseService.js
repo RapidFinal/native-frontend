@@ -367,8 +367,8 @@ class DatabaseService {
     firebase.database().ref("employerInfo/" + uid + "/lastName").set(lastName);
   }
 
-  updateEmployerDescription(uid, desc) {
-    firebase.database().ref("employerInfo/" + uid + "/deacription").set(desc);
+  updateEmployerCompanyName(uid, companyName) {
+    firebase.database().ref("employerInfo/" + uid + "/companyName").set(companyName);
   }
 
   // cat = map of categoey-subcategory that selected
@@ -414,7 +414,7 @@ class DatabaseService {
         firebase.database().ref("employerInfo/" + uid + "/").once('value').then((snapshot) => {
           const ret = {};
           let val = snapshot.val();
-          let cat = []
+          let cat = [];
           Object.entries(val.categories).forEach(
             ([categoryId, subCatIds]) => {
               let tmp = {};
@@ -423,12 +423,12 @@ class DatabaseService {
                 let subCats = {
                   subCategoryId: subCatId,
                   subCategoryName: allCats[categoryId].subCategory[subCatId].subCategoryName
-                }
+                };
                 arr.push(subCats);
               });
               tmp.categoryId = categoryId;
               tmp.categoryName = allCats[categoryId].categoryName;
-              tmp.subCategory = arr
+              tmp.subCategory = arr;
               cat.push(tmp);
             }
           );
