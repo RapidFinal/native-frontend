@@ -73,19 +73,21 @@ class DatabaseService {
     firebase.database().ref("employeeInfo/" + uid + "/experiences/").push(value)
   }
 
-  // tags = ["java", "python"]
-  createEmployeeProjects(uid, progName, progDesc, date, tags) {
+  // links: {youtube: www.youtube.com
+  //         website: www.helloworld.com}
+  // tag: ["java", "python"]
+  createEmployeeProjects(uid, progName, progDesc, date, tags, links) {
     this.getAllTags().then((allTags) => {
       let progId = firebase.database().ref("employeeInfo/" + uid + "/projects/").push().key;
       let tagIds = [];
       tags.forEach(tag => {
-        if ( allTags[tag] !== null) {
+        if ( typeof(allTags[tag]) !== 'undefined') {
           let tagId = allTags[tag];
           tagIds.push(tagId);
           this.addProjectIdToTag(uid, progId, tagId);
         } else {
           let tagId = firebase.database().ref("tags/").push().key;
-          tagIds.push(allTags[tag]);
+          tagIds.push(tagId);
           firebase.database().ref("tags/" + tagId + "/").set({tagName: tag});
           this.addProjectIdToTag(uid, progId, tagId)
         }
@@ -98,14 +100,32 @@ class DatabaseService {
         tagIds: tagIds
       };
       firebase.database().ref("employeeInfo/" + uid + "/projects/" + progId +"/").set(value);
+
+      if (links !== null) {
+        Object.entries(links).forEach(
+          ([type, link]) => {
+            let val = {type: type,
+              link: link};
+            firebase.database().ref("employeeInfo/" + uid + "/projects/" + progId + "/links/").push(val);
+          })
+      }
     });
   }
 
-  CreateEmployeeSkillSet(uid, skill) {
+  createEmployeeSkillSet(uid, skill) {
     this.getEmployeeSkillSet(uid).then(skills => {
-      // console.log(skills.val());
-      skills[skill] = true;
-      firebase.database().ref("employeeInfo/" + uid + "/skillSet/").set(skills);
+      let val = {}
+      if (skills === null) {
+        console.log("new");
+        val[skill] = true;
+      } else {
+        console.log("not new");
+        val = skills;
+        if (typeof(val[skill]) === 'undefined') {
+          val[skill] = true;
+        }
+      }
+      firebase.database().ref("employeeInfo/" + uid + "/skillSet/").set(val);
     })
   }
 
@@ -117,14 +137,12 @@ class DatabaseService {
     });
   }
 
-
   getEmployeeInfo(uid) {
     return new Promise((resolve, reject) => {
       firebase.database().ref("employeeInfo/" + uid + "/").once('value').then((snapshot) => {
         this.getStatus(snapshot.val().statusId).then(status => {
           const ret = {};
           let val = snapshot.val();
-
           let ex = [];
           if (typeof(val.experiences) !== 'undefined'){
             Object.entries(val.experiences).forEach( ([id, info]) => {
@@ -135,11 +153,14 @@ class DatabaseService {
           }
 
           let prog = [];
-          // console.log(val.projects);
           if (typeof(val.projects) !== 'undefined'){
+            let tmp = []
             Object.entries(val.projects).forEach( ([id, info]) => {
+              Object.entries(info.links).forEach(([id, val]) => {
+                tmp.push(val);
+              });
               prog.push({name: info.projectName, description: info.projectDescription,
-                date: info.date, tags: info.tagIds});
+                date: info.date, tags: info.tagIds, links: tmp});
             });
           } else {
             prog = [];
@@ -172,7 +193,7 @@ class DatabaseService {
           ret.skillSet = skills;
           ret.major = val.major;
           resolve(ret)
-        })
+        });
       });
     });
   }
@@ -288,8 +309,18 @@ class DatabaseService {
     return ret;
   }
 
-  updateEmployeeLiked(uid, val){
-    firebase.database().ref("employeeInfo/" + uid + "/liked/").set(val);
+  /* All employeeInfo must be created with the node "liked: 0"*/
+  updateEmployeeLiked(uid, operator){
+    firebase.database().ref("employeeInfo/" + uid + "/liked/").transaction((currentVal) => {
+      if (currentVal !== null) {
+        if (operator === "increment") currentVal++;
+        else if (operator === "decrement") currentVal--
+      }
+      else {
+        // run commitSuicide.exe
+      }
+      return currentVal;
+    });
   }
 
   getEmployeeLiked(uid) {
@@ -340,8 +371,19 @@ class DatabaseService {
     firebase.database().ref("employerInfo/" + uid + "/deacription").set(desc);
   }
 
+  // cat = map of categoey-subcategory that selected
+  // {
+  //   "categoryId1": ["subcategoryId1", "subcategoryId2", "subcategoryId3"],
+  //   "categoryId2": ["subcategoryId1", "subcategoryId2", "subcategoryId3"]
+  // }
   updateEmployerCategories(uid, cat) {
-
+    Object.entries(cat).forEach(
+      ([categoryId, subCatIds]) => {
+        let val = {};
+        val[categoryId] = {subCategoryIds: subCatIds};
+        firebase.database().ref("employerInfo/" + uid + "/categories/").set(val);
+      }
+    );
   }
 
   // ret = {firstName: "Alice", lastName:"Smith", companyName: "MUIC", imgUrl,
@@ -411,9 +453,7 @@ class DatabaseService {
 
   likedEmployee(employerUid, employeeUid){
     this.getLikedEmployee(employerUid).then((list) => {
-      this.getEmployeeLiked(employeeUid).then((liked) => {
-        this.updateEmployeeLiked(employeeUid, liked+1)
-      });
+      this.updateEmployeeLiked(employeeUid, "increment");
       if (typeof(list[employeeUid]) === 'undefined'){
         list[employeeUid] = true;
         firebase.database().ref("employerInfo/" + employerUid + "/likedEmployee/").set(list);
@@ -424,14 +464,8 @@ class DatabaseService {
 
   unLikedEmployee(employerUid, employeeUid){
     this.getLikedEmployee(employerUid).then((list) => {
-      this.getEmployeeLiked(employeeUid).then((liked) => {
-        this.updateEmployeeLiked(employeeUid, liked-1)
-      });
+      this.updateEmployeeLiked(employeeUid, "decrement");
       firebase.database().ref("employerInfo/" + employerUid + "/likedEmployee/" + employeeUid + "/").remove();
-    });
-
-    this.getEmployeeLiked(employeeUid).then((liked) => {
-      this.updateEmployeeLiked(uid, liked-1)
     });
   }
 
@@ -562,22 +596,27 @@ class DatabaseService {
   //     }]
   static getAllCategories() {
     return new Promise((resolve, reject) => {
-      firebase.database().ref("categories/").once('value').then(function(snapshot) {
-        // console.log(snapshot.val());
-        let ret = [];
-        snapshot.forEach(cat => {
-          let tmpObj = {};
-          let tmpArray = [];
-          Object.entries(cat.val().subCategories).forEach(([key, info]) => {
-            tmpArray.push({subCategoryId: key, subCategoryName: info.subCategoryName})
-          });
-          tmpObj.subCategory = tmpArray;
-          tmpObj.categoryId = cat.key;
-          tmpObj.categoryName = cat.val().categoryName;
-          ret.push(tmpObj);
-        });
-        resolve(ret);
-      });
+      firebase.database().ref("categories/").once('value')
+          .then(function(snapshot) {
+            // console.log(snapshot.val());
+            const ret = [];
+            snapshot.forEach(cat => {
+              const tmpObj = {};
+              const tmpArray = [];
+              Object.entries(cat.val().subCategories).forEach(([key, info]) => {
+                tmpArray.push({subCategoryId: key, subCategoryName: info.subCategoryName})
+              });
+              tmpObj.subCategory = tmpArray;
+              tmpObj.categoryId = cat.key;
+              tmpObj.categoryName = cat.val().categoryName;
+              ret.push(tmpObj);
+            });
+            resolve(ret);
+          })
+          .catch((e) => {
+            // TODO: Handle error
+              reject(e)
+          })
     });
   }
 

@@ -100,7 +100,29 @@ class EmployeeInfo extends React.Component {
         Promise
             .all(dataPromises)
             .then((data) => [].concat.apply([], data))
-            .then((d) => this.setState({suggestionTags:d}))
+            .then((d) => {
+                const shuffle = function (array) {
+                    let currentIndex = array.length, temporaryValue, randomIndex;
+
+                    // While there remain elements to shuffle...
+                    while (0 !== currentIndex) {
+
+                        // Pick a remaining element...
+                        randomIndex = Math.floor(Math.random() * currentIndex);
+                        currentIndex -= 1;
+
+                        // And swap it with the current element.
+                        temporaryValue = array[currentIndex];
+                        array[currentIndex] = array[randomIndex];
+                        array[randomIndex] = temporaryValue;
+                    }
+
+                    return array;
+                };
+                d = shuffle(d);
+                let fiveTags = d.slice(0, 5);
+                this.setState({suggestionTags:fiveTags})
+            })
     }
 
 

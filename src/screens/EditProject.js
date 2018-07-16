@@ -5,7 +5,6 @@ import { View, StyleSheet, Text, ScrollView, TouchableOpacity, TextInput } from 
 import { TextField } from 'react-native-material-textfield';
 import { Button, Divider } from 'react-native-elements';
 import Tags from "react-native-tags";
-import TagInput from "react-native-tag-input";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import DatePicker from 'react-native-datepicker';
 
@@ -19,8 +18,7 @@ class Edit_Test extends React.Component {
         projectDate: '',
         projectGit: '',
         projectVideo: '',
-        projectTags: ["Java","Python","NodeJs"],
-        projectTag: '',
+        projectTags: ["Java","Python","NodeJs"]
       }
     }
 
@@ -48,22 +46,7 @@ class Edit_Test extends React.Component {
       this.setState({ projectTags: tags })
     }
 
-    handleTagTextChange = (tag) => {
-      this.setState({ projectTag: tag })
-
-      const lastTyped = tag.charAt(tag.length - 1);
-      const parseWhen = [',', ' ', ';', '\n'];
-
-      if (parseWhen.indexOf(lastTyped) > -1) {
-        this.setState({
-          projectTags: [...this.state.projectTags, this.state.projectTag],
-          projectTag: "",
-        });
-      }
-    }
-
     render(){
-        console.log('render');
         return (
           <ScrollView contentContainerStyle = {styles.container}>
             <View style = {styles.inputContainer}>
@@ -116,13 +99,12 @@ class Edit_Test extends React.Component {
             </View>
             <View style = {styles.inputContainer}>
               <Text style = {styles.inputTitle}> #Tags </Text>
-              <TagInput
-                  value={this.state.projectTags}
-                  onChange={this.handleTagsChange}
-                  labelExtractor={(tag) => tag}
-                  text={this.state.projectTag}
-                  onChangeText={this.handleTagTextChange}
-                  tagContainerStyle={{justifyContent: "center"}}
+              <Tags
+                initialText=""
+                initialTags={this.state.projectTags}
+                containerStyle={{justifyContent: "center"}}
+                onChangeTags={this.handleTagsChange}
+                onTagPress={(index, tagLabel, event) => this.removeTag(index)}
               />
             </View>
 

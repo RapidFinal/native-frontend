@@ -94,6 +94,8 @@ PODS:
     - React/Core
     - React/fishhook
     - React/RCTBlob
+  - ReactNativeSearchBar (3.4.2):
+    - React
   - RNVectorIcons (4.6.0):
     - React
   - yoga (0.55.4.React)
@@ -116,6 +118,7 @@ DEPENDENCIES:
   - React/RCTNetwork (from `../node_modules/react-native`)
   - React/RCTText (from `../node_modules/react-native`)
   - React/RCTWebSocket (from `../node_modules/react-native`)
+  - ReactNativeSearchBar (from `../node_modules/react-native-search-bar`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -147,6 +150,8 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
   React:
     :path: "../node_modules/react-native"
+  ReactNativeSearchBar:
+    :path: "../node_modules/react-native-search-bar"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
   yoga:
@@ -173,9 +178,10 @@ SPEC CHECKSUMS:
   leveldb-library: 08cba283675b7ed2d99629a4bc5fd052cd2bb6a5
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   React: aa2040dbb6f317b95314968021bd2888816e03d5
+  ReactNativeSearchBar: 43b76df06f1a0a04c13e02309129da3c21cd3176
   RNVectorIcons: c0dbfbf6068fefa240c37b0f71bd03b45dddac44
   yoga: a23273df0088bf7f2bb7e5d7b00044ea57a2a54a
 
-PODFILE CHECKSUM: 90727c01cad7c4d5de50d33d986c0bac32ff4431
+PODFILE CHECKSUM: 5eed92fe88c478116fe5d4ef0086595cd65d02c6
 
 COCOAPODS: 1.5.3

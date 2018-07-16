@@ -47,6 +47,8 @@ target 'JobMe' do
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
+  pod 'ReactNativeSearchBar', :path => '../node_modules/react-native-search-bar'
+
   target 'JobMeTests' do
     inherit! :search_paths
     # Pods for testing

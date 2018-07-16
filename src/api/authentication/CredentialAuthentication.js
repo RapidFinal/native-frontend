@@ -1,4 +1,5 @@
 import RNFirebase from 'react-native-firebase'
+import _ from 'lodash'
 
 export const signin = async ({ email, password }) => {
     return RNFirebase.auth().signInAndRetrieveDataWithEmailAndPassword(email, password)
@@ -21,6 +22,10 @@ const reauthenticate = (currentPassword) => {
 }
 
 export const changePassword = async ({password, newPassword, confirmPassword}) => {
+    if (!_.isEmpty(password.trim()) && !_.isEmpty(newPassword.trim())){
+        throw new Error("New password or confirm password is empty")
+    }
+
     if (newPassword !== confirmPassword){
         throw new Error("Password and confirm password do not match")
     }
@@ -30,6 +35,11 @@ export const changePassword = async ({password, newPassword, confirmPassword}) =
 }
 
 export const changeEmail = async ({password, newEmail, confirmEmail}) => {
+
+    if (!_.isEmpty(newEmail.trim()) && !_.isEmpty(confirmEmail.trim())){
+        throw new Error("New email or confirm email is empty")
+    }
+
     if (newEmail !== confirmEmail){
         throw new Error("New email and confirm email do not match")
     }
