@@ -47,30 +47,44 @@ class StatusDropdown extends React.Component {
         return (
             <View>
                 <Item picker regular style={styles.view} error={hasError}>
-                    <Picker
-                        mode="dropdown"
-                        iosIcon={<Icon name="ios-arrow-down-outline" />}
-                        placeholder="Select Status..."
-                        selectedValue={selectedStatus}
-                        onValueChange={this.changeStatus}
-                    >
-                        {
-                            Platform.OS === "android" ?
+                    {Platform.OS === "android" ?
+                        <Picker
+                            mode="dropdown"
+                            selectedValue={selectedStatus}
+                            onValueChange={this.changeStatus}
+                        >
                             <Picker.Item
                                 label="Select Status..."
                                 value={null}
-                            /> : null
-                        }
-                        {
-                            Object.keys(allStatus).map((item, index) =>
-                                <Picker.Item
-                                    key={index}
-                                    label={allStatus[item]}
-                                    value={item}
-                                />
-                            )
-                        }
-                    </Picker>
+                            />
+                            {
+                                Object.keys(allStatus).map((item, index) =>
+                                    <Picker.Item
+                                        key={index}
+                                        label={allStatus[item]}
+                                        value={item}
+                                    />
+                                )
+                            }
+                        </Picker> :
+                        <Picker
+                            mode="dropdown"
+                            iosIcon={<Icon name="ios-arrow-down-outline" />}
+                            placeholder="Select Status..."
+                            selectedValue={selectedStatus}
+                            onValueChange={this.changeStatus}
+                        >
+                            {
+                                Object.keys(allStatus).map((item, index) =>
+                                    <Picker.Item
+                                        key={index}
+                                        label={allStatus[item]}
+                                        value={item}
+                                    />
+                                )
+                            }
+                        </Picker>
+                    }
                 </Item>
             </View>
         )
