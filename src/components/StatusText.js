@@ -9,11 +9,21 @@ class StatusText extends React.Component {
         status: PropTypes.string,
     }
 
+    statusPicker() {
+        if (this.props.status === 'looking for job') {
+            return (<Image source={require('../assets/images/green.png')} style={styles.StatusImg}/>)
+        } else if (this.props.status === 'looking for opportunity') {
+            return (<Image source={require('../assets/images/yellow.png')} style={styles.StatusImg}/>)
+        } else {
+            return (<Image source={require('../assets/images/grey.png')} style={styles.StatusImg}/>)
+        }
+    }
+
     render(){
         return (
             <View style={styles.StatusBox}>
                 <Text style={styles.StatusText}>{this.props.status}</Text>
-                <Image source={require('../assets/images/green.png')} style={styles.StatusImg}/>
+                {this.statusPicker()}
             </View>
         )
     }
