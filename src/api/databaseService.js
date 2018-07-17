@@ -246,10 +246,12 @@ class DatabaseService {
     });
   }
 
-  // exp = {title: "title2", desc: "defefefefefefer"}, {title: "title3", desc: "defefefefefefer"}
-  // need to talk with sky on the the process of edit
-  updateEmployeeExperience(uid, exp) {
-
+  updateEmployeeExperience(uid, expId, title, desc) {
+    let val = {
+      experience_title: title,
+      experience_description: desc
+    };
+    firebase.database().ref("employeeInfo/" + uid + "/experiences/" + expId + "/").set(val);
   }
 
   updateEmployeeProject(uid, projectId, progName, progDesc, date, tags) {
