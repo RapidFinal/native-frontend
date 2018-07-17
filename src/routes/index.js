@@ -32,6 +32,7 @@ import ChangePassword from "../screens/accountmanagement/ChangePassword"
 import ViewEmployerProfile from "../screens/ViewEmployerProfile"
 import {View} from "react-native";
 import Initial from "../screens/Initial";
+import EditProfile from '../screens/EditProfile';
 
 /* REQUIRED in both EmployerMainStack & CandidateMainStack  */
 const headerOptions = () => ({
@@ -70,7 +71,7 @@ const CandidateTabStack = createBottomTabNavigator(
     {
         View: ViewCandidateProfile,
         Home: Home,
-        Edit: Edit_Test,
+        Edit: EditProfile,
     },
     {
         navigationOptions: ({navigation}) => ({
@@ -133,8 +134,8 @@ const AuthenticationMainStack = createStackNavigator(
         employeeCredentialSignUp: EmployeeCredentialSignUp,
         employeeInfo: EmployeeInfo,
         workExp: WorkExp,
-        employerCredentialSignUp : EmployerCredentialSignUp,
-        employerCategorySelect : EmployerCategorySelect,
+        employerCredentialSignUp: EmployerCredentialSignUp,
+        employerCategorySelect: EmployerCategorySelect,
         /*********************/
         CredentialSignin: CredentialSignin,
         ForgotPassword: ForgotPassword,
@@ -145,7 +146,7 @@ const AuthenticationMainStack = createStackNavigator(
     }
 );
 
-EmployerTabStack.navigationOptions = ({ navigation }) => {
+EmployerTabStack.navigationOptions = ({navigation}) => {
     return setHeaderTabItems(navigation);
 };
 
