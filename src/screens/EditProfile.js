@@ -1,16 +1,17 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import {StyleSheet, View, Text, ScrollView} from "react-native";
+import {StyleSheet, View, Text, ScrollView, Image, TouchableHighlight, Modal} from "react-native";
 import {Spinner} from 'native-base';
 import StatusText from '../components/StatusText';
 import ExperiencesCard from '../components/ExperiencesCard';
 import SkillSetsCard from '../components/SkillSetsCard';
-import EditableCircularProfilePhoto from '../components/EditableCircularProfilePhoto';
+import CircularProfilePhoto from '../components/CircularProfilePhoto';
 import ProjectSection from '../components/ProjectSection';
 import DatabaseService from '../api/databaseService';
 import TagsSection from '../components/TagsSection';
 import {Authentication} from '../api'
+import EditableName from '../components/EditableName'
 
 class EditProfile extends React.Component {
 
@@ -21,14 +22,35 @@ class EditProfile extends React.Component {
     state = {
         ready: true,
         imgUrl: "",
-        fullName: "",
-        description: "",
-        status: "",
-        experiences: [],
-        skillSets: [],
-        projects: [],
-        tags: [],
-        scrollView: null
+        firstName: "Josep",
+        lastName: "Bort",
+        description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+        status: "Looking for job",
+        experiences: [
+            {
+                title: "Web",
+                description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+            }
+        ],
+        skillSets: ["Python", "Java"],
+        projects: [
+            {
+                name: "Notey",
+                description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+                date: "15/06/2018"
+            }
+        ],
+        tags: ["Python", "Java"],
+        scrollView: null,
+        descriptionModal: false,
+        tagModal: false,
+    }
+
+    updateName(firstName, lastName) {
+        this.setState({
+            firstName: firstName,
+            lastName: lastName
+        })
     }
 
     updateExperienceState(newExp) {
@@ -43,22 +65,25 @@ class EditProfile extends React.Component {
         })
     }
 
+    toggleModal(name, value) {
+        alert('toggle')
+        this.setState({
+            [name]: value
+        })
+    }
+
     render(){
-        const {ready, imgUrl, fullName, description, status, experiences, skillSets, projects, tags} = this.state; // to easily access state put desire variable in the curly brace so it may become const {variable} = this.state;
+        const {ready, imgUrl, firstName, lastName, description, status, experiences, skillSets, projects, tags, fullNameModal} = this.state;
         return (
             <ScrollView contentContainerStyle={styles.ScrollContainer} ref={scrollView => this.scrollView = scrollView}>
                 {
                     ready ? (
                         <View style={styles.MainContainer}>
-                            <EditableCircularProfilePhoto url={imgUrl} diameter={150}/>
-                            <Text style={styles.ProfileName}>
-                                {fullName}
-                            </Text>
+                            <CircularProfilePhoto url={imgUrl} diameter={150}/>
+                            <EditableName firstName={firstName} lastName={lastName} updateName={this.updateName.bind(this)}/>
                             <StatusText status={status}/>
-                            <Text style={styles.Description}>
-                                {description}
-                            </Text>
-                            <TagsSection tags={tags}/>
+                            <EditableDescription description={description}/>
+                            <EditableTags tags={tags}/>
                             <ExperiencesCard experiences={experiences}/>
                             <SkillSetsCard skills={skillSets}/>
                             <ProjectSection projects={projects} navigation={this.props.navigation}/>
@@ -70,12 +95,55 @@ class EditProfile extends React.Component {
             </ScrollView>
         )
     }
-
 }
 
 const DataLoading = ({}) => (
     <View style={styles.MainContainer}>
         <Spinner color={"black"} />
+    </View>
+);
+
+// const EditNameModal = ({fullNameModal, toggleModal}) => (
+//     <Modal
+//         animationType="slide"
+//         transparent={false}
+//         visible={fullNameModal}
+//         onRequestClose={() => {
+//             alert('Modal has been closed.');
+//         }}>
+//         <View style={{marginTop: 22}}>
+//             <View>
+//                 <Text>Hello World!</Text>
+//                 <TouchableHighlight
+//                     onPress={() => {
+//                         toggleModal('fullNameModal', false)
+//                     }}>
+//                     <Text>Hide Modal</Text>
+//                 </TouchableHighlight>
+//             </View>
+//         </View>
+//     </Modal>
+// );
+
+const EditableDescription = ({description}) => (
+    <View style={[styles.DescriptionSection, styles.CenterAlign]}>
+        <Text style={styles.DescriptionText}>
+            {description}
+        </Text>
+        <Image
+            source={require('../assets/images/edit.png')}
+            style={[styles.EditIcon, styles.DescriptionEditIcon]}
+        />
+    </View>
+);
+
+const EditableTags = ({tags}) => (
+    <View style={[styles.CenterAlign]}>
+        <TagsSection tags={tags}/>
+        <Image
+            source={require('../assets/images/edit.png')}
+            style={[styles.EditIcon, styles.TagsEditIcon]}
+        />
     </View>
 );
 
@@ -90,16 +158,55 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
 
-    ProfileName: {
-        marginTop: 20,
-        fontSize: 26,
-    },
-
-    Description: {
+    DescriptionSection: {
         marginTop: 20,
         maxWidth: '90%',
+    },
+
+    DescriptionText: {
         textAlign: 'center'
+    },
+
+    DescriptionEditIcon: {
+        marginTop: 15,
+    },
+
+    CenterAlign: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+    Uploader: {
+        position: 'absolute',
+        left: 50,
+        top: 120,
+        zIndex: -1,
+        borderWidth: 1,
+        borderColor: '#ddd',
+        shadowColor: '#989898',
+        shadowOffset: { width: 5, height: 5},
+        shadowOpacity: 1,
+        shadowRadius: 5,
+    },
+
+    RowAlign: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+    EditIcon: {
+        width: 20,
+        height: 20,
+    },
+
+    TagsEditIcon: {
+        marginTop: 15,
     }
+
 });
 
 export default compose() (EditProfile)
