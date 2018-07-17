@@ -56,7 +56,7 @@ class CategoriesSelection extends React.Component {
 
 
     isSelectedKeyExist=(subKey)=>{
-        const {selectedCategories}=this.props.context;
+        const {selectedCategories}=this.props;
         const {currentCategoryId}= this.state;
         if (selectedCategories.hasOwnProperty(currentCategoryId)){
             if(selectedCategories[currentCategoryId].indexOf(subKey)>-1){
@@ -67,7 +67,7 @@ class CategoriesSelection extends React.Component {
     }
 
     _toggleCheckbox = (subKey) =>{
-        let {selectedCategories}=this.props.context;
+        let {selectedCategories}=this.props;
         const {currentCategoryId}= this.state;
         if (selectedCategories.hasOwnProperty(currentCategoryId)){
             const index = selectedCategories[currentCategoryId].indexOf(subKey);
