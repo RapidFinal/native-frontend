@@ -5,6 +5,7 @@ import {StyleSheet, Image, View, Text, TouchableHighlight, Modal, TouchableOpaci
 import TextInputWithLabel from './TextInputWithLabel';
 import DatabaseService from "../api/databaseService";
 import {Authentication} from '../api'
+import TextInputMultipleLineWithLabel from '../components/TextInputMultipleLineWithLabel';
 
 class CircularProfilePhoto extends React.Component {
 
@@ -109,13 +110,16 @@ class CircularProfilePhoto extends React.Component {
                     }}>
                     <View style={{marginTop: 22}}>
                         <View>
-                            <TextInputWithLabel
+                            <TextInputMultipleLineWithLabel
                                 label="Description"
                                 placeholder="Description"
-                                value={description}
                                 hasError={flags.description}
-                                onBlur={() => this.validate("description")}
+                                multiline = {true}
                                 onChange={this.handleChange("description")}
+                                value={description}
+                                editable = {true}
+                                maxLength = {120}
+                                onBlur={() => this.validate("description")}
                                 errorMessage={message.description}
                             />
                             <TouchableOpacity
