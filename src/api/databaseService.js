@@ -229,7 +229,7 @@ class DatabaseService {
     });
   }
 
-  updateSkillSet(uid, skillId, skill) {
+  updateEmployeeSkillSet(uid, skillId, skill) {
     firebase.database().ref("employeeInfo/" + uid + "/skillSet/" + skillId + "/").set(skill);
   }
 
