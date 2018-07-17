@@ -116,14 +116,6 @@ class DatabaseService {
     firebase.database().ref("employeeInfo/" + uid + "/skillSet/").push(skill);
   }
 
-  getEmployeeSkillSet(uid) {
-    return new Promise((resolve, reject) => {
-      firebase.database().ref("employeeInfo/" + uid + "/skillSet/").once('value').then(snapshot => {
-        resolve(snapshot.val());
-      });
-    });
-  }
-
   getEmployeeInfo(uid) {
     return new Promise((resolve, reject) => {
       firebase.database().ref("employeeInfo/" + uid + "/").once('value').then((snapshot) => {
