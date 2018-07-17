@@ -20,7 +20,7 @@ class EditProfile extends React.Component {
     }
 
     state = {
-        ready: true,
+        ready: false,
         imgUrl: "",
         firstName: "Josep",
         lastName: "Bort",
@@ -71,6 +71,67 @@ class EditProfile extends React.Component {
             [name]: value
         })
     }
+
+    getAllTags(tagIds) {
+        let db = new DatabaseService
+        tagIds.forEach((id) => {
+            db.getTagName(id).then((tagName) => {
+                this.setState(prevState => ({
+                    tags: [...prevState.tags, tagName]
+                }))
+            }).catch((error) => {
+                console.log(error)
+            })
+        })
+    }
+
+    fetchData() {
+        let db = new DatabaseService
+        let uid = Authentication.currentUser().uid
+        db.getEmployeeInfo(uid).then((result) => {
+            this.getAllTags(result.tagIds)
+            this.setState({
+                imgUrl: result.imgUrl,
+                firstName: result.firstName,
+                lastName: result.lastName,
+                description: result.description,
+                status: result.status,
+                experiences: result.experiences,
+                projects: result.projects,
+                skillSets: result.skillSet,
+                ready: true
+            })
+        }).catch((error) => {
+            alert(error)
+        })
+    }
+
+    resetState() {
+        this.setState({
+            ready: false,
+            imgUrl: "",
+            firstName: "",
+            lastName: "",
+            description: "",
+            status: "",
+            experiences: [],
+            skillSets: [],
+            projects: [],
+            tags: [],
+        })
+    }
+
+    initializeState() {
+        this.resetState()
+        this.fetchData()
+    }
+
+    didFocusSubscription = this.props.navigation.addListener(
+        'didFocus',
+        payload => {
+            this.initializeState()
+        }
+    );
 
     render(){
         const {ready, imgUrl, firstName, lastName, description, status, experiences, skillSets, projects, tags, fullNameModal} = this.state;
