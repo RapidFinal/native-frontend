@@ -1,7 +1,6 @@
-package com.jobme;
+package com.jobme.androiod.app;
 import android.content.Intent;
 
-import com.facebook.CallbackManager;
 import com.facebook.react.ReactActivity;
 
 public class MainActivity extends ReactActivity {
