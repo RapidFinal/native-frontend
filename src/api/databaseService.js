@@ -237,6 +237,10 @@ class DatabaseService {
     });
   }
 
+  updateSkillSet(uid, skillId, skill) {
+    firebase.database().ref("employeeInfo/" + uid + "/skillSet/" + skillId + "/").set(skill);
+  }
+
   updateEmployeeExperience(uid, expId, title, desc) {
     let val = {
       experience_title: title,
