@@ -113,20 +113,7 @@ class DatabaseService {
   }
 
   createEmployeeSkillSet(uid, skill) {
-    this.getEmployeeSkillSet(uid).then(skills => {
-      let val = {}
-      if (skills === null) {
-        console.log("new");
-        val[skill] = true;
-      } else {
-        console.log("not new");
-        val = skills;
-        if (typeof(val[skill]) === 'undefined') {
-          val[skill] = true;
-        }
-      }
-      firebase.database().ref("employeeInfo/" + uid + "/skillSet/").set(val);
-    })
+    firebase.database().ref("employeeInfo/" + uid + "/skillSet/").push(skill);
   }
 
   getEmployeeSkillSet(uid) {
@@ -168,8 +155,12 @@ class DatabaseService {
 
           let skills = [];
           if (typeof(val.skillSet) !== 'undefined'){
-            Object.entries(val.skillSet).forEach( ([skill, bool]) => {
-              skills.push(skill);
+            Object.entries(val.skillSet).forEach( ([id, skill]) => {
+              let tmp = {
+                id: id,
+                skill: skill
+              };
+              skills.push(tmp);
             });
           } else {
             skills = [];
@@ -244,6 +235,14 @@ class DatabaseService {
         firebase.database().ref("employeeInfo/" + uid + "/tagIds/").set(tagIds);
       })
     });
+  }
+
+  updateSkillSet(uid, skillId, skill) {
+    firebase.database().ref("employeeInfo/" + uid + "/skillSet/" + skillId + "/").set(skill);
+  }
+
+  deleteEmployeeSkillSet(uid, skillId) {
+    firebase.database().ref("employeeInfo/" + uid + "/skillSet/" + skillId + "/").remove();
   }
 
   updateEmployeeExperience(uid, expId, title, desc) {
