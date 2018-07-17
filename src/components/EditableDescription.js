@@ -9,7 +9,10 @@ import TextInputMultipleLineWithLabel from '../components/TextInputMultipleLineW
 
 class CircularProfilePhoto extends React.Component {
 
-    static propTypes = {}
+    static propTypes = {
+        description: PropTypes.string,
+        update: PropTypes.func,
+    }
 
     state = {
         modalVisible: false,

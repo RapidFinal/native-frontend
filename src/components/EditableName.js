@@ -8,7 +8,11 @@ import {Authentication} from '../api'
 
 class CircularProfilePhoto extends React.Component {
 
-    static propTypes = {}
+    static propTypes = {
+        firstName: PropTypes.string,
+        lastName: PropTypes.string,
+        updateName: PropTypes.func
+    }
 
     state = {
         modalVisible: false,
