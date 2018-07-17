@@ -241,6 +241,10 @@ class DatabaseService {
     firebase.database().ref("employeeInfo/" + uid + "/skillSet/" + skillId + "/").set(skill);
   }
 
+  deleteEmployeeSkillSet(uid, skillId) {
+    firebase.database().ref("employeeInfo/" + uid + "/skillSet/" + skillId + "/").remove();
+  }
+
   updateEmployeeExperience(uid, expId, title, desc) {
     let val = {
       experience_title: title,
