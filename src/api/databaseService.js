@@ -146,7 +146,7 @@ class DatabaseService {
           let ex = [];
           if (typeof(val.experiences) !== 'undefined'){
             Object.entries(val.experiences).forEach( ([id, info]) => {
-              ex.push({title: info.experience_title, description: info.experience_description});
+              ex.push({id: id, title: info.experience_title, description: info.experience_description});
             });
           } else {
             ex = [];
@@ -246,10 +246,16 @@ class DatabaseService {
     });
   }
 
-  // exp = {title: "title2", desc: "defefefefefefer"}, {title: "title3", desc: "defefefefefefer"}
-  // need to talk with sky on the the process of edit
-  updateEmployeeExperience(uid, exp) {
+  updateEmployeeExperience(uid, expId, title, desc) {
+    let val = {
+      experience_title: title,
+      experience_description: desc
+    };
+    firebase.database().ref("employeeInfo/" + uid + "/experiences/" + expId + "/").set(val);
+  }
 
+  deleteEmployeeExperience(uid, expId){
+    firebase.database().ref("employeeInfo/" + uid + "/experiences/" + expId + "/").remove();
   }
 
   updateEmployeeProject(uid, projectId, progName, progDesc, date, tags) {
@@ -298,17 +304,6 @@ class DatabaseService {
     firebase.database().ref("employeeInfo/" + uid + "/imgUrl/").set(url);
   }
 
-  // assume you want to get at projects filed
-  // getEmployeeInfoAt("uid", "projects") -> array of object
-  //                                      -> [{},{}]
-  getEmployeeInfoAt(uid, field) {
-    let ret = [{
-      name: "Note Sharing", description: "a web application to share and comment notes",
-      date: "01/06/2018", tags: ["firebase", "Vue", "Cordova"]
-    }];
-    return ret;
-  }
-
   /* All employeeInfo must be created with the node "liked: 0"*/
   updateEmployeeLiked(uid, operator){
     firebase.database().ref("employeeInfo/" + uid + "/liked/").transaction((currentVal) => {
@@ -329,7 +324,7 @@ class DatabaseService {
         resolve(snapshot.val())
       });
     });
-  }
+  };
 
   // Employer
 
@@ -367,8 +362,8 @@ class DatabaseService {
     firebase.database().ref("employerInfo/" + uid + "/lastName").set(lastName);
   }
 
-  updateEmployerDescription(uid, desc) {
-    firebase.database().ref("employerInfo/" + uid + "/deacription").set(desc);
+  updateEmployerCompanyName(uid, companyName) {
+    firebase.database().ref("employerInfo/" + uid + "/companyName").set(companyName);
   }
 
   // cat = map of categoey-subcategory that selected
@@ -384,6 +379,23 @@ class DatabaseService {
         firebase.database().ref("employerInfo/" + uid + "/categories/").set(val);
       }
     );
+  }
+
+
+  // {
+  //   "categoryId1": ["subcategoryId1", "subcategoryId2", "subcategoryId3"],
+  //   "categoryId2": ["subcategoryId1", "subcategoryId2", "subcategoryId3"]
+  // }
+  getEmployerCategories(uid){
+    return new Promise((resolve, reject) => {
+      firebase.database().ref("employerInfo/" + uid + "/categories/").once('value').then((snapshot) => {
+        let ret = {};
+        snapshot.forEach(s => {
+          ret[s.key] = s.val().subCategoryIds;
+        });
+        resolve(ret);
+      })
+    });
   }
 
   // ret = {firstName: "Alice", lastName:"Smith", companyName: "MUIC", imgUrl,
@@ -414,7 +426,7 @@ class DatabaseService {
         firebase.database().ref("employerInfo/" + uid + "/").once('value').then((snapshot) => {
           const ret = {};
           let val = snapshot.val();
-          let cat = []
+          let cat = [];
           Object.entries(val.categories).forEach(
             ([categoryId, subCatIds]) => {
               let tmp = {};
@@ -423,12 +435,12 @@ class DatabaseService {
                 let subCats = {
                   subCategoryId: subCatId,
                   subCategoryName: allCats[categoryId].subCategory[subCatId].subCategoryName
-                }
+                };
                 arr.push(subCats);
               });
               tmp.categoryId = categoryId;
               tmp.categoryName = allCats[categoryId].categoryName;
-              tmp.subCategory = arr
+              tmp.subCategory = arr;
               cat.push(tmp);
             }
           );

@@ -2,7 +2,7 @@ Pods
 # OSX
 #
 .DS_Store
-
+Podfile.lock
 # Xcode
 #
 build/
@@ -21,7 +21,7 @@ DerivedData
 *.hmap
 *.ipa
 *.xcuserstate
-project.xcworkspace
+*.xcworkspace
 
 # Android/IntelliJ
 #

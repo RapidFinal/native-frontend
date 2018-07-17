@@ -94,13 +94,12 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    compileSdkVersion rootProject.ext.compileSdkVersion
 
     defaultConfig {
         applicationId "com.jobme.androiod.app"
-        minSdkVersion 16
-        targetSdkVersion 27
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
         ndk {
@@ -134,28 +133,22 @@ android {
             }
         }
     }
+    buildToolsVersion '27.0.3'
 }
 
 dependencies {
     compile project(':react-native-vector-icons')
-
-    implementation project(':react-native-fbsdk')
-    implementation(project(':react-native-firebase')) {
-        transitive = false
-    }
-    implementation fileTree(dir: "libs", include: ["*.jar"])
-    //noinspection GradleCompatible
-    implementation "com.android.support:appcompat-v7:27.1.1"
-
-    implementation "com.facebook.react:react-native:+"  // From node_modules
-    implementation 'com.google.android.gms:play-services-analytics:16.0.1'
+    compile project(':react-native-firebase')
+    compile project(':react-native-fbsdk')
+    compile fileTree(dir: "libs", include: ["*.jar"])
+    compile "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
+    compile "com.facebook.react:react-native:+"  // From node_modules
+    implementation project(':react-native-firebase')
     implementation "com.google.android.gms:play-services-base:15.0.1"
-
     implementation "com.google.firebase:firebase-core:16.0.1"
     implementation "com.google.firebase:firebase-auth:16.0.2"
     implementation "com.google.firebase:firebase-database:16.0.1"
     implementation "com.google.firebase:firebase-storage:16.0.1"
-    implementation 'com.facebook.android:facebook-android-sdk:4.34.0'
 }
 
 // Run this once to be able to run the application with BUCK
@@ -166,4 +159,3 @@ task copyDownloadableDepsToLibs(type: Copy) {
 }
 
 apply plugin: 'com.google.gms.google-services'
-apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"

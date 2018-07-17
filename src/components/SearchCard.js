@@ -18,7 +18,6 @@ class SearchCard extends Component {
     render() {
         const {} = this.state;
         const { results, onPress } = this.props;
-	console.log('results::::', results);
         return (
             <SafeAreaView style={styles.container}>
                 <Content style={styles.container}>
@@ -38,10 +37,10 @@ class SearchCard extends Component {
                                       value={(i.tags) ? i.tags : []}
                                       labelExtractor={ l => <Text style={styles.tagText}>{l}</Text> }
                                       editable={false}
-				      text={""}
-				      onChange={() => null}
+                                      text={""}
+                                      onChange={() => null}
                                       onChangeText={() => ""}
-				      inputProps={{placeholder: ""}}
+                                      inputProps={{placeholder: ""}}
                                 />
                             </Body>
                         </Left>
