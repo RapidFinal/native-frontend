@@ -3,6 +3,7 @@ import {withContext} from "../../context/withContext";
 import compose from "recompose/compose";
 import hoistStatics from "recompose/hoistStatics";
 import AccountManagement from './AccountManagement'
+import AuthenticationWrapper from '../../components/AuthenticatedWrapper'
 import {Signin} from "../signin/index"
 
 class AccountWrapper extends React.Component {
@@ -14,15 +15,10 @@ class AccountWrapper extends React.Component {
         })
     };
 
-    render(){
-        const { context: {authenticated}, ...rest } = this.props;
-        if (authenticated) {
-            const AccountManageWrap = hoistStatics(compose(withContext))(AccountManagement)
-            return <AccountManageWrap {...rest} />
-        } else {
-            const SigninWrap = hoistStatics(compose(withContext))(Signin)
-            return <SigninWrap {...rest} />
-        }
+    render() {
+        return (
+            <AuthenticationWrapper authenticated={AccountManagement} unauthenticated={Signin} />
+        )
     }
 }
 
