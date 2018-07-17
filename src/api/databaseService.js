@@ -367,13 +367,13 @@ class DatabaseService {
   //   "categoryId2": ["subcategoryId1", "subcategoryId2", "subcategoryId3"]
   // }
   updateEmployerCategories(uid, cat) {
+    let val = {}
     Object.entries(cat).forEach(
       ([categoryId, subCatIds]) => {
-        let val = {};
-        val[categoryId] = {subCategoryIds: subCatIds};
-        firebase.database().ref("employerInfo/" + uid + "/categories/").set(val);
+        val[categoryId] = {subCategoryIds: subCatIds}
       }
     );
+    firebase.database().ref("employerInfo/" + uid + "/categories/").set(val);
   }
 
 
