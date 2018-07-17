@@ -121,7 +121,7 @@ class CircularProfilePhoto extends React.Component {
                             <TextInputWithLabel
                                 label="First name"
                                 placeholder="First name"
-                                value={firstName === "" ? (this.props.firstName) : (firstName)}
+                                value={firstName}
                                 hasError={flags.firstName}
                                 onBlur={() => this.validate("firstName")}
                                 onChange={this.handleChange("firstName")}
@@ -130,7 +130,7 @@ class CircularProfilePhoto extends React.Component {
                             <TextInputWithLabel
                                 label="Last name"
                                 placeholder="Last name"
-                                value={lastName === "" ? (this.props.lastName) : (lastName)}
+                                value={lastName}
                                 hasError={flags.lastName}
                                 onBlur={() => this.validate("lastName")}
                                 onChange={this.handleChange("lastName")}
