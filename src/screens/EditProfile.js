@@ -12,12 +12,11 @@ import DatabaseService from '../api/databaseService';
 import TagsSection from '../components/TagsSection';
 import {Authentication} from '../api'
 import EditableName from '../components/EditableName'
+import EditableDescription from '../components/EditableDescription';
 
 class EditProfile extends React.Component {
 
-    static propTypes = {
-
-    }
+    static propTypes = {}
 
     state = {
         ready: false,
@@ -53,6 +52,12 @@ class EditProfile extends React.Component {
         })
     }
 
+    update(field, value) {
+        this.setState({
+            [field]: value
+        })
+    }
+
     updateExperienceState(newExp) {
         this.setState({
             experiences: newExp
@@ -62,13 +67,6 @@ class EditProfile extends React.Component {
     updateSkillSetsState(newSkills) {
         this.setState({
             skillSets: newSkills
-        })
-    }
-
-    toggleModal(name, value) {
-        alert('toggle')
-        this.setState({
-            [name]: value
         })
     }
 
@@ -133,17 +131,18 @@ class EditProfile extends React.Component {
         }
     );
 
-    render(){
-        const {ready, imgUrl, firstName, lastName, description, status, experiences, skillSets, projects, tags, fullNameModal} = this.state;
+    render() {
+        const {ready, imgUrl, firstName, lastName, description, status, experiences, skillSets, projects, tags} = this.state;
         return (
             <ScrollView contentContainerStyle={styles.ScrollContainer} ref={scrollView => this.scrollView = scrollView}>
                 {
                     ready ? (
                         <View style={styles.MainContainer}>
                             <CircularProfilePhoto url={imgUrl} diameter={150}/>
-                            <EditableName firstName={firstName} lastName={lastName} updateName={this.updateName.bind(this)}/>
+                            <EditableName firstName={firstName} lastName={lastName}
+                                          updateName={this.updateName.bind(this)}/>
                             <StatusText status={status}/>
-                            <EditableDescription description={description}/>
+                            <EditableDescription description={description} update={this.update.bind(this)}/>
                             <EditableTags tags={tags}/>
                             <ExperiencesCard experiences={experiences}/>
                             <SkillSetsCard skills={skillSets}/>
@@ -160,41 +159,7 @@ class EditProfile extends React.Component {
 
 const DataLoading = ({}) => (
     <View style={styles.MainContainer}>
-        <Spinner color={"black"} />
-    </View>
-);
-
-// const EditNameModal = ({fullNameModal, toggleModal}) => (
-//     <Modal
-//         animationType="slide"
-//         transparent={false}
-//         visible={fullNameModal}
-//         onRequestClose={() => {
-//             alert('Modal has been closed.');
-//         }}>
-//         <View style={{marginTop: 22}}>
-//             <View>
-//                 <Text>Hello World!</Text>
-//                 <TouchableHighlight
-//                     onPress={() => {
-//                         toggleModal('fullNameModal', false)
-//                     }}>
-//                     <Text>Hide Modal</Text>
-//                 </TouchableHighlight>
-//             </View>
-//         </View>
-//     </Modal>
-// );
-
-const EditableDescription = ({description}) => (
-    <View style={[styles.DescriptionSection, styles.CenterAlign]}>
-        <Text style={styles.DescriptionText}>
-            {description}
-        </Text>
-        <Image
-            source={require('../assets/images/edit.png')}
-            style={[styles.EditIcon, styles.DescriptionEditIcon]}
-        />
+        <Spinner color={"black"}/>
     </View>
 );
 
@@ -247,7 +212,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#ddd',
         shadowColor: '#989898',
-        shadowOffset: { width: 5, height: 5},
+        shadowOffset: {width: 5, height: 5},
         shadowOpacity: 1,
         shadowRadius: 5,
     },
@@ -270,4 +235,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default compose() (EditProfile)
+export default compose()(EditProfile)
