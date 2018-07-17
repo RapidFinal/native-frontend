@@ -5,7 +5,7 @@ import android.app.Application;
 import com.facebook.CallbackManager;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.react.ReactApplication;
-import com.jobme.BuildConfig;
+import com.jobme.androiod.app.BuildConfig;
 import com.oblador.vectoricons.VectorIconsPackage;
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.auth.RNFirebaseAuthPackage;
@@ -42,7 +42,6 @@ public class MainApplication extends Application implements ReactApplication {
 
     @Override
     protected List<ReactPackage> getPackages() {
-      mCallbackManager = new CallbackManager.Factory().create();
       ReactPackage packages[] = new ReactPackage[]{
               new VectorIconsPackage(),
               new MainReactPackage(),
