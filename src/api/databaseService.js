@@ -283,6 +283,10 @@ class DatabaseService {
     });
   }
 
+  deleteEmployeeProject(uid, projectId){
+    firebase.database().ref("employeeInfo/" + uid + "/projects/" + projectId + "/").remove();
+  }
+
   getEmployeeTags(uid) {
     return new Promise((resolve, reject) => {
       firebase.database().ref("employeeInfo/" + uid + "/tagIds/").once('value').then((snapshot) => {
