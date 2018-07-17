@@ -133,12 +133,16 @@ class DatabaseService {
 
           let prog = [];
           if (typeof(val.projects) !== 'undefined'){
-            let tmp = []
+            let tmp = [];
             Object.entries(val.projects).forEach( ([id, info]) => {
               Object.entries(info.links).forEach(([id, val]) => {
-                tmp.push(val);
+                let v = {};
+                v[id] = id;
+                v["type"] = val.type;
+                v["links"] = val.link;
+                tmp.push(v);
               });
-              prog.push({name: info.projectName, description: info.projectDescription,
+              prog.push({id:id, name: info.projectName, description: info.projectDescription,
                 date: info.date, tags: info.tagIds, links: tmp});
             });
           } else {
