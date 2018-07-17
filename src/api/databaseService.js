@@ -254,6 +254,10 @@ class DatabaseService {
     firebase.database().ref("employeeInfo/" + uid + "/experiences/" + expId + "/").set(val);
   }
 
+  deleteEmployeeExperience(uid, expId){
+    firebase.database().ref("employeeInfo/" + uid + "/experiences/" + expId + "/").remove();
+  }
+
   updateEmployeeProject(uid, projectId, progName, progDesc, date, tags) {
     this.getAllTags().then((allTags) => {
       this.getEmployeeTags(uid).then((oldTagIds) => {
@@ -300,17 +304,6 @@ class DatabaseService {
     firebase.database().ref("employeeInfo/" + uid + "/imgUrl/").set(url);
   }
 
-  // assume you want to get at projects filed
-  // getEmployeeInfoAt("uid", "projects") -> array of object
-  //                                      -> [{},{}]
-  getEmployeeInfoAt(uid, field) {
-    let ret = [{
-      name: "Note Sharing", description: "a web application to share and comment notes",
-      date: "01/06/2018", tags: ["firebase", "Vue", "Cordova"]
-    }];
-    return ret;
-  }
-
   /* All employeeInfo must be created with the node "liked: 0"*/
   updateEmployeeLiked(uid, operator){
     firebase.database().ref("employeeInfo/" + uid + "/liked/").transaction((currentVal) => {
@@ -331,7 +324,7 @@ class DatabaseService {
         resolve(snapshot.val())
       });
     });
-  }
+  };
 
   // Employer
 
