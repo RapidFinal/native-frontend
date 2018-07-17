@@ -113,28 +113,7 @@ class DatabaseService {
   }
 
   createEmployeeSkillSet(uid, skill) {
-    this.getEmployeeSkillSet(uid).then(skills => {
-      let val = {}
-      if (skills === null) {
-        console.log("new");
-        val[skill] = true;
-      } else {
-        console.log("not new");
-        val = skills;
-        if (typeof(val[skill]) === 'undefined') {
-          val[skill] = true;
-        }
-      }
-      firebase.database().ref("employeeInfo/" + uid + "/skillSet/").set(val);
-    })
-  }
-
-  getEmployeeSkillSet(uid) {
-    return new Promise((resolve, reject) => {
-      firebase.database().ref("employeeInfo/" + uid + "/skillSet/").once('value').then(snapshot => {
-        resolve(snapshot.val());
-      });
-    });
+    firebase.database().ref("employeeInfo/" + uid + "/skillSet/").push(skill);
   }
 
   getEmployeeInfo(uid) {
@@ -146,7 +125,7 @@ class DatabaseService {
           let ex = [];
           if (typeof(val.experiences) !== 'undefined'){
             Object.entries(val.experiences).forEach( ([id, info]) => {
-              ex.push({title: info.experience_title, description: info.experience_description});
+              ex.push({id: id, title: info.experience_title, description: info.experience_description});
             });
           } else {
             ex = [];
@@ -168,8 +147,12 @@ class DatabaseService {
 
           let skills = [];
           if (typeof(val.skillSet) !== 'undefined'){
-            Object.entries(val.skillSet).forEach( ([skill, bool]) => {
-              skills.push(skill);
+            Object.entries(val.skillSet).forEach( ([id, skill]) => {
+              let tmp = {
+                id: id,
+                skill: skill
+              };
+              skills.push(tmp);
             });
           } else {
             skills = [];
@@ -246,10 +229,24 @@ class DatabaseService {
     });
   }
 
-  // exp = {title: "title2", desc: "defefefefefefer"}, {title: "title3", desc: "defefefefefefer"}
-  // need to talk with sky on the the process of edit
-  updateEmployeeExperience(uid, exp) {
+  updateEmployeeSkillSet(uid, skillId, skill) {
+    firebase.database().ref("employeeInfo/" + uid + "/skillSet/" + skillId + "/").set(skill);
+  }
 
+  deleteEmployeeSkillSet(uid, skillId) {
+    firebase.database().ref("employeeInfo/" + uid + "/skillSet/" + skillId + "/").remove();
+  }
+
+  updateEmployeeExperience(uid, expId, title, desc) {
+    let val = {
+      experience_title: title,
+      experience_description: desc
+    };
+    firebase.database().ref("employeeInfo/" + uid + "/experiences/" + expId + "/").set(val);
+  }
+
+  deleteEmployeeExperience(uid, expId){
+    firebase.database().ref("employeeInfo/" + uid + "/experiences/" + expId + "/").remove();
   }
 
   updateEmployeeProject(uid, projectId, progName, progDesc, date, tags) {
@@ -286,6 +283,10 @@ class DatabaseService {
     });
   }
 
+  deleteEmployeeProject(uid, projectId){
+    firebase.database().ref("employeeInfo/" + uid + "/projects/" + projectId + "/").remove();
+  }
+
   getEmployeeTags(uid) {
     return new Promise((resolve, reject) => {
       firebase.database().ref("employeeInfo/" + uid + "/tagIds/").once('value').then((snapshot) => {
@@ -296,17 +297,6 @@ class DatabaseService {
 
   updateEmployeeImgUrl(uid, url) {
     firebase.database().ref("employeeInfo/" + uid + "/imgUrl/").set(url);
-  }
-
-  // assume you want to get at projects filed
-  // getEmployeeInfoAt("uid", "projects") -> array of object
-  //                                      -> [{},{}]
-  getEmployeeInfoAt(uid, field) {
-    let ret = [{
-      name: "Note Sharing", description: "a web application to share and comment notes",
-      date: "01/06/2018", tags: ["firebase", "Vue", "Cordova"]
-    }];
-    return ret;
   }
 
   /* All employeeInfo must be created with the node "liked: 0"*/
@@ -329,7 +319,7 @@ class DatabaseService {
         resolve(snapshot.val())
       });
     });
-  }
+  };
 
   // Employer
 
@@ -377,13 +367,13 @@ class DatabaseService {
   //   "categoryId2": ["subcategoryId1", "subcategoryId2", "subcategoryId3"]
   // }
   updateEmployerCategories(uid, cat) {
+    let val = {}
     Object.entries(cat).forEach(
       ([categoryId, subCatIds]) => {
-        let val = {};
-        val[categoryId] = {subCategoryIds: subCatIds};
-        firebase.database().ref("employerInfo/" + uid + "/categories/").set(val);
+        val[categoryId] = {subCategoryIds: subCatIds}
       }
     );
+    firebase.database().ref("employerInfo/" + uid + "/categories/").set(val);
   }
 
 

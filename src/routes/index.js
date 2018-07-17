@@ -140,9 +140,16 @@ const AuthenticationMainStack = createStackNavigator(
         CredentialSignin: CredentialSignin,
         ForgotPassword: ForgotPassword,
         AccountWrapper: AccountWrapper,
+        /* Others */
+        Home: Home,
+        SideMenu: SideMenu,
+        SubCategorySideMenu: SubCategorySideMenu,
+        SearchResult: SearchResult,
+        View: ViewCandidateProfile,
     },
     {
-        initialRouteName: 'AccountWrapper'
+        initialRouteName: 'Home',
+        navigationOptions: headerOptions
     }
 );
 
