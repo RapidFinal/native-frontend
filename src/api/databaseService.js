@@ -386,6 +386,23 @@ class DatabaseService {
     );
   }
 
+
+  // {
+  //   "categoryId1": ["subcategoryId1", "subcategoryId2", "subcategoryId3"],
+  //   "categoryId2": ["subcategoryId1", "subcategoryId2", "subcategoryId3"]
+  // }
+  getEmployerCategories(uid){
+    return new Promise((resolve, reject) => {
+      firebase.database().ref("employerInfo/" + uid + "/categories/").once('value').then((snapshot) => {
+        let ret = {};
+        snapshot.forEach(s => {
+          ret[s.key] = s.val().subCategoryIds;
+        });
+        resolve(ret);
+      })
+    });
+  }
+
   // ret = {firstName: "Alice", lastName:"Smith", companyName: "MUIC", imgUrl,
   //   categories: [
   //     {
