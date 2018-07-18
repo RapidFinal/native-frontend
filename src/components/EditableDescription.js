@@ -2,10 +2,10 @@ import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
 import {StyleSheet, Image, View, Text, TouchableHighlight, Modal, TouchableOpacity} from "react-native";
-import TextInputWithLabel from './TextInputWithLabel';
 import DatabaseService from "../api/databaseService";
 import {Authentication} from '../api'
 import TextInputMultipleLineWithLabel from '../components/TextInputMultipleLineWithLabel';
+import {Icon} from 'react-native-elements'
 
 class EditableDescription extends React.Component {
 
@@ -77,6 +77,10 @@ class EditableDescription extends React.Component {
         this.setState({modalVisible: visible});
     }
 
+    closeModal() {
+        this.setModalVisible(!this.state.modalVisible)
+    }
+
     openModal() {
         const credential = {...this.state.credential};
         credential['description'] = this.props.description;
@@ -111,27 +115,33 @@ class EditableDescription extends React.Component {
                     onRequestClose={() => {
                         alert('Modal has been closed.');
                     }}>
-                    <View style={{marginTop: 22}}>
-                        <View>
-                            <TextInputMultipleLineWithLabel
-                                label="Description"
-                                placeholder="Description"
-                                hasError={flags.description}
-                                multiline = {true}
-                                onChange={this.handleChange("description")}
-                                value={description}
-                                editable = {true}
-                                maxLength = {120}
-                                onBlur={() => this.validate("description")}
-                                errorMessage={message.description}
-                            />
-                            <TouchableOpacity
-                                onPress={() => this.save()}
-                                style={styles.button}
-                            >
-                                <Text style={styles.saveText}>Save</Text>
-                            </TouchableOpacity>
-                        </View>
+                    <View style={[styles.MainContainer]}>
+                        <TouchableHighlight
+                            style={styles.CloseIconPos}
+                            onPress={() => {
+                                this.closeModal();
+                            }}
+                        >
+                            <Icon name='close'/>
+                        </TouchableHighlight>
+                        <TextInputMultipleLineWithLabel
+                            label="Description"
+                            placeholder="Description"
+                            hasError={flags.description}
+                            multiline = {true}
+                            onChange={this.handleChange("description")}
+                            value={description}
+                            editable = {true}
+                            maxLength = {120}
+                            onBlur={() => this.validate("description")}
+                            errorMessage={message.description}
+                        />
+                        <TouchableOpacity
+                            onPress={() => this.save()}
+                            style={styles.button}
+                        >
+                            <Text style={styles.saveText}>Save</Text>
+                        </TouchableOpacity>
                     </View>
                 </Modal>
 
@@ -154,6 +164,13 @@ class EditableDescription extends React.Component {
 }
 
 const styles = StyleSheet.create({
+    MainContainer: {
+        width: '90%',
+        maxWidth: '90%',
+        marginTop: 20,
+        alignSelf: 'center'
+    },
+
     CenterAlign: {
         flex: 1,
         flexDirection: 'column',
@@ -184,6 +201,10 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 20,
         color: '#fff'
+    },
+
+    CloseIconPos: {
+        alignSelf: 'flex-end'
     }
 })
 
