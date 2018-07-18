@@ -69,6 +69,7 @@ const styles = StyleSheet.create({
     RowAlign: {
         flex: 1,
         flexDirection: 'row',
+        alignItems: 'center'
     },
 });
 
