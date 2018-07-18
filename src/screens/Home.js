@@ -22,7 +22,7 @@ class Home extends React.Component {
 
     static propTypes = {
         searchText: PropTypes.string,
-        recentlyViewed: PropTypes.array,
+        recentViewUsers: PropTypes.array,
     };
 
     static navigationOptions = ({ navigation }) => ({
@@ -46,19 +46,24 @@ class Home extends React.Component {
     });
 
     state = {
-        searchText: ''
+        searchText: '',
+        recentViewUsers: [],
     }
 
     componentWillMount() {
         const db = new DatabaseService;
         const currentUser = Authentication.currentUser();
-        // const recentView = db.getEmployeeRecentView(currentUser.uid)
-        console.log(currentUser)
+        const recentView = db.getEmployeeRecentView(currentUser.uid)
+        for (let view of recentView) {
+            console.log(view);
+        }
+
     }
 
     goToProfile = (userID) => {
         this.props.navigation.navigate("View", { userID: userID });
     };
+
     drawer = () => {
         this.props.navigation.openDrawer();
         console.log("drawer open")
@@ -75,7 +80,7 @@ class Home extends React.Component {
     }
 
     render(){
-        const { } = this.state;
+        const { recentViewUsers } = this.state;
         const userInfo = [
             {
                 uid: 1,
@@ -125,15 +130,15 @@ class Home extends React.Component {
                         style={styles.swipeBox}
                         index={0}
                     >
-                        {userInfo.map((prop, key) => {
+                        {userInfo.map((user, key) => {
                             return (
                                 <TouchableHighlight
                                     style={styles.button}
-                                    onPress={() => this.goToProfile(prop.uid)}
+                                    onPress={() => this.goToProfile(user.uid)}
                                     underlayColor="#EAEAEA"
                                     key={key}
                                 >
-                                    <HomeCard name={prop.name} major={prop.major} status={prop.status}/>
+                                    <HomeCard name={user.name} major={user.major} status={user.status}/>
                                 </TouchableHighlight>
                             );
                         })}
@@ -167,6 +172,12 @@ class Home extends React.Component {
         )
     }
 
+}
+
+const RecentlyViewed = (recentViews) => {
+    recentViews.map((view,key) => {
+
+    })
 }
 
 const styles = StyleSheet.create({
