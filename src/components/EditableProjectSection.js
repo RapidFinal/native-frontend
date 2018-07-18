@@ -1,21 +1,31 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import {StyleSheet, View, ScrollView} from "react-native";
+import {StyleSheet, View, TouchableHighlight} from "react-native";
 import {Text} from "native-base";
-import DatabaseService from "../api/databaseService";
 import EditableProjectCard from "./EditableProjectCard";
+import { Icon } from 'react-native-elements'
 
-class StatusDropdown extends React.Component {
+class EditableProjectSection extends React.Component {
 
     static propTypes = {}
-
-    state = {}
 
     render() {
         return (
             <View style={styles.MainContainer}>
-                <Text style={styles.Title}>Projects</Text>
+                <View style={styles.RowAlign}>
+                    <Text style={styles.Title}>Projects</Text>
+                    <TouchableHighlight
+                        onPress={() => {
+                            // Call add project here
+                        }}
+                    >
+                        <Icon
+                            name='add-circle-outline'
+                            color='#517fa4'
+                        />
+                    </TouchableHighlight>
+                </View>
                 {
                     this.props.projects.map((value, index) => {
                         return (
@@ -53,7 +63,13 @@ const styles = StyleSheet.create({
         fontSize: 30,
         fontWeight: 'bold',
         marginBottom: 5,
-    }
+        marginRight: 10,
+    },
+
+    RowAlign: {
+        flex: 1,
+        flexDirection: 'row',
+    },
 });
 
-export default compose()(StatusDropdown)
+export default compose()(EditableProjectSection)

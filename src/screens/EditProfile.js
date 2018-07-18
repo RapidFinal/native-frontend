@@ -75,6 +75,18 @@ class EditProfile extends React.Component {
         db.deleteEmployeeProject(uid, projectId)
     }
 
+    addProject() {
+
+    }
+
+    addProjectToState() {
+
+    }
+
+    addProjectToDB() {
+        
+    }
+
     deleteProjectFromState(index) {
         console.log('delete from state')
         console.log(index)

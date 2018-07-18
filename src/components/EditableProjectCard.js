@@ -6,7 +6,7 @@ import DatabaseService from "../api/databaseService";
 import {Authentication} from "../api";
 import { Icon } from 'react-native-elements'
 
-class ProjectDetail extends React.Component {
+class EditableProjectCard extends React.Component {
 
     static propTypes = {
         name: PropTypes.string,
@@ -140,4 +140,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default compose() (ProjectDetail)
+export default compose() (EditableProjectCard)
