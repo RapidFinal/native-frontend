@@ -5,6 +5,7 @@ import {StyleSheet, Image, View, Text, TouchableHighlight, Modal, TouchableOpaci
 import TextInputWithLabel from './TextInputWithLabel';
 import DatabaseService from "../api/databaseService";
 import {Authentication} from '../api'
+import {Icon} from 'react-native-elements'
 
 class EditableName extends React.Component {
 
@@ -77,6 +78,10 @@ class EditableName extends React.Component {
         this.setState({modalVisible: visible});
     }
 
+    closeModal() {
+        this.setModalVisible(!this.state.modalVisible)
+    }
+
     openModal() {
         const credential = {...this.state.credential};
         credential['firstName'] = this.props.firstName;
@@ -118,33 +123,39 @@ class EditableName extends React.Component {
                     onRequestClose={() => {
                         alert('Modal has been closed.');
                     }}>
-                    <View style={{marginTop: 22}}>
-                        <View>
-                            <TextInputWithLabel
-                                label="First name"
-                                placeholder="First name"
-                                value={firstName}
-                                hasError={flags.firstName}
-                                onBlur={() => this.validate("firstName")}
-                                onChange={this.handleChange("firstName")}
-                                errorMessage={message.firstName}
-                            />
-                            <TextInputWithLabel
-                                label="Last name"
-                                placeholder="Last name"
-                                value={lastName}
-                                hasError={flags.lastName}
-                                onBlur={() => this.validate("lastName")}
-                                onChange={this.handleChange("lastName")}
-                                errorMessage={message.lastName}
-                            />
-                            <TouchableOpacity
-                                onPress={() => this.save()}
-                                style={styles.button}
-                            >
-                                <Text style={styles.saveText}>Save</Text>
-                            </TouchableOpacity>
-                        </View>
+                    <View style={[styles.MainContainer]}>
+                        <TouchableHighlight
+                            style={styles.CloseIconPos}
+                            onPress={() => {
+                                this.closeModal();
+                            }}
+                        >
+                            <Icon name='close'/>
+                        </TouchableHighlight>
+                        <TextInputWithLabel
+                            label="First name"
+                            placeholder="First name"
+                            value={firstName}
+                            hasError={flags.firstName}
+                            onBlur={() => this.validate("firstName")}
+                            onChange={this.handleChange("firstName")}
+                            errorMessage={message.firstName}
+                        />
+                        <TextInputWithLabel
+                            label="Last name"
+                            placeholder="Last name"
+                            value={lastName}
+                            hasError={flags.lastName}
+                            onBlur={() => this.validate("lastName")}
+                            onChange={this.handleChange("lastName")}
+                            errorMessage={message.lastName}
+                        />
+                        <TouchableOpacity
+                            onPress={() => this.save()}
+                            style={styles.button}
+                        >
+                            <Text style={styles.saveText}>Save</Text>
+                        </TouchableOpacity>
                     </View>
                 </Modal>
 
@@ -165,6 +176,13 @@ class EditableName extends React.Component {
 }
 
 const styles = StyleSheet.create({
+    MainContainer: {
+        width: '90%',
+        maxWidth: '90%',
+        marginTop: 20,
+        alignSelf: 'center'
+    },
+
     RowAlign: {
         flex: 1,
         flexDirection: 'row',
@@ -198,6 +216,10 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 20,
         color: '#fff'
+    },
+
+    CloseIconPos: {
+        alignSelf: 'flex-end'
     }
 })
 

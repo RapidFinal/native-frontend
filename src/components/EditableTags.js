@@ -72,7 +72,7 @@ class EditableTags extends React.Component {
                                 inputStyle={{ backgroundColor: "white" }}
                             />
                             <TouchableOpacity
-                                onPress={}
+                                onPress={() => console.log('save button pressed')}
                                 style={styles.button}
                             >
                                 <Text style={styles.saveText}>Save</Text>
