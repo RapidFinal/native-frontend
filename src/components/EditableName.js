@@ -116,7 +116,7 @@ class EditableName extends React.Component {
         const {firstName, lastName} = this.state.credential
         const {message, flags} = this.state.error;
         return (
-            <View style={styles.RowAlign}>
+            <View style={[styles.RowAlign, {marginTop: 10}]}>
                 <Modal
                     animationType="slide"
                     transparent={false}
