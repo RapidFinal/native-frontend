@@ -87,19 +87,19 @@ class ViewProfile extends React.Component {
         })
     }
 
-    showModal = () => {
+    showSkillModal = () => {
         this.setState({
             showSkillModal: true
         })
     }
 
-    hideModal = () => {
+    hideSkillModal = () => {
         this.setState({
             showSkillModal: false
         })
     }
 
-    toggleModal = () => {
+    toggleSkillModal = () => {
         this.setState((prev) => ({showSkillModal: !prev.showSkillModal}))
     }
 
@@ -205,7 +205,7 @@ class ViewProfile extends React.Component {
                                 </Text>
                                 <TagsSection tags={tags}/>
                                 <ExperiencesCard experiences={experiences}/>
-                                <SkillSetsCard skills={skillSets} onOpenModal={this.showModal} onCloseModal={this.hideModal} setSkillInput={this.setSkillInput} />
+                                <SkillSetsCard skills={skillSets} onOpenModal={this.showSkillModal} onCloseModal={this.hideSkillModal} setSkillInput={this.setSkillInput} />
                                 <ProjectSection projects={projects} navigation={this.props.navigation}/>
                             </View>
                         ) : (
@@ -213,7 +213,7 @@ class ViewProfile extends React.Component {
                         )
                     }
                 </ScrollView>
-                <ModalPopup visible={showSkillModal} close={this.hideModal}>
+                <ModalPopup visible={showSkillModal} close={this.hideSkillModal}>
                     <TextInput text={"Skill"} onChange={this.updateSkillInput} value={skillInput} />
                     <ClickButton>Save</ClickButton>
                 </ModalPopup>
