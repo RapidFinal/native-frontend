@@ -1,8 +1,8 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import {StyleSheet, View, Text, ScrollView} from "react-native";
-import {Spinner} from 'native-base';
+import {StyleSheet, View, ScrollView} from "react-native";
+import {Spinner, Button, Text, Icon, Fab} from 'native-base';
 import StatusText from '../components/StatusText';
 import ExperiencesCard from '../components/ExperiencesCard';
 import SkillSetsCard from '../components/SkillSetsCard';
@@ -134,28 +134,37 @@ class ViewProfile extends React.Component {
     render() {
         const {imgUrl, fullName, status, description, experiences, skillSets, projects, tags, ready} = this.state;
         return (
-            <ScrollView contentContainerStyle={styles.ScrollContainer} ref={scrollView => this.scrollView = scrollView}>
+            <View>
                 {
                     ready ? (
-                        <View style={styles.MainContainer}>
-                            <CircularProfilePhoto url={imgUrl} diameter={150}/>
-                            <Text style={styles.ProfileName}>
-                                {fullName}
-                            </Text>
-                            <StatusText status={status}/>
-                            <Text style={styles.Description}>
-                                {description}
-                            </Text>
-                            <TagsSection tags={tags}/>
-                            <ExperiencesCard experiences={experiences}/>
-                            <SkillSetsCard skills={skillSets}/>
-                            <ProjectSection projects={projects} navigation={this.props.navigation}/>
+                        <View>
+                            <ScrollView
+                                contentContainerStyle={styles.ScrollContainer}
+                                ref={scrollView => this.scrollView = scrollView}
+                            >
+                                <View style={styles.MainContainer}>
+                                    <SwitchButton/>
+                                    <CircularProfilePhoto url={imgUrl} diameter={150}/>
+                                    <Text style={styles.ProfileName}>
+                                        {fullName}
+                                    </Text>
+                                    <StatusText status={status}/>
+                                    <Text style={styles.Description}>
+                                        {description}
+                                    </Text>
+                                    <TagsSection tags={tags}/>
+                                    <ExperiencesCard experiences={experiences}/>
+                                    <SkillSetsCard skills={skillSets}/>
+                                    <ProjectSection projects={projects} navigation={this.props.navigation}/>
+                                </View>
+                            </ScrollView>
+                            <FavButton/>
                         </View>
                     ) : (
                         <DataLoading/>
                     )
                 }
-            </ScrollView>
+            </View>
         )
     }
 }
@@ -164,6 +173,21 @@ const DataLoading = ({}) => (
     <View style={styles.MainContainer}>
         <Spinner color={"black"} />
     </View>
+);
+
+const SwitchButton = ({onPress}) => (
+    <Button
+        style={styles.SwitchButton}
+        onPress={onPress}
+    >
+        <Text uppercase={false}>Switch View</Text>
+    </Button>
+);
+
+const FavButton = () => (
+    <Fab>
+        <Icon type={"Ionicons"} name={"md-star-outline"}/>
+    </Fab>
 );
 
 const styles = StyleSheet.create({
@@ -186,6 +210,11 @@ const styles = StyleSheet.create({
         marginTop: 20,
         maxWidth: '90%',
         textAlign: 'center'
+    },
+
+    SwitchButton: {
+        alignSelf: 'flex-end',
+        marginRight: "4%"
     }
 });
 
