@@ -1,8 +1,9 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import {StyleSheet, View, ScrollView, Image} from "react-native";
-import {Spinner} from 'native-base';
+import {StyleSheet, View, ScrollView, Image, Platform} from "react-native";
+import Modal from 'react-native-modal'
+import {Input, Item, Spinner} from 'native-base';
 import StatusText from '../components/StatusText';
 import ExperiencesCard from '../components/ExperiencesCard';
 import SkillSetsCard from '../components/SkillSetsCard';
@@ -13,6 +14,30 @@ import TagsSection from '../components/TagsSection';
 import {Authentication} from '../api'
 import EditableName from '../components/EditableName'
 import EditableDescription from '../components/EditableDescription';
+import ClickButton from "../components/ClickButton";
+
+const ModalPopup = ({visible, close, children }) => (
+    <Modal
+        isVisible={visible}
+        onBackdropPress={close}
+        style={styles.bottomModal}
+        avoidKeyboard={Platform.OS === 'ios'}
+    >
+        <View style={styles.scrollableModal}>
+            <View style={styles.modalContent}>
+                {children}
+            </View>
+        </View>
+    </Modal>
+);
+
+const TextInput = ({text, onChange, value, ...rest}) => (
+    <View style={styles.textInput}>
+        <Item regular>
+            <Input placeholder={text} onChange={onChange} value={value} {...rest}/>
+        </Item>
+    </View>
+);
 
 class EditProfile extends React.Component {
 
@@ -43,6 +68,19 @@ class EditProfile extends React.Component {
         scrollView: null,
         descriptionModal: false,
         tagModal: false,
+        skillInput: "",
+        currentEditSkillId: null,
+        showSkillModal: false,
+    }
+
+    componentDidMount(){
+
+    }
+
+    setIdOnEdit = (id) => {
+        this.setState({
+            currentEditSkillId: id
+        })
     }
 
     updateName(firstName, lastName) {
@@ -68,6 +106,47 @@ class EditProfile extends React.Component {
         this.setState({
             skillSets: newSkills
         })
+    }
+
+    showSkillModal = () => {
+        this.setState({
+            showSkillModal: true
+        })
+    }
+
+    hideSkillModal = () => {
+        this.setState({
+            showSkillModal: false,
+            skillInput: "",
+            currentEditSkillId: null
+        })
+    }
+
+    toggleSkillModal = () => {
+        this.setState((prev) => ({showSkillModal: !prev.showSkillModal}))
+    }
+
+    updateSkillInput = (e) => {
+        this.setState({
+            skillInput: e.nativeEvent.text
+        })
+    }
+
+    setSkillInput = (value) => {
+        this.setState({
+            skillInput: value
+        })
+    }
+
+    onSaveSkill = () => {
+        const {currentEditSkillId, skillInput} = this.state
+        const db = new DatabaseService();
+        const uid = Authentication.currentUser().uid;
+        if (currentEditSkillId === null){
+            db.createEmployeeSkillSet(uid, skillInput);
+        } else {
+            db.updateEmployeeSkillSet(uid, currentEditSkillId, skillInput)
+        }
     }
 
     getAllTags(tagIds) {
@@ -116,6 +195,9 @@ class EditProfile extends React.Component {
             skillSets: [],
             projects: [],
             tags: [],
+            showSkillModal: false,
+            skillInput: "",
+            currentEditSkillId: null
         })
     }
 
@@ -132,27 +214,33 @@ class EditProfile extends React.Component {
     );
 
     render() {
-        const {ready, imgUrl, firstName, lastName, description, status, experiences, skillSets, projects, tags} = this.state;
+        const {ready, imgUrl, firstName, lastName, description, status, experiences, skillSets, projects, tags, showSkillModal, skillInput} = this.state;
         return (
-            <ScrollView contentContainerStyle={styles.ScrollContainer} ref={scrollView => this.scrollView = scrollView}>
-                {
-                    ready ? (
-                        <View style={styles.MainContainer}>
-                            <CircularProfilePhoto url={imgUrl} diameter={150}/>
-                            <EditableName firstName={firstName} lastName={lastName}
-                                          updateName={this.updateName.bind(this)}/>
-                            <StatusText status={status}/>
-                            <EditableDescription description={description} update={this.update.bind(this)}/>
-                            <EditableTags tags={tags}/>
-                            <ExperiencesCard experiences={experiences}/>
-                            <SkillSetsCard skills={skillSets}/>
-                            <ProjectSection projects={projects} navigation={this.props.navigation}/>
-                        </View>
-                    ) : (
-                        <DataLoading/>
-                    )
-                }
-            </ScrollView>
+            <View>
+                <ScrollView contentContainerStyle={styles.ScrollContainer} ref={scrollView => this.scrollView = scrollView}>
+                    {
+                        ready ? (
+                            <View style={styles.MainContainer}>
+                                <CircularProfilePhoto url={imgUrl} diameter={150}/>
+                                <EditableName firstName={firstName} lastName={lastName}
+                                              updateName={this.updateName.bind(this)}/>
+                                <StatusText status={status}/>
+                                <EditableDescription description={description} update={this.update.bind(this)}/>
+                                <EditableTags tags={tags}/>
+                                <ExperiencesCard experiences={experiences}/>
+                                <SkillSetsCard editable={true} onCurrentEditSkill={this.setIdOnEdit} skills={skillSets} onOpenModal={this.showSkillModal} onCloseModal={this.hideSkillModal} setSkillInput={this.setSkillInput}  />
+                                <ProjectSection projects={projects} navigation={this.props.navigation}/>
+                            </View>
+                        ) : (
+                            <DataLoading/>
+                        )
+                    }
+                </ScrollView>
+                <ModalPopup visible={showSkillModal} close={this.hideSkillModal}>
+                    <TextInput text={"Skill"} onChange={this.updateSkillInput} value={skillInput} />
+                    <ClickButton onPress={this.onSaveSkill}>Save</ClickButton>
+                </ModalPopup>
+            </View>
         )
     }
 }
@@ -231,7 +319,20 @@ const styles = StyleSheet.create({
 
     TagsEditIcon: {
         marginTop: 15,
-    }
+    },
+    bottomModal: {
+        justifyContent: "flex-end",
+        margin: 0,
+    },
+    modalContent: {
+        backgroundColor: "white",
+        padding: 22,
+
+    },
+    scrollableModal: {
+        maxHeight: '60%',
+        backgroundColor: "white",
+    },
 
 });
 
