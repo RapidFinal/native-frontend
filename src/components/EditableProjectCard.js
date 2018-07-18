@@ -61,22 +61,22 @@ class EditableProjectCard extends React.Component {
                     <View style={[styles.RowAlign, styles.ActionIcons]}>
                         <TouchableHighlight
                             onPress={() => {
+                                this.openModal();
+                            }}
+                        >
+                            <Image
+                                source={require('../assets/images/edit.png')}
+                                style={[styles.EditIcon, {marginRight: 10}]}
+                            />
+                        </TouchableHighlight>
+                        <TouchableHighlight
+                            onPress={() => {
                                 this.attemptDelete(this.props.index, this.props.name);
                             }}
                         >
                             <Icon
                                 name='remove-circle-outline'
                                 color='#517fa4'
-                            />
-                        </TouchableHighlight>
-                        <TouchableHighlight
-                            onPress={() => {
-                                this.openModal();
-                            }}
-                        >
-                            <Image
-                                source={require('../assets/images/edit.png')}
-                                style={[styles.EditIcon, {marginLeft: 10}]}
                             />
                         </TouchableHighlight>
                     </View>
