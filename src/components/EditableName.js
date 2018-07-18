@@ -1,11 +1,11 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import {StyleSheet, Image, View, Text, TouchableHighlight, Modal} from "react-native";
+import {StyleSheet, View, Text, TouchableHighlight, Modal, TouchableOpacity} from "react-native";
 import TextInputWithLabel from './TextInputWithLabel';
 import DatabaseService from "../api/databaseService";
 import {Authentication} from '../api';
-import {Icon} from 'react-native-elements';
+import {Icon} from 'native-base';
 import SaveButton from './SaveButton';
 
 class EditableName extends React.Component {
@@ -156,16 +156,17 @@ class EditableName extends React.Component {
                 </Modal>
 
                 <Text style={styles.FullNameText}>{this.props.firstName + ' ' + this.props.lastName}</Text>
-                <TouchableHighlight
+                <TouchableOpacity
                     onPress={() => {
                         this.openModal();
                     }}
                 >
-                    <Image
-                        source={require('../assets/images/edit.png')}
+                    <Icon
+                        type="FontAwesome"
+                        name='edit'
                         style={[styles.EditIcon, styles.FullNameEditIcon]}
                     />
-                </TouchableHighlight>
+                </TouchableOpacity>
             </View>
         )
     }
@@ -192,12 +193,10 @@ const styles = StyleSheet.create({
 
     FullNameEditIcon: {
         marginLeft: 10,
-        paddingTop: 15,
     },
 
     EditIcon: {
-        width: 20,
-        height: 20,
+        fontSize: 25,
     },
 
     button: {
