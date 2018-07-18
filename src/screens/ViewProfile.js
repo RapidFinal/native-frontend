@@ -15,7 +15,7 @@ import {Authentication} from '../api'
 import ClickButton from "../components/ClickButton";
 
 
-const ModalPopup = ({visible, close, value, onInputChange, children }) => (
+const ModalPopup = ({visible, close, children }) => (
     <Modal
         isVisible={visible}
         onBackdropPress={close}
@@ -213,7 +213,7 @@ class ViewProfile extends React.Component {
                         )
                     }
                 </ScrollView>
-                <ModalPopup visible={showSkillModal} close={this.hideModal} onInputChange={this.updateSkillInput} value={skillInput}>
+                <ModalPopup visible={showSkillModal} close={this.hideModal}>
                     <TextInput text={"Skill"} onChange={this.updateSkillInput} value={skillInput} />
                     <ClickButton>Save</ClickButton>
                 </ModalPopup>
