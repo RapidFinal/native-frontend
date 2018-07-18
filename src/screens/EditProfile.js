@@ -15,6 +15,7 @@ import EditableProjectSection from '../components/EditableProjectSection';
 import EditableTags from '../components/EditableTags';
 import EditableStatus from '../components/EditableStatus';
 import CategoryCard from "../components/CategoryCard";
+import EditableMajor from '../components/EditableMajor';
 
 class EditProfile extends React.Component {
 
@@ -34,8 +35,9 @@ class EditProfile extends React.Component {
         scrollView: null,
         descriptionModal: false,
         tagModal: false,
-        selectedCategories:{},
-        categories:[],
+        selectedCategories: {},
+        categories: [],
+        major: "asdf",
     }
 
     updateName(firstName, lastName) {
@@ -108,9 +110,9 @@ class EditProfile extends React.Component {
         })
     }
 
-    updateCategories = (categories) =>{
+    updateCategories = (categories) => {
         this.setState({
-            categories : categories
+            categories: categories
         })
     }
 
@@ -142,6 +144,7 @@ class EditProfile extends React.Component {
                 experiences: result.experiences,
                 projects: result.projects,
                 skillSets: result.skillSet,
+                major: result.major,
                 ready: true
             })
         }).catch((error) => {
@@ -157,6 +160,7 @@ class EditProfile extends React.Component {
             lastName: "",
             description: "",
             status: "",
+            major: "",
             experiences: [],
             skillSets: [],
             projects: [],
@@ -177,7 +181,7 @@ class EditProfile extends React.Component {
     );
 
     render() {
-        const {ready, imgUrl, firstName, lastName, description, status, experiences, skillSets, projects, tags, categories} = this.state;
+        const {ready, imgUrl, firstName, lastName, description, status, experiences, skillSets, projects, major, tags, categories} = this.state;
         const uid = Authentication.currentUser().uid;
         return (
             <ScrollView contentContainerStyle={styles.ScrollContainer} ref={scrollView => this.scrollView = scrollView}>
@@ -191,6 +195,7 @@ class EditProfile extends React.Component {
                                           userRole="employee"
                             />
                             <EditableStatus status={status} update={this.update.bind(this)}/>
+                            <EditableMajor major={major} update={this.update.bind(this)}/>
                             <EditableDescription description={description} update={this.update.bind(this)}/>
                             <EditableTags tags={tags} updateTags={this.updateTags.bind(this)}/>
                             <ExperiencesCard experiences={experiences}/>
