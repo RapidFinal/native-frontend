@@ -129,6 +129,7 @@ class ViewProfile extends React.Component {
         } else {
             uid = this.props.uid
         }
+        console.log("uid : " + uid)
         db.getEmployeeInfo(uid).then((result) => {
             console.log(result)
             this.getAllTags(result.tagIds)
