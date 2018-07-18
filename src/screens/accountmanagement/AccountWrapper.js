@@ -8,7 +8,7 @@ import {Signin} from "../signin/index"
 
 class AccountWrapper extends React.Component {
 
-    static navigationOptions = () => {
+    static navigationOptions = ({navigation}) => {
         return ({
             title: 'Account Management',
             headerTitleStyle: {flex: 1, textAlign: 'center'},
@@ -17,7 +17,10 @@ class AccountWrapper extends React.Component {
 
     render() {
         return (
-            <AuthenticationWrapper authenticated={AccountManagement} unauthenticated={Signin} />
+            <AuthenticationWrapper
+                authenticated={AccountManagement}
+                unauthenticated={Signin}
+                {...this.props} />
         )
     }
 }

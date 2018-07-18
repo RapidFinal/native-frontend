@@ -40,7 +40,8 @@ class App extends React.Component {
         selectedCategories:{},
         authProvider: null,
         emailVerified: null,
-        photoURL: null
+        photoURL: null,
+        role: null
     };
 
     componentDidMount(){
@@ -62,7 +63,8 @@ class App extends React.Component {
                     currentUser: null,
                     authProvider: null,
                     emailVerified: null,
-                    photoURL: null
+                    photoURL: null,
+                    role: null
 
                 })
 
