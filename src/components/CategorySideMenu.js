@@ -63,8 +63,8 @@ class CategorySideMenu extends React.Component {
     handleClicked = (key) => () => {
         console.log(this.state.categoriesDetails[key])
         this.props.navigation.push("SubCategorySideMenu", {
-            subCategoriesKey: key,
-            subCategories: this.state.categoriesDetails[key].sub
+            categoryKey: key,
+            subCategories: this.state.categoriesDetails[key].sub,
         })
     };
 
