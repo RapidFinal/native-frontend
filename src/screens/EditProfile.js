@@ -37,7 +37,7 @@ class EditProfile extends React.Component {
         tagModal: false,
         selectedCategories: {},
         categories: [],
-        major: "asdf",
+        major: "",
     }
 
     updateName(firstName, lastName) {
