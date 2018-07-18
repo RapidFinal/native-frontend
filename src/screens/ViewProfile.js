@@ -10,7 +10,6 @@ import PropTypes from 'prop-types'
 import {StyleSheet, View, Text, ScrollView, Platform} from "react-native";
 import Modal from 'react-native-modal'
 import {Input, Item, Spinner} from 'native-base';
->>>>>>> master
 import StatusText from '../components/StatusText';
 import ExperiencesCard from '../components/ExperiencesCard';
 import SkillSetsCard from '../components/SkillSetsCard';
