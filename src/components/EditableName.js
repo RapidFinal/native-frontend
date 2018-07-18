@@ -103,8 +103,13 @@ class CircularProfilePhoto extends React.Component {
     saveToDB(firstName, lastName) {
         let db = new DatabaseService()
         let uid = Authentication.currentUser().uid
-        db.updateEmployeeFirstName(uid, firstName)
-        db.updateEmployeeLastName(uid, lastName)
+        if (this.props.userRole === 'employee') {
+            db.updateEmployeeFirstName(uid, firstName)
+            db.updateEmployeeLastName(uid, lastName)
+        } else {
+            db.updateEmployerFirstName(uid, firstName)
+            db.updateEmployerLastName(uid, lastName)
+        }
     }
 
     render() {
