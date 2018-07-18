@@ -133,12 +133,16 @@ class DatabaseService {
 
           let prog = [];
           if (typeof(val.projects) !== 'undefined'){
-            let tmp = []
+            let tmp = [];
             Object.entries(val.projects).forEach( ([id, info]) => {
               Object.entries(info.links).forEach(([id, val]) => {
-                tmp.push(val);
+                let v = {};
+                v[id] = id;
+                v["type"] = val.type;
+                v["links"] = val.link;
+                tmp.push(v);
               });
-              prog.push({name: info.projectName, description: info.projectDescription,
+              prog.push({id:id, name: info.projectName, description: info.projectDescription,
                 date: info.date, tags: info.tagIds, links: tmp});
             });
           } else {
@@ -320,6 +324,45 @@ class DatabaseService {
       });
     });
   };
+
+  updateEmployeeRecentView(uid, recentViewUid) {
+    this.getEmployeeRecentView(uid).then(recentViews => {
+      let val = [];
+      if (recentViews === null) {
+        val.push(recentViewUid);
+        firebase.database().ref("employeeInfo/" + uid + "/recentViews/").set(val);
+      } else {
+        val = recentViews.reverse();
+        if (recentViews.length < 5){
+          if (recentViews.includes(recentViewUid)){
+            let index = recentViews.indexOf(recentViewUid);
+            val.splice(index, 1);
+            val.push(recentViewUid)
+          } else {
+            val.push(recentViewUid);
+          }
+        } else {
+          if (recentViews.includes(recentViewUid)){
+            let index = recentViews.indexOf(recentViewUid);
+            val.splice(index, 1);
+            val.push(recentViewUid)
+          } else {
+            val.splice(0, 1);
+            val.push(recentViewUid);
+          }
+        }
+        firebase.database().ref("employeeInfo/" + uid + "/recentViews/").set(val.reverse());
+      }
+    })
+  }
+
+  getEmployeeRecentView(uid) {
+    return new Promise((resolve, reject) => {
+      firebase.database().ref("employeeInfo/" + uid + "/recentViews/").once('value').then(function(snapshot) {
+        resolve(snapshot.val())
+      });
+    });
+  }
 
   // Employer
 
