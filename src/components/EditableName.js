@@ -93,7 +93,7 @@ class EditableName extends React.Component {
         }
     }
 
-    saveToDB(firstName, lastName) {
+    saveToDB(firstName, lastName, userRole) {
         let db = new DatabaseService()
         let uid = Authentication.currentUser().uid
         if (this.props.userRole === 'employee') {

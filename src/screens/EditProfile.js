@@ -22,26 +22,14 @@ class EditProfile extends React.Component {
     state = {
         ready: false,
         imgUrl: "",
-        firstName: "Josep",
-        lastName: "Bort",
-        description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-        status: "Looking for job",
-        experiences: [
-            {
-                title: "Web",
-                description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
-            }
-        ],
-        skillSets: ["Python", "Java"],
-        projects: [
-            {
-                id: "asdf",
-                name: "Notey",
-                description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                date: "15/06/2018"
-            }
-        ],
-        tags: ["Python", "Java"],
+        firstName: "",
+        lastName: "",
+        description: "",
+        status: "",
+        experiences: [],
+        skillSets: [],
+        projects: [],
+        tags: [],
         scrollView: null,
         descriptionModal: false,
         tagModal: false,
@@ -180,8 +168,11 @@ class EditProfile extends React.Component {
                     ready ? (
                         <View style={styles.MainContainer}>
                             <CircularProfilePhoto url={imgUrl} diameter={150}/>
-                            <EditableName firstName={firstName} lastName={lastName}
-                                          updateName={this.updateName.bind(this)}/>
+                            <EditableName firstName={firstName}
+                                          lastName={lastName}
+                                          updateName={this.updateName.bind(this)}
+                                          userRole="employee"
+                            />
                             <StatusText status={status}/>
                             <EditableDescription description={description} update={this.update.bind(this)}/>
                             <EditableTags tags={tags}/>
