@@ -13,12 +13,34 @@ import {
     ScrollView,
     TouchableHighlight
 } from 'react-native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 
 class Home extends React.Component {
 
     static propTypes = {
         searchText: PropTypes.string
     };
+
+    static navigationOptions = ({ navigation }) => ({
+        headerTitle: "Home",
+        headerLeft: (
+            <FontAwesome.Button
+                name="navicon"
+                backgroundColor="transparent"
+                color="black"
+                onPress={() => navigation.push("SideMenu")}
+            />
+        ),
+        headerRight: (
+            <MaterialCommunityIcons.Button
+                name="account"
+                backgroundColor="transparent"
+                color="black"
+                onPress={() => navigation.push("AccountWrapper")}/>
+        ),
+        headerTitleStyle: {flex: 1, textAlign: 'center'}
+    });
 
     state = {
         searchText: ''

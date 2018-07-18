@@ -8,21 +8,21 @@ import {
     ClickButton
 } from '../../components/index'
 import {
-    Alert, StyleSheet
+    Alert, StyleSheet, Text, TouchableOpacity
 } from 'react-native'
 
 // TODO: Fix proxy component problem
 class AccountManagement extends React.Component {
 
-    logout = () => {
+    logout = async () => {
         const {authProvider} = this.props.context;
         switch (authProvider){
             case "password":
-                CredentialAuthentication.signout();
+                await CredentialAuthentication.signout();
                 break;
 
             case "facebook.com":
-                FacebookAuthentication.facebookLogout();
+                await FacebookAuthentication.facebookLogout();
                 break;
         }
     };
@@ -92,15 +92,32 @@ class AccountManagement extends React.Component {
         }
     };
 
+    editProfile = (uid) => () => {
+        alert(`My UID: ${uid}`)
+    }
+
     render(){
-        const {authProvider, emailVerified} = this.props.context
+        const {authProvider, emailVerified, role, currentUser} = this.props.context
         return (
             <Container style={styles.container}>
                 {
                     authProvider === "password" && !emailVerified && (<ClickButton warning rounded onPress={this.sendVerificationEmail}>Resent Confirmation Email</ClickButton>)
                 }
-                <ClickButton rounded onPress={this.changeEmail}>Change Email</ClickButton>
-                <ClickButton rounded onPress={this.changePassword}>Change Password</ClickButton>
+                {
+                    role === "employer" && (
+                        <ClickButton rounded onPress={this.editProfile(currentUser.uid)}>Edit Profile</ClickButton>
+                    )
+                }
+                {
+                    authProvider === "password" && (
+                        <ClickButton rounded onPress={this.changeEmail}>Change Email</ClickButton>
+                    )
+                }
+                {
+                    authProvider === "password" && (
+                        <ClickButton rounded onPress={this.changePassword}>Change Password</ClickButton>
+                    )
+                }
                 <ClickButton rounded danger onPress={this.logout}>Logout</ClickButton>
             </Container>
         )

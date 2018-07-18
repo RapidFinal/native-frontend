@@ -22,7 +22,7 @@ class ProjectSection extends React.Component {
                             <ProjectCard title={value.name}
                                          description={value.description}
                                          date={value.date}
-                                         projectId={value.progId}
+                                         projectId={value.id}
                                          navigation={this.props.navigation}
                                          key={value.name}
                             />
