@@ -93,7 +93,7 @@ class AccountManagement extends React.Component {
     };
 
     editProfile = (uid) => () => {
-        alert(`My UID: ${uid}`)
+        this.props.navigation.navigate("EditEmployerProfile", {uid})
     }
 
     render(){

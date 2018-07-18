@@ -7,6 +7,8 @@ import DatabaseService from "../api/databaseService";
 import CircularProfilePhoto from "../components/CircularProfilePhoto";
 import {Authentication} from '../api'
 import EditButton from "../components/EditButton";
+import {withContext} from "../context/withContext";
+import hoistStatics from "recompose/hoistStatics";
 
 
 class EditEmployerProfile extends React.Component {
@@ -17,7 +19,7 @@ class EditEmployerProfile extends React.Component {
         fullName: PropTypes.string,
         companyName: PropTypes.string,
         categories: PropTypes.array,
-    }
+    };
 
     state = {
         imgUrl: "",
@@ -27,10 +29,12 @@ class EditEmployerProfile extends React.Component {
         ready:false, //for setting spinner
     };
 
-    componentWillMount() {
+    componentDidMount() {
         let db = new DatabaseService
         // let uid = this.props.uid //Discuss with Hart(for now)
-        let uid = Authentication.currentUser().uid
+        // const uid = Authentication.currentUser().uid
+        const {uid} = this.props.navigation.state.params
+        console.log("uid",uid);
         db.getEmployerInfo(uid).then((result) => {
             this.setState({
                 imgUrl: result.imgUrl,
@@ -88,4 +92,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default compose()(EditEmployerProfile)
+export default hoistStatics(compose(withContext))(EditEmployerProfile)
