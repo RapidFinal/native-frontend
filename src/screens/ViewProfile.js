@@ -1,8 +1,16 @@
 import React from 'react';
+<<<<<<< HEAD
 import compose from 'recompose/compose';
 import PropTypes from 'prop-types';
 import {StyleSheet, View, Text, ScrollView} from "react-native";
 import {Spinner} from 'native-base';
+=======
+import compose from 'recompose/compose'
+import PropTypes from 'prop-types'
+import {StyleSheet, View, Text, ScrollView, Platform} from "react-native";
+import Modal from 'react-native-modal'
+import {Input, Item, Spinner} from 'native-base';
+>>>>>>> master
 import StatusText from '../components/StatusText';
 import ExperiencesCard from '../components/ExperiencesCard';
 import SkillSetsCard from '../components/SkillSetsCard';
@@ -10,7 +18,32 @@ import CircularProfilePhoto from '../components/CircularProfilePhoto';
 import ProjectSection from '../components/ProjectSection';
 import DatabaseService from '../api/databaseService';
 import TagsSection from '../components/TagsSection';
-import {Authentication} from '../api';
+import {Authentication} from '../api'
+import ClickButton from "../components/ClickButton";
+
+
+const ModalPopup = ({visible, close, children }) => (
+    <Modal
+        isVisible={visible}
+        onBackdropPress={close}
+        style={styles.bottomModal}
+        avoidKeyboard={Platform.OS === 'ios'}
+    >
+        <View style={styles.scrollableModal}>
+            <View style={styles.modalContent}>
+                {children}
+            </View>
+        </View>
+    </Modal>
+);
+
+const TextInput = ({text, onChange, value, ...rest}) => (
+    <View style={styles.textInput}>
+        <Item regular>
+            <Input placeholder={text} onChange={onChange} value={value} {...rest}/>
+        </Item>
+    </View>
+);
 
 class ViewProfile extends React.Component {
 
@@ -23,7 +56,7 @@ class ViewProfile extends React.Component {
         skillSets: PropTypes.array,
         projects: PropTypes.array,
         tags: PropTypes.array,
-    }
+    };
 
     state = {
         ready: false,
@@ -35,8 +68,9 @@ class ViewProfile extends React.Component {
         skillSets: [],
         projects: [],
         tags: [],
-        scrollView: null
-
+        scrollView: null,
+        showSkillModal: false,
+        skillInput: ""
     };
 
     static navigationOptions = ({navigation}) => ({
@@ -60,6 +94,34 @@ class ViewProfile extends React.Component {
         });
     }
 
+    showSkillModal = () => {
+        this.setState({
+            showSkillModal: true
+        })
+    }
+
+    hideSkillModal = () => {
+        this.setState({
+            showSkillModal: false
+        })
+    }
+
+    toggleSkillModal = () => {
+        this.setState((prev) => ({showSkillModal: !prev.showSkillModal}))
+    }
+
+    updateSkillInput = (e) => {
+        this.setState({
+            skillInput: e.nativeEvent.text
+        })
+    }
+
+    setSkillInput = (value) => {
+        this.setState({
+            skillInput: value
+        })
+    }
+
     scrollToTop() {
         this.scrollView.scrollTo({x: 0, y: 0, animated: true});
     }
@@ -74,6 +136,7 @@ class ViewProfile extends React.Component {
         } else {
             uid = this.prop.uid;
         }
+        console.log("uid : " + uid)
         db.getEmployeeInfo(uid).then((result) => {
             console.log(result);
             this.getAllTags(result.tagIds);
@@ -132,31 +195,37 @@ class ViewProfile extends React.Component {
     }
 
     render() {
-        const {imgUrl, fullName, status, description, experiences, skillSets, projects, tags, ready} = this.state;
+        const {imgUrl, fullName, status, description, experiences, skillSets, projects, tags, ready, showSkillModal, skillInput} = this.state;
         return (
-            <ScrollView contentContainerStyle={styles.ScrollContainer} ref={scrollView => this.scrollView = scrollView}>
-                {
-                    ready ? (
-                        <View style={styles.MainContainer}>
-                            <CircularProfilePhoto url={imgUrl} diameter={150}/>
-                            <Text style={styles.ProfileName}>
-                                {fullName}
-                            </Text>
-                            <StatusText status={status}/>
-                            <Text style={styles.Description}>
-                                {description}
-                            </Text>
-                            <TagsSection tags={tags}/>
-                            <ExperiencesCard experiences={experiences}/>
-                            <SkillSetsCard skills={skillSets}/>
-                            <ProjectSection projects={projects} navigation={this.props.navigation}/>
-                        </View>
-                    ) : (
-                        <DataLoading/>
-                    )
-                }
-            </ScrollView>
-        );
+            <View>
+                <ScrollView contentContainerStyle={styles.ScrollContainer} ref={scrollView => this.scrollView = scrollView}>
+                    {
+                        ready ? (
+                            <View style={styles.MainContainer}>
+                                <CircularProfilePhoto url={imgUrl} diameter={150}/>
+                                <Text style={styles.ProfileName}>
+                                    {fullName}
+                                </Text>
+                                <StatusText status={status}/>
+                                <Text style={styles.Description}>
+                                    {description}
+                                </Text>
+                                <TagsSection tags={tags}/>
+                                <ExperiencesCard experiences={experiences}/>
+                                <SkillSetsCard skills={skillSets} onOpenModal={this.showSkillModal} onCloseModal={this.hideSkillModal} setSkillInput={this.setSkillInput} />
+                                <ProjectSection projects={projects} navigation={this.props.navigation}/>
+                            </View>
+                        ) : (
+                            <DataLoading/>
+                        )
+                    }
+                </ScrollView>
+                <ModalPopup visible={showSkillModal} close={this.hideSkillModal}>
+                    <TextInput text={"Skill"} onChange={this.updateSkillInput} value={skillInput} />
+                    <ClickButton>Save</ClickButton>
+                </ModalPopup>
+            </View>
+        )
     }
 }
 
@@ -186,7 +255,20 @@ const styles = StyleSheet.create({
         marginTop: 20,
         maxWidth: '90%',
         textAlign: 'center'
-    }
+    },
+    bottomModal: {
+        justifyContent: "flex-end",
+        margin: 0,
+    },
+    modalContent: {
+        backgroundColor: "white",
+        padding: 22,
+
+    },
+    scrollableModal: {
+        maxHeight: '60%',
+        backgroundColor: "white",
+    },
 });
 
-export default compose()(ViewProfile);
+export default compose()(ViewProfile)
