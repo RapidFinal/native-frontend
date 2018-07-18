@@ -1,13 +1,13 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import {StyleSheet, View, TouchableHighlight, Modal, TouchableOpacity} from "react-native";
-import {Text} from "native-base";
-import {Icon} from 'react-native-elements'
+import {StyleSheet, View, Modal, TouchableOpacity} from "react-native";
+import {Text, Icon} from "native-base";
 import Tags from "react-native-tags";
 import TagsSection from './TagsSection';
 import DatabaseService from "../api/databaseService";
 import {Authentication} from '../api'
+import SaveButton from './SaveButton';
 
 class EditableTags extends React.Component {
 
@@ -17,6 +17,10 @@ class EditableTags extends React.Component {
         tags: [],
         modalVisible: false,
         initialText: ""
+    }
+
+    closeModal() {
+        this.setModalVisible(!this.state.modalVisible)
     }
 
     openModal() {
@@ -48,11 +52,14 @@ class EditableTags extends React.Component {
         this.handleTagsChange(tagList);
     }
 
+    save() {
+        this.setModalVisible(!this.state.modalVisible)
+    }
+
     render() {
         const {tags, modalVisible, initialText} = this.state
         return (
-            <View style={[styles.CenterAlign]}>
-
+            <View style={styles.CenterAlign}>
                 <Modal
                     animationType="slide"
                     transparent={false}
@@ -60,29 +67,30 @@ class EditableTags extends React.Component {
                     onRequestClose={() => {
                         alert('Modal has been closed.');
                     }}>
-                    <View style={{marginTop: 22}}>
-                        <View>
-                            <Text>Edit Tags</Text>
-                            <Tags
-                                initialText=""
-                                initialTags={tags}
-                                onChangeTags={tags => this.handleTagsChange(tags)}
-                                onTagPress={(index, tagLabel, event) => this.removeTag(index)}
-                                containerStyle={{ justifyContent: "center" }}
-                                inputStyle={{ backgroundColor: "white" }}
-                            />
-                            <TouchableOpacity
-                                onPress={() => console.log('save button pressed')}
-                                style={styles.button}
-                            >
-                                <Text style={styles.saveText}>Save</Text>
-                            </TouchableOpacity>
-                        </View>
+                    <View style={[styles.MainContainer]}>
+                        <TouchableOpacity
+                            style={styles.CloseIconPos}
+                            onPress={() => {
+                                this.closeModal();
+                            }}
+                        >
+                            <Icon name='close'/>
+                        </TouchableOpacity>
+                        <Text>Edit Tags</Text>
+                        <Tags
+                            initialText=""
+                            initialTags={tags}
+                            onChangeTags={tags => this.handleTagsChange(tags)}
+                            onTagPress={(index, tagLabel, event) => this.removeTag(index)}
+                            containerStyle={{justifyContent: "center"}}
+                            inputStyle={{backgroundColor: "white"}}
+                        />
+                        <SaveButton onPress={this.save.bind(this)}/>
                     </View>
                 </Modal>
 
                 <TagsSection tags={this.props.tags}/>
-                <TouchableHighlight
+                <TouchableOpacity
                     onPress={() => {
                         this.openModal()
                     }}
@@ -90,8 +98,9 @@ class EditableTags extends React.Component {
                     <Icon
                         type="FontAwesome"
                         name='edit'
+                        style={[styles.EditIcon, styles.EditIconPosition]}
                     />
-                </TouchableHighlight>
+                </TouchableOpacity>
             </View>
         )
     }
@@ -99,6 +108,13 @@ class EditableTags extends React.Component {
 }
 
 const styles = StyleSheet.create({
+    MainContainer: {
+        width: '90%',
+        maxWidth: '90%',
+        marginTop: 20,
+        alignSelf: 'center'
+    },
+
     CenterAlign: {
         flex: 1,
         flexDirection: 'column',
@@ -106,19 +122,17 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
 
-    button: {
-        alignSelf: 'center',
-        marginVertical: 40,
-        width: 120,
-        height: 30,
-        backgroundColor: '#8BD2EB',
+    EditIconPosition: {
+        marginTop: 10,
     },
 
-    saveText: {
-        textAlign: 'center',
-        fontSize: 20,
-        color: '#fff'
-    }
+    EditIcon: {
+        fontSize: 25,
+    },
+
+    CloseIconPos: {
+        alignSelf: 'flex-end'
+    },
 });
 
 export default compose()(EditableTags)
