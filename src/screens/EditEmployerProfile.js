@@ -12,6 +12,8 @@ import CategoriesSelection from "../components/CategoriesSelection";
 import TextInputWithLabel from "../components/TextInputWithLabel";
 import SaveButton from "../components/SaveButton";
 import {Spinner, Toast} from "native-base";
+import {hoistStatics} from "recompose";
+import withContext from "../context/withContext";
 
 
 const DataLoading = ({}) => (
@@ -195,24 +197,6 @@ class EditEmployerProfile extends React.Component {
         this.closeModal()
     }
 
-    editSelectedCategories(){
-        const uid = Authentication.currentUser().uid
-        const {selectedCategories}= this.state
-        const db= new DatabaseService;
-        console.log("save")
-        console.log(selectedCategories);
-
-        if (Object.keys(selectedCategories).length <1){
-            Toast.show({
-                text: "Please select at least one category!",
-                buttonText: "Okay",
-                duration: 3000,
-            })
-            return;
-        }
-        db.updateEmployerCategories(uid,selectedCategories)
-        this.closeModal()
-    }
 
     setError = (errorField, message) => {
         const {error} = this.state;
@@ -237,15 +221,14 @@ class EditEmployerProfile extends React.Component {
         }
     };
 
-    setSelectedState = (selected) => {
+    updateCategories = (categories) =>{
         this.setState({
-            selectedCategories: selected
+            categories : categories
         })
     }
 
-
     render(){
-        const {imgUrl, fullName,editedFirstName,editedLastName, editedCompanyName, selectedCategories, companyName, categories, modalVisible, ready, modalReady} = this.state;
+        const {imgUrl, fullName,editedFirstName,editedLastName, editedCompanyName, companyName, categories, modalVisible, ready, modalReady} = this.state;
         const {message, flags} = this.state.error;
         const uid = Authentication.currentUser().uid;
         return (
@@ -319,23 +302,13 @@ class EditEmployerProfile extends React.Component {
                                 </View>
                             </Modal>
 
-                            <CategoryCard categories={categories}/>
-                            <EditButton onPress={()=>this.openModal(3)}/>
+                            <CategoryCard
+                                categories={categories}
+                                editable={true}
+                                uid={uid}
+                                updateCategories={this.updateCategories}
+                            />
 
-                            <Modal
-                                style={styles.ModalContainer}
-                                isVisible={modalVisible===3}
-                                onBackdropPress={()=>this.closeModal()}>
-                                <View style={{ flex: 1 }}>
-                                    {console.log('this inside edit Employer')}
-                                    {console.log(selectedCategories)}
-                                    <CategoriesSelection
-                                        uid={uid}
-                                        setSelectedState={this.setSelectedState}
-                                    />
-                                </View>
-                                <SaveButton onPress={()=>this.editSelectedCategories()}/>
-                            </Modal>
                         </View>
                     ) : (
                         <DataLoading/>
@@ -373,3 +346,4 @@ const styles = StyleSheet.create({
 });
 
 export default compose()(EditEmployerProfile)
+

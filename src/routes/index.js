@@ -32,8 +32,8 @@ import ChangePassword from "../screens/accountmanagement/ChangePassword"
 import ViewEmployerProfile from "../screens/ViewEmployerProfile"
 import {View} from "react-native";
 import Initial from "../screens/Initial";
+import EditProfile from "../screens/EditProfile"
 import EditEmployerProfile from "../screens/EditEmployerProfile";
-import EditProfile from '../screens/EditProfile';
 
 /* REQUIRED in both EmployerMainStack & CandidateMainStack  */
 const headerOptions = () => ({
