@@ -6,7 +6,7 @@ import TextInputWithLabel from './TextInputWithLabel';
 import DatabaseService from "../api/databaseService";
 import {Authentication} from '../api'
 
-class CircularProfilePhoto extends React.Component {
+class EditableName extends React.Component {
 
     static propTypes = {
         firstName: PropTypes.string,
@@ -201,4 +201,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default compose()(CircularProfilePhoto)
+export default compose()(EditableName)

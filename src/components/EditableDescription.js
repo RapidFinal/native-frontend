@@ -7,7 +7,7 @@ import DatabaseService from "../api/databaseService";
 import {Authentication} from '../api'
 import TextInputMultipleLineWithLabel from '../components/TextInputMultipleLineWithLabel';
 
-class CircularProfilePhoto extends React.Component {
+class EditableDescription extends React.Component {
 
     static propTypes = {
         description: PropTypes.string,
@@ -187,4 +187,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default compose()(CircularProfilePhoto)
+export default compose()(EditableDescription)

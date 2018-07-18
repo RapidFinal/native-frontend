@@ -84,7 +84,7 @@ class EditProfile extends React.Component {
     }
 
     addProjectToDB() {
-        
+
     }
 
     deleteProjectFromState(index) {
