@@ -11,6 +11,7 @@ import ProjectSection from '../components/ProjectSection';
 import DatabaseService from '../api/databaseService';
 import TagsSection from '../components/TagsSection';
 import {Authentication} from '../api'
+import ProjectDetail from '../components/ProjectDetail'
 
 class ViewProfile extends React.Component {
 
@@ -150,6 +151,16 @@ class ViewProfile extends React.Component {
                             <ExperiencesCard experiences={experiences}/>
                             <SkillSetsCard skills={skillSets}/>
                             <ProjectSection projects={projects} navigation={this.props.navigation}/>
+                            <ProjectDetail
+                                name={"This is da project yo"}
+                                description={"jshkshgkasjhglaksjhgaksjhgaksjhgkshlaskhladksjfhk"}
+                                date={"15/06/2048"}
+                                tags={["tag1", "tag2"]}
+                                links={[
+                                    {link: "https://github.com/karn806", type: "github"},
+                                    {link: "https://www.youtube.com", type: "youtube"}
+                                ]}
+                            />
                         </View>
                     ) : (
                         <DataLoading/>

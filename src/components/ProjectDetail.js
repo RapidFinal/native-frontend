@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
-import { StyleSheet, Modal, Text, TouchableHighlight, View} from 'react-native';
+import { StyleSheet, Modal, Text, TouchableHighlight, View, WebView, Linking} from 'react-native';
 import { SocialIcon } from 'react-native-elements'
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
 import TagsSection from './TagsSection'
+
 
 class ProjectDetail extends React.Component {
 
@@ -18,32 +19,31 @@ class ProjectDetail extends React.Component {
 
 
     state = {
-        name: '',
-        description: '',
-        date: '',
-        tags: [],
-        links: [],
         modalVisible: false,
-    }
-
-    componentWillMount() {
-        this.setState(
-            {
-                name: this.props.name,
-                description: this.props.description,
-                date: this.props.date,
-                tags: this.props.tags,
-                links: this.props.links
-            })
     }
 
     setModalVisible(visible) {
         this.setState({modalVisible: visible});
     }
 
+    openWeb = (url) => () => {
+        // console.error(url)
+        Linking.canOpenURL(url).then(supported => {
+            if (!supported) {
+                console.log('Can\'t handle url: ' + url);
+            } else {
+                return Linking.openURL(url);
+            }
+        }).catch(err => console.error('An error occurred', err));
+    }
+
+    toggleModal = () => {
+        this.setState((prevState) => ({modalVisible: !prevState.modalVisible}))
+    }
+
     render(){
-        const {} = this.props;
-        const {name, description, date, tags, links, modalVisible} = this.state;
+        const {modalVisible} = this.state;
+        const {name, description, date, tags, links} = this.props;
         return (
             <View style={{marginTop: 22}}>
                 <Modal
@@ -55,17 +55,17 @@ class ProjectDetail extends React.Component {
                         <View>
                             <TouchableHighlight
                                 style={styles.closeBtn}
-                                onPress={() => {
-                                    this.setModalVisible(!this.state.modalVisible);
-                                }}>
+                                onPress={this.toggleModal}>
                                 <Text style={styles.closeText}>X</Text>
                             </TouchableHighlight>
                             <View style={styles.allText}>
                                 <Text style={styles.titleText}>{name}</Text>
                                 <Text>{date}</Text>
                                 <Text style={styles.descText}>{description}</Text>
+                                <View style={styles.iconBox}>
+                                    <AllLinks links={links} onPress={this.openWeb} component={TouchableHighlight} />
+                                </View>
                             </View>
-                            <allLinks />
                             <TagsSection tags={tags}/>
                         </View>
                     </View>
@@ -83,17 +83,21 @@ class ProjectDetail extends React.Component {
 
 }
 
-const allLinks = () => {
-    this.state.links.map((prop, key) => {
-        console.log(prop.type)
-        return (
-            <SocialIcon
-                title={prop.type}
-                button
-                type={prop.type}
-            />
-        )
-    })
+const AllLinks = ({links, component, onPress}) => {
+    return (
+        links.map((prop,key) => {
+            return (
+                <SocialIcon
+                    style={styles.iconLink}
+                    component={component}
+                    onPress={onPress(prop.link)}
+                    button
+                    type={prop.type}
+                    key={key}
+                />
+            )
+        })
+    )
 }
 
 const styles = StyleSheet.create({
@@ -123,7 +127,16 @@ const styles = StyleSheet.create({
         fontSize: 15,
         marginTop: 20,
         marginBottom: 10,
+    },
+    iconBox: {
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+    },
+    iconLink: {
+        width: 60,
+        height: 60,
     }
+
 
 });
 
