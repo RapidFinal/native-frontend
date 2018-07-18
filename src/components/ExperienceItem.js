@@ -1,21 +1,34 @@
 import React from 'react';
-import compose from 'recompose/compose'
-import PropTypes from 'prop-types'
-import {StyleSheet, Text, View, Button} from "react-native";
+import compose from 'recompose/compose';
+import PropTypes from 'prop-types';
+import { StyleSheet, Text, View } from "react-native";
+import { Container, Button, Icon } from "native-base";
 
 class ExperienceItem extends React.Component {
 
     static propTypes = {
         title: PropTypes.string,
-        desc: PropTypes.string
+        desc: PropTypes.string,
+	isEditable: PropTypes.bool,
     }
 
     render(){
+	const {isEditable = false, title, desc} = this.props;
         return (
-            <View style={[styles.MainContainer, this.props.style]}>
-                <Text style={styles.Title}>{this.props.title}</Text>
-                <Text style={styles.Description}>{this.props.desc}</Text>
-            </View>
+            <Container style={[styles.MainContainer, this.props.style]}>
+                <Text style={styles.Title}>{title}</Text>
+                <Text style={styles.Description}>{desc}</Text>
+		{ (isEditable) && (
+		    <Container>
+		    <Button transparent>
+                    <Icon name='ios-create'/>
+                    </Button>
+		    <Button transparent>
+                    <Icon name='ios-trash'/>
+		    </Button>
+		    </Container>)
+		}
+            </Container>
         );
     }
 }
@@ -23,6 +36,9 @@ class ExperienceItem extends React.Component {
 const styles = StyleSheet.create({
     MainContainer: {
         paddingLeft: 10,
+	flex: 1,
+	flexDirection: 'row',
+	justifyContent: 'space-between',
     },
 
     Title: {
@@ -35,4 +51,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default compose() (ExperienceItem)
+export default compose() (ExperienceItem);

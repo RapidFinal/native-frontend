@@ -1,6 +1,6 @@
 import React from 'react';
-import compose from 'recompose/compose'
-import PropTypes from 'prop-types'
+import compose from 'recompose/compose';
+import PropTypes from 'prop-types';
 import {StyleSheet, View, Text, ScrollView} from "react-native";
 import {Spinner} from 'native-base';
 import StatusText from '../components/StatusText';
@@ -10,7 +10,7 @@ import CircularProfilePhoto from '../components/CircularProfilePhoto';
 import ProjectSection from '../components/ProjectSection';
 import DatabaseService from '../api/databaseService';
 import TagsSection from '../components/TagsSection';
-import {Authentication} from '../api'
+import {Authentication} from '../api';
 
 class ViewProfile extends React.Component {
 
@@ -45,7 +45,7 @@ class ViewProfile extends React.Component {
         headerRight: <View></View>,
         tabBarOnPress: () => {
             if(navigation.isFocused()){
-                navigation.state.params.scrollToTop()
+                navigation.state.params.scrollToTop();
             }
             else {
                 navigation.navigate('View', { uid: Authentication.currentUser().uid});
@@ -57,26 +57,26 @@ class ViewProfile extends React.Component {
         this.props.navigation.setParams({
             fetchData: this.fetchData.bind(this),
             scrollToTop: this.scrollToTop.bind(this)
-        })
+        });
     }
 
     scrollToTop() {
-        this.scrollView.scrollTo({x: 0, y: 0, animated: true})
+        this.scrollView.scrollTo({x: 0, y: 0, animated: true});
     }
 
     fetchData() {
-        console.log("fetching data..")
-        let db = new DatabaseService
-        let uid = ""
-        let paramUid = this.props.navigation.getParam('uid')
+        console.log("fetching data..");
+        let db = new DatabaseService;
+        let uid = "";
+        let paramUid = this.props.navigation.getParam('uid');
         if (paramUid !== null || paramUid !== "" || typeof(paramUid) !== "undefined") {
-            uid = paramUid
+            uid = paramUid;
         } else {
-            uid = this.props.uid
+            uid = this.prop.uid;
         }
         db.getEmployeeInfo(uid).then((result) => {
-            console.log(result)
-            this.getAllTags(result.tagIds)
+            console.log(result);
+            this.getAllTags(result.tagIds);
             this.setState({
                 imgUrl: result.imgUrl,
                 fullName: result.firstName + ' ' + result.lastName,
@@ -86,10 +86,10 @@ class ViewProfile extends React.Component {
                 projects: result.projects,
                 skillSets: result.skillSet,
                 ready: true
-            })
+            });
         }).catch((error) => {
-            console.log(error)
-        })
+            console.error(error);
+        });
     }
 
     resetState() {
@@ -103,32 +103,32 @@ class ViewProfile extends React.Component {
             skillSets: [],
             projects: [],
             tags: [],
-        })
+        });
     }
 
     initializeState() {
-        this.resetState()
-        this.fetchData()
+        this.resetState();
+        this.fetchData();
     }
 
     didBlurSubscription = this.props.navigation.addListener(
         'didFocus',
         payload => {
-            this.initializeState()
+            this.initializeState();
         }
     );
 
     getAllTags(tagIds) {
-        let db = new DatabaseService
+        let db = new DatabaseService;
         tagIds.forEach((id) => {
             db.getTagName(id).then((tagName) => {
                 this.setState(prevState => ({
                     tags: [...prevState.tags, tagName]
-                }))
+                }));
             }).catch((error) => {
-                console.log(error)
-            })
-        })
+                console.log(error);
+            });
+        });
     }
 
     render() {
@@ -156,7 +156,7 @@ class ViewProfile extends React.Component {
                     )
                 }
             </ScrollView>
-        )
+        );
     }
 }
 
@@ -189,4 +189,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default compose()(ViewProfile)
+export default compose()(ViewProfile);

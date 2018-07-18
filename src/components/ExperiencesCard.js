@@ -1,17 +1,18 @@
 import React from 'react';
-import compose from 'recompose/compose'
-import PropTypes from 'prop-types'
-import {StyleSheet, Text, View, Button} from "react-native";
+import compose from 'recompose/compose';
+import PropTypes from 'prop-types';
+import { StyleSheet, Text, View } from "react-native";
 import ExperienceItem from '../components/ExperienceItem';
 
 class ExperiencesCard extends React.Component {
 
     static propTypes = {
-        title: PropTypes.string,
-        description: PropTypes.string,
+	experiences: PropTypes.array.isRequired,
+	isEditable: PropTypes.bool.isRequired,
     }
 
     render() {
+	console.log(`ExperiencesCard ${this.props.experiences}`, this.props.experiences);
         return (
             <View style={styles.MainContainer}>
                 <Text style={styles.Title}>Experiences</Text>
@@ -24,7 +25,7 @@ class ExperiencesCard extends React.Component {
                                 desc={value.description}
                                 key={index.toString()}
                             />
-                        )
+                        );
                     } else {
                         return (
                             <ExperienceItem
@@ -33,7 +34,7 @@ class ExperiencesCard extends React.Component {
                                 desc={value.description}
                                 key={index.toString()}
                             />
-                        )
+                        );
                     }
 
                 })}
@@ -75,4 +76,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default compose()(ExperiencesCard)
+export default compose()(ExperiencesCard);
