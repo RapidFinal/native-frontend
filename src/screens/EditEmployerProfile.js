@@ -14,6 +14,7 @@ import SaveButton from "../components/SaveButton";
 import {Spinner, Toast} from "native-base";
 import {hoistStatics} from "recompose";
 import withContext from "../context/withContext";
+import EditableCompanyName from "../components/EditableCompanyName";
 
 
 const DataLoading = ({}) => (
@@ -227,6 +228,19 @@ class EditEmployerProfile extends React.Component {
         })
     }
 
+    updateCompanyName = (companyName) =>{
+        this.setState({
+            companyName : companyName
+        })
+    }
+
+    updateFullName = (firstName,lastName) =>{
+        this.setState({
+            firstName : firstName,
+            lastName : lastName
+        })
+    }
+
     render(){
         const {imgUrl, fullName,editedFirstName,editedLastName, editedCompanyName, companyName, categories, modalVisible, ready, modalReady} = this.state;
         const {message, flags} = this.state.error;
@@ -278,29 +292,10 @@ class EditEmployerProfile extends React.Component {
                                 }
 
                             </Modal>
-
-                            <Text style={styles.Description}>
-                                Work at {companyName}
-                            </Text>
-                            <EditButton onPress={()=>this.openModal(2)}/>
-
-                            <Modal
-                                style={styles.ModalContainer}
-                                isVisible={modalVisible ===2}
-                                onBackdropPress={()=>this.closeModal()} >
-                                <View style={{ flex: 1 }}>
-                                    <TextInputWithLabel
-                                        label="Company Name"
-                                        placeholder="Company Name"
-                                        value={editedCompanyName}
-                                        hasError={flags.editedCompanyName}
-                                        onBlur={() => this.validate("editedCompanyName")}
-                                        onChange={this.handleChange("editedCompanyName")}
-                                        errorMessage={message.editedCompanyName}
-                                    />
-                                    <SaveButton onPress={()=>this.editCompanyName()}/>
-                                </View>
-                            </Modal>
+                            <EditableCompanyName
+                                companyName={companyName}
+                                updateCompanyName={this.updateCompanyName}
+                            />
 
                             <CategoryCard
                                 categories={categories}
