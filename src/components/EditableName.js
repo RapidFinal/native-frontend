@@ -125,14 +125,14 @@ class EditableName extends React.Component {
                         alert('Modal has been closed.');
                     }}>
                     <View style={[styles.MainContainer]}>
-                        <TouchableHighlight
+                        <TouchableOpacity
                             style={styles.CloseIconPos}
                             onPress={() => {
                                 this.closeModal();
                             }}
                         >
                             <Icon name='close'/>
-                        </TouchableHighlight>
+                        </TouchableOpacity>
                         <TextInputWithLabel
                             label="First name"
                             placeholder="First name"
