@@ -5,8 +5,8 @@ import {StyleSheet, View, ScrollView, Text} from "react-native";
 import {Body, CheckBox, ListItem, Button, Spinner} from "native-base";
 import Modal from "react-native-modal";
 import {withContext} from "../context/withContext";
-import DatabaseService from "../api/databaseService";
-
+import DatabaseService from "../api/databaseService"
+import {Authentication} from "../api";
 
 const DataLoading = ({}) => (
     <View style={styles.MainContainer}>
@@ -18,26 +18,49 @@ class CategoriesSelection extends React.Component {
 
     static propTypes = {
         setSelectedState : PropTypes.func,
+        // selectedCategories: PropTypes.object
     };
 
     state = {
         currentCategoryIndex : null,
         currentCategoryId :'',
         categories: [],
-        ready:false,
+        selectedCategories:{},
+        ready1:false,
+        ready2:false,
     };
 
     componentDidMount(){
-        this.getCategoriesData();
+        this.getCategoriesData()
+        this.getSelectedCategories()
     }
 
     getCategoriesData = () => {
         DatabaseService.getAllCategories().then(result=>{
             this.setState({
                 categories: result,
-                ready: true
+                ready1: true
             })
         })
+    }
+
+    getSelectedCategories = () => {
+        const uid = this.props.uid;
+        if(uid) {
+            let db = new DatabaseService
+            db.getEmployerCategories(uid).then((result) => {
+                this.setState({
+                    selectedCategories: result,
+                    ready2: true
+                })
+                this.props.setSelectedState(result)
+            })
+        }
+        else{
+            this.setState({
+                ready2: true
+            })
+        }
     }
 
     openModal=(index,categoryId)=>{
@@ -52,12 +75,12 @@ class CategoriesSelection extends React.Component {
             currentCategoryIndex: null,
             currentCategoryId : '',
         })
+        this.props.setSelectedState(this.state.selectedCategories)
     }
 
 
     isSelectedKeyExist=(subKey)=>{
-        const {selectedCategories}=this.props;
-        const {currentCategoryId}= this.state;
+        const {currentCategoryId, selectedCategories}= this.state;
         if (selectedCategories.hasOwnProperty(currentCategoryId)){
             if(selectedCategories[currentCategoryId].indexOf(subKey)>-1){
                 return true
@@ -67,8 +90,8 @@ class CategoriesSelection extends React.Component {
     }
 
     _toggleCheckbox = (subKey) =>{
-        let {selectedCategories}=this.props;
-        const {currentCategoryId}= this.state;
+        let {currentCategoryId,selectedCategories}= this.state;
+
         if (selectedCategories.hasOwnProperty(currentCategoryId)){
             const index = selectedCategories[currentCategoryId].indexOf(subKey);
             if(selectedCategories[currentCategoryId].indexOf(subKey)>-1){
@@ -84,7 +107,9 @@ class CategoriesSelection extends React.Component {
             selectedCategories[currentCategoryId]=[subKey];
         }
 
-        this.props.setSelectedState(selectedCategories);
+        this.setState({
+            selectedCategories : selectedCategories
+        })
     };
 
     renderSubCategoriesCheckbox =(index)=> {
@@ -123,12 +148,11 @@ class CategoriesSelection extends React.Component {
 
 
     render(){
-        const {categories, currentCategoryIndex, ready} =this.state
+        const {categories, currentCategoryIndex, ready1,ready2} =this.state
         return (
             <View>
-            { ready ? (
+            { ready1 && ready2 ? (
                     <View>
-
                         <ScrollView>
                             <View style={styles.categoryContainer}
                             >

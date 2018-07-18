@@ -11,7 +11,7 @@ import Modal from "react-native-modal";
 import CategoriesSelection from "../components/CategoriesSelection";
 import TextInputWithLabel from "../components/TextInputWithLabel";
 import SaveButton from "../components/SaveButton";
-import {Spinner} from "native-base";
+import {Spinner, Toast} from "native-base";
 
 
 const DataLoading = ({}) => (
@@ -41,15 +41,19 @@ class EditEmployerProfile extends React.Component {
         fullName: "",
         companyName:"",
         categories:[],
-        ready:false, //for setting spinner
+        ready:false,
         modalReady:true,
         scrollView: null,
+        selectedCategories:{},
 
+        //for edit in Modal
         editedFirstName:'',
         editedLastName:'',
         editedCompanyName:'',
         editedImgUrl:'',
         editedSelectedCategories:'',
+
+        //check Error
         error: {
             flags: {
                 editedFirstName: false,
@@ -95,6 +99,7 @@ class EditEmployerProfile extends React.Component {
         }).catch((error) => {
             console.log(error)
         })
+
     }
 
     resetState() {
@@ -104,6 +109,7 @@ class EditEmployerProfile extends React.Component {
             fullName: "",
             companyName:"",
             categories:[],
+            // originalSelectedCategories:{}
         })
     }
 
@@ -124,6 +130,9 @@ class EditEmployerProfile extends React.Component {
     };
 
     closeModal = () =>{
+        const {editedSelectedCategories} = this.state
+        // console.log(originalSelectedCategories)
+        console.log(editedSelectedCategories)
         this.setState({
             modalVisible :0,
             editedFirstName:'',
@@ -186,8 +195,23 @@ class EditEmployerProfile extends React.Component {
         this.closeModal()
     }
 
-    editSelectedCategories(selectedCategories){
+    editSelectedCategories(){
+        const uid = Authentication.currentUser().uid
+        const {selectedCategories}= this.state
+        const db= new DatabaseService;
+        console.log("save")
+        console.log(selectedCategories);
 
+        if (Object.keys(selectedCategories).length <1){
+            Toast.show({
+                text: "Please select at least one category!",
+                buttonText: "Okay",
+                duration: 3000,
+            })
+            return;
+        }
+        db.updateEmployerCategories(uid,selectedCategories)
+        this.closeModal()
     }
 
     setError = (errorField, message) => {
@@ -213,10 +237,17 @@ class EditEmployerProfile extends React.Component {
         }
     };
 
+    setSelectedState = (selected) => {
+        this.setState({
+            selectedCategories: selected
+        })
+    }
+
 
     render(){
-        const {imgUrl, fullName,editedFirstName,editedLastName, editedCompanyName, companyName, categories, modalVisible, ready, modalReady} = this.state;
+        const {imgUrl, fullName,editedFirstName,editedLastName, editedCompanyName, selectedCategories, companyName, categories, modalVisible, ready, modalReady} = this.state;
         const {message, flags} = this.state.error;
+        const uid = Authentication.currentUser().uid;
         return (
             <ScrollView contentContainerStyle={styles.ScrollContainer} ref={scrollView => this.scrollView = scrollView}>
                 {
@@ -296,9 +327,14 @@ class EditEmployerProfile extends React.Component {
                                 isVisible={modalVisible===3}
                                 onBackdropPress={()=>this.closeModal()}>
                                 <View style={{ flex: 1 }}>
-                                    <CategoriesSelection/>
+                                    {console.log('this inside edit Employer')}
+                                    {console.log(selectedCategories)}
+                                    <CategoriesSelection
+                                        uid={uid}
+                                        setSelectedState={this.setSelectedState}
+                                    />
                                 </View>
-                                <SaveButton onPress={()=>this.closeModal()}/>
+                                <SaveButton onPress={()=>this.editSelectedCategories()}/>
                             </Modal>
                         </View>
                     ) : (

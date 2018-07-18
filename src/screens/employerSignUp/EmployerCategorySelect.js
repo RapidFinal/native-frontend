@@ -40,6 +40,7 @@ class EmployerCategorySelect extends React.Component {
         const {employer} = this.props.context
         const {selectedCategories} = this.state
         const {navigation, setContext} = this.props
+        console.log(selectedCategories)
         
         if (Object.keys(selectedCategories).length <1){
             Toast.show({
@@ -91,9 +92,7 @@ class EmployerCategorySelect extends React.Component {
                         />
                         {console.log(selectedCategories)}
                         <CategoriesSelection
-                            selectedCategories={selectedCategories}
                             setSelectedState={this.setSelectedCategoriesState}
-                            setReady={this.setReady}
                         />
                         <Button
                             style={[styles.submitButton, styles.center]}
