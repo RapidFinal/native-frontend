@@ -14,6 +14,7 @@ import EditableDescription from '../components/EditableDescription';
 import EditableProjectSection from '../components/EditableProjectSection';
 import EditableTags from '../components/EditableTags';
 import EditableStatus from '../components/EditableStatus';
+import CategoryCard from "../components/CategoryCard";
 
 class EditProfile extends React.Component {
 
@@ -33,6 +34,8 @@ class EditProfile extends React.Component {
         scrollView: null,
         descriptionModal: false,
         tagModal: false,
+        selectedCategories:{},
+        categories:[],
     }
 
     updateName(firstName, lastName) {
@@ -105,6 +108,12 @@ class EditProfile extends React.Component {
         })
     }
 
+    updateCategories = (categories) =>{
+        this.setState({
+            categories : categories
+        })
+    }
+
     getAllTags(tagIds) {
         let db = new DatabaseService
         tagIds.forEach((id) => {
@@ -168,7 +177,8 @@ class EditProfile extends React.Component {
     );
 
     render() {
-        const {ready, imgUrl, firstName, lastName, description, status, experiences, skillSets, projects, tags} = this.state;
+        const {ready, imgUrl, firstName, lastName, description, status, experiences, skillSets, projects, tags, categories} = this.state;
+        const uid = Authentication.currentUser().uid;
         return (
             <ScrollView contentContainerStyle={styles.ScrollContainer} ref={scrollView => this.scrollView = scrollView}>
                 {
@@ -185,6 +195,12 @@ class EditProfile extends React.Component {
                             <EditableTags tags={tags} updateTags={this.updateTags.bind(this)}/>
                             <ExperiencesCard experiences={experiences}/>
                             <SkillSetsCard skills={skillSets}/>
+                            <CategoryCard
+                                categories={categories}
+                                editable={true}
+                                uid={uid}
+                                updateCategories={this.updateCategories}
+                            />
                             <EditableProjectSection projects={projects} deleteProject={this.deleteProject.bind(this)}/>
                         </View>
                     ) : (
