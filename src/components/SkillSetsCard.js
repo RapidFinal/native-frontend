@@ -18,18 +18,18 @@ class SkillSetsCard extends React.Component {
                         return (
                             <Text
                                 style={styles.Item}
-                                key={index}
+                                key={value.id}
                             >
-                                {value}
+                                {value.skill}
                             </Text>
                         )
                     } else {
                         return (
                             <Text
                                 style={[styles.Item, styles.DividerLine]}
-                                key={index}
+                                key={value.id}
                             >
-                                {value}
+                                {value.skill}
                             </Text>
                         )
                     }
