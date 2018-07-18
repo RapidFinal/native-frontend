@@ -64,6 +64,29 @@ class EditProfile extends React.Component {
 
     }
 
+    deleteProject(index) {
+        this.deleteProjectFromDB(this.state.projects[index].id)
+        this.deleteProjectFromState(index)
+    }
+
+    deleteProjectFromDB(projectId) {
+        let db = DatabaseService()
+        let uid = Authentication.currentUser().uid
+        db.deleteEmployeeProject(uid, projectId)
+    }
+
+    deleteProjectFromState(index) {
+        console.log('delete from state')
+        console.log(index)
+        let projectsClone = this.state.projects
+        if (index > -1) {
+            projectsClone.splice(index, 1)
+            this.setState({
+                projects: projectsClone
+            });
+        }
+    }
+
     updateExperienceState(newExp) {
         this.setState({
             experiences: newExp
@@ -152,7 +175,7 @@ class EditProfile extends React.Component {
                             <EditableTags tags={tags}/>
                             <ExperiencesCard experiences={experiences}/>
                             <SkillSetsCard skills={skillSets}/>
-                            <EditableProjectSection projects={projects}/>
+                            <EditableProjectSection projects={projects} deleteProject={this.deleteProject.bind(this)}/>
                         </View>
                     ) : (
                         <DataLoading/>

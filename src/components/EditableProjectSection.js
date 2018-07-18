@@ -19,10 +19,12 @@ class StatusDropdown extends React.Component {
                 {
                     this.props.projects.map((value, index) => {
                         return (
-                            <EditableProjectCard title={value.name}
+                            <EditableProjectCard name={value.name}
                                          description={value.description}
                                          date={value.date}
                                          projectId={value.id}
+                                         index={index}
+                                         deleteProject={this.props.deleteProject}
                                          key={value.id}
                             />
                         )
