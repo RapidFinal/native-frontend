@@ -1,10 +1,11 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import {StyleSheet, View, Text, TouchableHighlight, Image, Alert} from "react-native";
+import {StyleSheet, View, Text, TouchableOpacity, Image, Alert} from "react-native";
 import DatabaseService from "../api/databaseService";
 import {Authentication} from "../api";
-import { Icon } from 'react-native-elements'
+import {Icon} from "native-base";
+import {Icon as MaterialIcon} from 'react-native-elements';
 
 class EditableProjectCard extends React.Component {
 
@@ -46,11 +47,11 @@ class EditableProjectCard extends React.Component {
                 {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
                 {text: 'Delete', onPress: () => this.props.deleteProject(index)},
             ],
-            { cancelable: false }
+            {cancelable: false}
         )
     }
 
-    render(){
+    render() {
         const {projectId, projectName, projectDescription, projectDate} = this.state.credential
         return (
             <View
@@ -59,26 +60,27 @@ class EditableProjectCard extends React.Component {
                 <View style={[styles.RowAlign, styles.TitleSection]}>
                     <Text style={styles.Title}>{this.props.name}</Text>
                     <View style={[styles.RowAlign, styles.ActionIcons]}>
-                        <TouchableHighlight
+                        <TouchableOpacity
                             onPress={() => {
                                 this.openModal();
                             }}
                         >
-                            <Image
-                                source={require('../assets/images/edit.png')}
-                                style={[styles.EditIcon, {marginRight: 10}]}
+                            <Icon
+                                type="FontAwesome"
+                                name='edit'
+                                style={[styles.EditIcon, styles.EditIconPosition]}
                             />
-                        </TouchableHighlight>
-                        <TouchableHighlight
+                        </TouchableOpacity>
+                        <TouchableOpacity
                             onPress={() => {
                                 this.attemptDelete(this.props.index, this.props.name);
                             }}
                         >
-                            <Icon
+                            <MaterialIcon
                                 name='remove-circle-outline'
                                 color='#517fa4'
                             />
-                        </TouchableHighlight>
+                        </TouchableOpacity>
                     </View>
                 </View>
                 <Text style={styles.Description}>{this.props.description}</Text>
@@ -121,9 +123,12 @@ const styles = StyleSheet.create({
         marginTop: 5,
     },
 
+    EditIconPosition: {
+        marginRight: 10,
+    },
+
     EditIcon: {
-        width: 20,
-        height: 20,
+        fontSize: 25,
     },
 
     RowAlign: {
@@ -140,4 +145,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default compose() (EditableProjectCard)
+export default compose()(EditableProjectCard)

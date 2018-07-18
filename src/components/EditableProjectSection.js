@@ -1,7 +1,7 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import {StyleSheet, View, TouchableHighlight} from "react-native";
+import {StyleSheet, View, TouchableOpacity} from "react-native";
 import {Text} from "native-base";
 import EditableProjectCard from "./EditableProjectCard";
 import { Icon } from 'react-native-elements'
@@ -15,7 +15,7 @@ class EditableProjectSection extends React.Component {
             <View style={styles.MainContainer}>
                 <View style={styles.RowAlign}>
                     <Text style={styles.Title}>Projects</Text>
-                    <TouchableHighlight
+                    <TouchableOpacity
                         onPress={() => {
                             // Call add project here
                         }}
@@ -24,7 +24,7 @@ class EditableProjectSection extends React.Component {
                             name='add-circle-outline'
                             color='#517fa4'
                         />
-                    </TouchableHighlight>
+                    </TouchableOpacity>
                 </View>
                 {
                     this.props.projects.map((value, index) => {

@@ -16,7 +16,6 @@ class EditableTags extends React.Component {
     state = {
         tags: [],
         modalVisible: false,
-        initialText: ""
     }
 
     closeModal() {
@@ -57,7 +56,7 @@ class EditableTags extends React.Component {
     }
 
     render() {
-        const {tags, modalVisible, initialText} = this.state
+        const {tags, modalVisible} = this.state
         return (
             <View style={styles.CenterAlign}>
                 <Modal
