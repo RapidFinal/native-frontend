@@ -21,7 +21,7 @@ class SaveButton extends React.Component {
                 style={styles.button}
                 onPress={this.props.onPress}
             >
-                <Text>Save</Text>
+                <Text style={styles.saveText}>Save</Text>
             </Button>
         )
     }
@@ -32,7 +32,14 @@ const styles = StyleSheet.create({
     button: {
         alignSelf: 'center',
         marginVertical: 40,
-    }
+        backgroundColor: '#8BD2EB',
+    },
+
+    saveText: {
+        textAlign: 'center',
+        fontSize: 20,
+        color: '#fff'
+    },
 });
 
 export default compose() (SaveButton)

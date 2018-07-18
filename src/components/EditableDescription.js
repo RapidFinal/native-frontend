@@ -6,6 +6,7 @@ import DatabaseService from "../api/databaseService";
 import {Authentication} from '../api'
 import TextInputMultipleLineWithLabel from '../components/TextInputMultipleLineWithLabel';
 import {Icon} from 'react-native-elements'
+import SaveButton from './SaveButton';
 
 class EditableDescription extends React.Component {
 
@@ -128,20 +129,15 @@ class EditableDescription extends React.Component {
                             label="Description"
                             placeholder="Description"
                             hasError={flags.description}
-                            multiline = {true}
+                            multiline={true}
                             onChange={this.handleChange("description")}
                             value={description}
-                            editable = {true}
-                            maxLength = {120}
+                            editable={true}
+                            maxLength={120}
                             onBlur={() => this.validate("description")}
                             errorMessage={message.description}
                         />
-                        <TouchableOpacity
-                            onPress={() => this.save()}
-                            style={styles.button}
-                        >
-                            <Text style={styles.saveText}>Save</Text>
-                        </TouchableOpacity>
+                        <SaveButton onPress={this.save.bind(this)}/>
                     </View>
                 </Modal>
 
@@ -187,20 +183,6 @@ const styles = StyleSheet.create({
         width: 20,
         height: 20,
         marginTop: 15,
-    },
-
-    button: {
-        alignSelf: 'center',
-        marginVertical: 40,
-        width: 120,
-        height: 30,
-        backgroundColor: '#8BD2EB',
-    },
-
-    saveText: {
-        textAlign: 'center',
-        fontSize: 20,
-        color: '#fff'
     },
 
     CloseIconPos: {
