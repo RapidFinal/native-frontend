@@ -15,11 +15,14 @@ import {
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import DatabaseService from "../api/databaseService";
+import {Authentication} from "../api";
 
 class Home extends React.Component {
 
     static propTypes = {
-        searchText: PropTypes.string
+        searchText: PropTypes.string,
+        recentlyViewed: PropTypes.array,
     };
 
     static navigationOptions = ({ navigation }) => ({
@@ -44,6 +47,13 @@ class Home extends React.Component {
 
     state = {
         searchText: ''
+    }
+
+    componentWillMount() {
+        const db = new DatabaseService;
+        const currentUser = Authentication.currentUser();
+        // const recentView = db.getEmployeeRecentView(currentUser.uid)
+        console.log(currentUser)
     }
 
     goToProfile = (userID) => {
