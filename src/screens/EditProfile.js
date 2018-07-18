@@ -13,6 +13,7 @@ import TagsSection from '../components/TagsSection';
 import {Authentication} from '../api'
 import EditableName from '../components/EditableName'
 import EditableDescription from '../components/EditableDescription';
+import EditableProjectSection from '../components/EditableProjectSection';
 
 class EditProfile extends React.Component {
 
@@ -34,6 +35,7 @@ class EditProfile extends React.Component {
         skillSets: ["Python", "Java"],
         projects: [
             {
+                id: "asdf",
                 name: "Notey",
                 description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
                 date: "15/06/2018"
@@ -56,6 +58,10 @@ class EditProfile extends React.Component {
         this.setState({
             [field]: value
         })
+    }
+
+    updateProjects() {
+
     }
 
     updateExperienceState(newExp) {
@@ -146,7 +152,7 @@ class EditProfile extends React.Component {
                             <EditableTags tags={tags}/>
                             <ExperiencesCard experiences={experiences}/>
                             <SkillSetsCard skills={skillSets}/>
-                            <ProjectSection projects={projects} navigation={this.props.navigation}/>
+                            <EditableProjectSection projects={projects}/>
                         </View>
                     ) : (
                         <DataLoading/>

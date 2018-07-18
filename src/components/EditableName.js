@@ -39,16 +39,9 @@ class CircularProfilePhoto extends React.Component {
     };
 
     validate = (errorField) => {
-        const {password, confirmPassword} = this.state.credential;
         const {credential} = this.state;
         if (credential[errorField] === '') {
             this.setError(errorField, "Required")
-        }
-        else if (errorField === 'password' && password.length < 6) {
-            this.setError(errorField, "Password minimum length is 6")
-        }
-        else if (errorField === 'confirmPassword' && password !== confirmPassword) {
-            this.setError(errorField, "Confirm password doesn't match")
         }
         else {
             this.setError(errorField, null)
