@@ -12,6 +12,9 @@ class SearchResult extends React.Component {
 
     static propTypes = {
         textInput: PropTypes.string,
+	catergoryQuery: PropTypes.shape(
+	    {categoryId: PropTypes.string.isRequired,
+	     subCategoryId: PropTypes.string.isRequired}),
     }
 
     static navigationOptions = ({navigation}) => {
@@ -44,6 +47,7 @@ class SearchResult extends React.Component {
         //console.log(this.props.navigation.state.params);
         //console.log(this.props.navigation.getParam("textInput", ""));
         const textInput = this.props.navigation.getParam("textInput", "");
+	const categoryQuery = this.props.navigation.getParam("categoryQuery", null);
         //console.log('search: ', textInput);
 	this.setState({textInput});
 	this.search(textInput);

@@ -39,7 +39,8 @@ class App extends React.Component {
         statusId: "",
         authProvider: null,
         emailVerified: null,
-        photoURL: null
+        photoURL: null,
+        role: null
     };
 
     componentDidMount(){
@@ -52,7 +53,7 @@ class App extends React.Component {
                     loading: false,
                     currentUser,
                     ...this.extractCurrentUserData(currentUser)
-                }, () => console.log("LOGIN STATE: ",this.state))
+                }, () => console.log("LOGIN STATE: ", this.state))
             } else {
                 console.log("currentUser null");
                 this.setState({
@@ -61,7 +62,8 @@ class App extends React.Component {
                     currentUser: null,
                     authProvider: null,
                     emailVerified: null,
-                    photoURL: null
+                    photoURL: null,
+                    role: null
 
                 })
 

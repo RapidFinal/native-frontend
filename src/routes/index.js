@@ -32,7 +32,7 @@ import ChangePassword from "../screens/accountmanagement/ChangePassword"
 import ViewEmployerProfile from "../screens/ViewEmployerProfile"
 import {View} from "react-native";
 import Initial from "../screens/Initial";
-import EditEmployerProfile from "../screens/EditEmployerProfile"
+import EditEmployerProfile from "../screens/EditEmployerProfile";
 
 /* REQUIRED in both EmployerMainStack & CandidateMainStack  */
 const headerOptions = () => ({
@@ -103,6 +103,7 @@ const EmployerMainStack = createStackNavigator(
         SearchResult: SearchResult,
         ChangePassword: ChangePassword,
         ChangeEmail: ChangeEmail,
+        EditEmployerProfile: EditEmployerProfile,
         View: ViewCandidateProfile, // View on tabbar for employer, will go to their profile
     },
     {

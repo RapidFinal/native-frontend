@@ -50,7 +50,7 @@ public class MainApplication extends Application implements ReactApplication {
               new RNFirebaseAuthPackage(),
               new RNFirebaseDatabasePackage()
       };
-      return Arrays.<ReactPackage>asList(packages);
+      return Arrays.asList(packages);
     }
 
     @Override
