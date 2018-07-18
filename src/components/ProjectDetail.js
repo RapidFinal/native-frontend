@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
+import React from 'react';
 import { StyleSheet, Modal, Text, TouchableHighlight, View, WebView, Linking} from 'react-native';
-import { SocialIcon } from 'react-native-elements'
+import { SocialIcon, Icon } from 'react-native-elements'
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
 import TagsSection from './TagsSection'
@@ -86,16 +86,46 @@ class ProjectDetail extends React.Component {
 const AllLinks = ({links, component, onPress}) => {
     return (
         links.map((prop,key) => {
-            return (
-                <SocialIcon
-                    style={styles.iconLink}
-                    component={component}
-                    onPress={onPress(prop.link)}
-                    button
-                    type={prop.type}
-                    key={key}
-                />
-            )
+            if (prop.type === 'website') {
+                return (
+                    <Icon
+                        name={'web'}
+                        type={'FontAwesome'}
+                        component={component}
+                        onPress={onPress(prop.link)}
+                        raised
+                        color={'white'}
+                        containerStyle={{backgroundColor: '#1D7BCD'}}
+                        size={28}
+                        key={key}
+                    />
+                )
+            }
+            else if (prop.type === 'bitbucket') {
+                return (
+                    <SocialIcon
+                        style={styles.iconLink}
+                        component={component}
+                        onPress={onPress(prop.link)}
+                        button
+                        light
+                        type={prop.type}
+                        key={key}
+                    />
+                )
+            }
+            else {
+                return (
+                    <SocialIcon
+                        style={styles.iconLink}
+                        component={component}
+                        onPress={onPress(prop.link)}
+                        button
+                        type={prop.type}
+                        key={key}
+                    />
+                )
+            }
         })
     )
 }
