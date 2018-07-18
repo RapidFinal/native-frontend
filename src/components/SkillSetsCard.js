@@ -1,7 +1,7 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import {Modal, ScrollView, StyleSheet, Text, View} from "react-native";
+import {StyleSheet, Text, View, Alert} from "react-native";
 import {Body, Left, Right, Icon} from "native-base";
 import ClickButton from "./ClickButton";
 import DatabaseService from '../api/databaseService'
@@ -59,7 +59,7 @@ const SkillCard = ({editable, id, isLast, onDelete, onEdit, children,...rest}) =
                 editable && (
                     <Right style={styles.skillSetHeader}>
                         <SkillEdit iconStyle={{ fontSize: 24 }} onPress={onEdit(id, children)} />
-                        <SkillDelete iconStyle={{ fontSize: 24 }} onPress={onDelete(id)} />
+                        <SkillDelete iconStyle={{ fontSize: 24 }} onPress={onDelete(id, children)} />
                     </Right>
                 )
             }
@@ -84,18 +84,29 @@ class SkillSetsCard extends React.Component {
         this.props.onOpenModal();
     };
 
-    deleteSkill = (skillId) => () => {
+    deleteSkill = (skillId, skill) => () => {
         const db = new DatabaseService();
         const uid = Authentication.currentUser().uid;
+        Alert.alert(
+            `Delete \"${skill}\"?`,
+            "Deleting this skill is permanent!",
+            [
+                {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+                {text: 'Delete', onPress: () => {
+                        db.deleteEmployeeSkillSet(uid, skillId)
+                        this.props.triggerRefresh()
+                    }, style: 'destructive'}
+            ],
+            { cancelable: false }
+        )
 
-        db.deleteEmployeeSkillSet(uid, skillId)
     };
 
     render(){
         const {skills: {length: skillLength}, skills, editable} = this.props
         return (
             <View style={styles.MainContainer}>
-                <TitleBar onAddSkill={this.showModal}>Skill Sets</TitleBar>
+                <TitleBar editable={true} onAddSkill={this.showModal}>Skill Sets</TitleBar>
                 <View>
                     {
                         skills.map((v, i) => (

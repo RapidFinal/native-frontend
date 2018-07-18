@@ -71,6 +71,8 @@ class EditProfile extends React.Component {
         skillInput: "",
         currentEditSkillId: null,
         showSkillModal: false,
+        saveStatus: "Save",
+        onSaving: false
     }
 
     componentDidMount(){
@@ -139,14 +141,36 @@ class EditProfile extends React.Component {
     }
 
     onSaveSkill = () => {
-        const {currentEditSkillId, skillInput} = this.state
-        const db = new DatabaseService();
-        const uid = Authentication.currentUser().uid;
-        if (currentEditSkillId === null){
-            db.createEmployeeSkillSet(uid, skillInput);
-        } else {
-            db.updateEmployeeSkillSet(uid, currentEditSkillId, skillInput)
-        }
+
+        this.setState({
+            saveStatus: "Saving...",
+            onSaving: true
+        }, () => {
+
+            const saved = () => {
+                this.setState(({
+                    saveStatus: "Save",
+                    onSaving: false
+                }), () => {
+                    this.hideSkillModal();
+                    this.fetchData();
+
+                })
+
+            };
+            const {currentEditSkillId, skillInput} = this.state
+            const db = new DatabaseService();
+            const uid = Authentication.currentUser().uid;
+            if (currentEditSkillId === null){
+                db.createEmployeeSkillSet(uid, skillInput, saved);
+            } else {
+                db.updateEmployeeSkillSet(uid, currentEditSkillId, skillInput, saved)
+            }
+
+
+        })
+
+
     }
 
     getAllTags(tagIds) {
@@ -214,7 +238,7 @@ class EditProfile extends React.Component {
     );
 
     render() {
-        const {ready, imgUrl, firstName, lastName, description, status, experiences, skillSets, projects, tags, showSkillModal, skillInput} = this.state;
+        const {ready, imgUrl, firstName, lastName, description, status, experiences, skillSets, projects, tags, showSkillModal, skillInput, saveStatus, onSaving} = this.state;
         return (
             <View>
                 <ScrollView contentContainerStyle={styles.ScrollContainer} ref={scrollView => this.scrollView = scrollView}>
@@ -228,7 +252,7 @@ class EditProfile extends React.Component {
                                 <EditableDescription description={description} update={this.update.bind(this)}/>
                                 <EditableTags tags={tags}/>
                                 <ExperiencesCard experiences={experiences}/>
-                                <SkillSetsCard editable={true} onCurrentEditSkill={this.setIdOnEdit} skills={skillSets} onOpenModal={this.showSkillModal} onCloseModal={this.hideSkillModal} setSkillInput={this.setSkillInput}  />
+                                <SkillSetsCard editable={true} triggerRefresh={this.fetchData} onCurrentEditSkill={this.setIdOnEdit} skills={skillSets} onOpenModal={this.showSkillModal} onCloseModal={this.hideSkillModal} setSkillInput={this.setSkillInput}  />
                                 <ProjectSection projects={projects} navigation={this.props.navigation}/>
                             </View>
                         ) : (
@@ -238,7 +262,7 @@ class EditProfile extends React.Component {
                 </ScrollView>
                 <ModalPopup visible={showSkillModal} close={this.hideSkillModal}>
                     <TextInput text={"Skill"} onChange={this.updateSkillInput} value={skillInput} />
-                    <ClickButton onPress={this.onSaveSkill}>Save</ClickButton>
+                    <ClickButton disabled={onSaving} onPress={this.onSaveSkill}>{saveStatus}</ClickButton>
                 </ModalPopup>
             </View>
         )

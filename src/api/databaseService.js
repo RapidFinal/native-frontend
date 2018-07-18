@@ -112,8 +112,8 @@ class DatabaseService {
     });
   }
 
-  createEmployeeSkillSet(uid, skill) {
-    firebase.database().ref("employeeInfo/" + uid + "/skillSet/").push(skill);
+  createEmployeeSkillSet(uid, skill, cb) {
+    firebase.database().ref("employeeInfo/" + uid + "/skillSet/").push(skill, cb);
   }
 
   getEmployeeInfo(uid) {
@@ -233,12 +233,12 @@ class DatabaseService {
     });
   }
 
-  updateEmployeeSkillSet(uid, skillId, skill) {
-    firebase.database().ref("employeeInfo/" + uid + "/skillSet/" + skillId + "/").set(skill);
+  updateEmployeeSkillSet(uid, skillId, skill, onComplete) {
+    firebase.database().ref("employeeInfo/" + uid + "/skillSet/" + skillId + "/").set(skill, onComplete);
   }
 
-  deleteEmployeeSkillSet(uid, skillId) {
-    firebase.database().ref("employeeInfo/" + uid + "/skillSet/" + skillId + "/").remove();
+  deleteEmployeeSkillSet(uid, skillId, onComplete) {
+    firebase.database().ref("employeeInfo/" + uid + "/skillSet/" + skillId + "/").remove(onComplete);
   }
 
   updateEmployeeExperience(uid, expId, title, desc) {
