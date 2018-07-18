@@ -14,15 +14,15 @@ import {
 // TODO: Fix proxy component problem
 class AccountManagement extends React.Component {
 
-    logout = () => {
+    logout = async () => {
         const {authProvider} = this.props.context;
         switch (authProvider){
             case "password":
-                CredentialAuthentication.signout();
+                await CredentialAuthentication.signout();
                 break;
 
             case "facebook.com":
-                FacebookAuthentication.facebookLogout();
+                await FacebookAuthentication.facebookLogout();
                 break;
         }
     };
