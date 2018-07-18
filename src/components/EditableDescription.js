@@ -1,11 +1,11 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import {StyleSheet, Image, View, Text, TouchableHighlight, Modal} from "react-native";
+import {StyleSheet, View, Text, TouchableOpacity, Modal} from "react-native";
 import DatabaseService from "../api/databaseService";
 import {Authentication} from '../api'
 import TextInputMultipleLineWithLabel from '../components/TextInputMultipleLineWithLabel';
-import {Icon} from 'react-native-elements'
+import {Icon} from 'native-base';
 import SaveButton from './SaveButton';
 
 class EditableDescription extends React.Component {
@@ -117,14 +117,14 @@ class EditableDescription extends React.Component {
                         alert('Modal has been closed.');
                     }}>
                     <View style={[styles.MainContainer]}>
-                        <TouchableHighlight
+                        <TouchableOpacity
                             style={styles.CloseIconPos}
                             onPress={() => {
                                 this.closeModal();
                             }}
                         >
                             <Icon name='close'/>
-                        </TouchableHighlight>
+                        </TouchableOpacity>
                         <TextInputMultipleLineWithLabel
                             label="Description"
                             placeholder="Description"
@@ -144,16 +144,17 @@ class EditableDescription extends React.Component {
                 <Text style={styles.Text}>
                     {this.props.description}
                 </Text>
-                <TouchableHighlight
+                <TouchableOpacity
                     onPress={() => {
                         this.openModal();
                     }}
                 >
-                    <Image
-                        source={require('../assets/images/edit.png')}
-                        style={styles.EditIcon}
+                    <Icon
+                        type="FontAwesome"
+                        name='edit'
+                        style={[styles.EditIcon, styles.EditIconPosition]}
                     />
-                </TouchableHighlight>
+                </TouchableOpacity>
             </View>
         )
     }
@@ -179,10 +180,12 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
 
+    EditIconPosition: {
+      marginTop: 10,
+    },
+
     EditIcon: {
-        width: 20,
-        height: 20,
-        marginTop: 15,
+        fontSize: 25,
     },
 
     CloseIconPos: {
