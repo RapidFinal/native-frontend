@@ -37,7 +37,6 @@ class App extends React.Component {
             major: "",
         },
         statusId: "",
-        selectedCategories:{},
         authProvider: null,
         emailVerified: null,
         photoURL: null,
