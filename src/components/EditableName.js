@@ -1,11 +1,12 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import {StyleSheet, Image, View, Text, TouchableHighlight, Modal, TouchableOpacity} from "react-native";
+import {StyleSheet, Image, View, Text, TouchableHighlight, Modal} from "react-native";
 import TextInputWithLabel from './TextInputWithLabel';
 import DatabaseService from "../api/databaseService";
-import {Authentication} from '../api'
-import {Icon} from 'react-native-elements'
+import {Authentication} from '../api';
+import {Icon} from 'react-native-elements';
+import SaveButton from './SaveButton';
 
 class EditableName extends React.Component {
 
@@ -150,12 +151,7 @@ class EditableName extends React.Component {
                             onChange={this.handleChange("lastName")}
                             errorMessage={message.lastName}
                         />
-                        <TouchableOpacity
-                            onPress={() => this.save()}
-                            style={styles.button}
-                        >
-                            <Text style={styles.saveText}>Save</Text>
-                        </TouchableOpacity>
+                        <SaveButton onPress={this.save.bind(this)}/>
                     </View>
                 </Modal>
 

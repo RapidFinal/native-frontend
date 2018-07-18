@@ -1,7 +1,7 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import {StyleSheet, Image, View, Text, TouchableHighlight, Modal, TouchableOpacity} from "react-native";
+import {StyleSheet, Image, View, Text, TouchableHighlight, Modal} from "react-native";
 import DatabaseService from "../api/databaseService";
 import {Authentication} from '../api'
 import TextInputMultipleLineWithLabel from '../components/TextInputMultipleLineWithLabel';
