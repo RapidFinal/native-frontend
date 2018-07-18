@@ -8,7 +8,7 @@ import DatabaseService from '../api/databaseService'
 import {Authentication} from "../api";
 
 const TitleBar = ({editable, children, onAddSkill}) => (
-    <View style={styles.skillSetHeader}>
+    <View style={[styles.skillSetHeader]}>
         <Left>
             <Text style={styles.Title}>
                 {children}
@@ -27,42 +27,45 @@ const TitleBar = ({editable, children, onAddSkill}) => (
     </View>
 );
 
-const SkillText = ({isLast, children, ...rest}) => (
+const SkillText = ({children, ...rest}) => (
     <Text
-        style={[styles.Item, isLast ? styles.DividerLine : {}]}
+        style={[styles.Item]}
         {...rest}
     >
         {children}
     </Text>
 );
 
-const SkillDelete = ({onPress}) => (
+const SkillDelete = ({onPress, iconStyle}) => (
     <ClickButton transparent onPress={onPress} >
-        <Icon name={"delete"} type={"MaterialCommunityIcons"} />
+        <Icon name={"delete"} type={"MaterialCommunityIcons"} style={iconStyle}/>
     </ClickButton>
 );
 
-const SkillEdit = ({onPress}) => (
+const SkillEdit = ({onPress, iconStyle}) => (
     <ClickButton transparent onPress={onPress} >
-        <Icon name={"edit"} type={"FontAwesome"} />
+        <Icon name={"edit"} type={"FontAwesome"} style={iconStyle}/>
     </ClickButton>
 );
 
-const SkillCard = ({editable, id, isLast, onDelete, onEdit, children,...rest}) => (
-    <View>
-        <Left>
-            <SkillText isLast={isLast} {...rest}>{children}</SkillText>
-        </Left>
-        {
-            editable && (
-                <Right>
-                    <SkillEdit onPress={onEdit(id, children)} />
-                    <SkillDelete onPress={onDelete(id)} />
-                </Right>
-            )
-        }
-    </View>
-)
+const SkillCard = ({editable, id, isLast, onDelete, onEdit, children,...rest}) => {
+    return (
+        <View style={[styles.skillSetHeader, !isLast ? styles.DividerLine : {}]}>
+            <Left>
+                <SkillText isLast={isLast} {...rest}>{children}</SkillText>
+            </Left>
+            <Body/>
+            {
+                editable && (
+                    <Right style={styles.skillSetHeader}>
+                        <SkillEdit iconStyle={{ fontSize: 24 }} onPress={onEdit(id, children)} />
+                        <SkillDelete iconStyle={{ fontSize: 24 }} onPress={onDelete(id)} />
+                    </Right>
+                )
+            }
+        </View>
+    )
+}
 
 class SkillSetsCard extends React.Component {
 
@@ -92,7 +95,7 @@ class SkillSetsCard extends React.Component {
         const {skills: {length: skillLength}, skills, editable} = this.props
         return (
             <View style={styles.MainContainer}>
-                <TitleBar editable={editable} onAddSkill={this.showModal}>Skill Sets</TitleBar>
+                <TitleBar onAddSkill={this.showModal}>Skill Sets</TitleBar>
                 <View>
                     {
                         skills.map((v, i) => (
