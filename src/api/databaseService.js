@@ -328,7 +328,7 @@ class DatabaseService {
   updateEmployeeRecentView(uid, recentViewUid) {
     this.getEmployeeRecentView(uid).then(recentViews => {
       let val = [];
-      if (recentViews === null) {
+      if (recentViews === []) {
         val.push(recentViewUid);
         firebase.database().ref("employeeInfo/" + uid + "/recentViews/").set(val);
       } else {
@@ -359,7 +359,11 @@ class DatabaseService {
   getEmployeeRecentView(uid) {
     return new Promise((resolve, reject) => {
       firebase.database().ref("employeeInfo/" + uid + "/recentViews/").once('value').then(function(snapshot) {
-        resolve(snapshot.val())
+        if (snapshot.val() === null){
+          resolve([])
+        } else {
+          resolve(snapshot.val())
+        }
       });
     });
   }
