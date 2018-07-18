@@ -7,13 +7,13 @@ import StatusText from '../components/StatusText';
 import ExperiencesCard from '../components/ExperiencesCard';
 import SkillSetsCard from '../components/SkillSetsCard';
 import CircularProfilePhoto from '../components/CircularProfilePhoto';
-import ProjectSection from '../components/ProjectSection';
 import DatabaseService from '../api/databaseService';
 import {Authentication} from '../api'
 import EditableName from '../components/EditableName'
 import EditableDescription from '../components/EditableDescription';
 import EditableProjectSection from '../components/EditableProjectSection';
 import EditableTags from '../components/EditableTags';
+import EditableStatus from '../components/EditableStatus';
 
 class EditProfile extends React.Component {
 
@@ -122,6 +122,7 @@ class EditProfile extends React.Component {
         let db = new DatabaseService
         let uid = Authentication.currentUser().uid
         db.getEmployeeInfo(uid).then((result) => {
+            console.log(result)
             this.getAllTags(result.tagIds)
             this.setState({
                 imgUrl: result.imgUrl,
@@ -179,7 +180,7 @@ class EditProfile extends React.Component {
                                           updateName={this.updateName.bind(this)}
                                           userRole="employee"
                             />
-                            <StatusText status={status}/>
+                            <EditableStatus status={status} update={this.update.bind(this)}/>
                             <EditableDescription description={description} update={this.update.bind(this)}/>
                             <EditableTags tags={tags} updateTags={this.updateTags.bind(this)}/>
                             <ExperiencesCard experiences={experiences}/>
