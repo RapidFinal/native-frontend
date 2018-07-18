@@ -112,17 +112,16 @@ class EditableCompanyName extends React.Component {
                     onRequestClose={() => {
                         alert('Modal has been closed.');
                     }}>
-                    <View style={{marginTop: 22}}>
-                        <View>
 
-                            <TouchableHighlight
-                                style={styles.CloseIconPos}
-                                onPress={() => {
-                                    this.setModalVisible(!this.state.modalVisible)
-                                }}
-                            >
-                                <Icon name='close' />
-                            </TouchableHighlight>
+                    <TouchableHighlight
+                        style={styles.CloseIconPos}
+                        onPress={() => {
+                            this.setModalVisible(!this.state.modalVisible)
+                        }}
+                    >
+                        <Icon name='close' />
+                    </TouchableHighlight>
+                    <View style={{marginTop: 40}}>
 
                             <TextInputWithLabel
                                 label="Company Name"
@@ -135,7 +134,6 @@ class EditableCompanyName extends React.Component {
                             />
 
                             <SaveButton onPress={()=>this.save()}/>
-                        </View>
                     </View>
                 </Modal>
                 <View style={styles.Inline}>

@@ -6,15 +6,9 @@ import CategoryCard from "../components/CategoryCard";
 import DatabaseService from "../api/databaseService";
 import CircularProfilePhoto from "../components/CircularProfilePhoto";
 import {Authentication} from '../api'
-import EditButton from "../components/EditButton";
-import Modal from "react-native-modal";
-import CategoriesSelection from "../components/CategoriesSelection";
-import TextInputWithLabel from "../components/TextInputWithLabel";
-import SaveButton from "../components/SaveButton";
-import {Spinner, Toast} from "native-base";
-import {hoistStatics} from "recompose";
-import withContext from "../context/withContext";
+import {Spinner} from "native-base";
 import EditableCompanyName from "../components/EditableCompanyName";
+import EditableName from "../components/EditableName";
 
 
 const DataLoading = ({}) => (
@@ -31,57 +25,25 @@ class EditEmployerProfile extends React.Component {
         title: 'Edit Profile'
     });
 
-    //Copy from ViewEmployer Profile
-    static propTypes = {
-        imgUrl: PropTypes.string,
-        fullName: PropTypes.string,
-        companyName: PropTypes.string,
-        categories: PropTypes.array,
-    }
+    static propTypes = {}
 
     state = {
         imgUrl: "",
-        fullName: "",
+        firstName:"",
+        lastName:"",
         companyName:"",
         categories:[],
         ready:false,
-        modalReady:true,
         scrollView: null,
         selectedCategories:{},
 
-        //for edit in Modal
-        editedFirstName:'',
-        editedLastName:'',
-        editedCompanyName:'',
-        editedImgUrl:'',
-        editedSelectedCategories:'',
-
-        //check Error
-        error: {
-            flags: {
-                editedFirstName: false,
-                editedLastName: false,
-                editedCompanyName: false,
-            },
-            message: {
-                editedFirstName: "Required",
-                editedLastName: "Required",
-                editedCompanyName:"Required",
-            }
-        },
-        modalVisible:0,
     };
 
 
     componentDidMount() {
         this.props.navigation.setParams({
             fetchData: this.fetchData.bind(this),
-            scrollToTop: this.scrollToTop.bind(this)
         })
-    }
-
-    scrollToTop() {
-        this.scrollView.scrollTo({x: 0, y: 0, animated: true})
     }
 
     fetchData() {
@@ -94,7 +56,8 @@ class EditEmployerProfile extends React.Component {
             console.log(result)
             this.setState({
                 imgUrl: result.imgUrl,
-                fullName: result.firstName + ' ' + result.lastName,
+                firstName: result.firstName,
+                lastName: result.lastName,
                 companyName:result.companyName,
                 categories:result.categories,
                 ready: true
@@ -112,7 +75,7 @@ class EditEmployerProfile extends React.Component {
             fullName: "",
             companyName:"",
             categories:[],
-            // originalSelectedCategories:{}
+            selectedCategories:{},
         })
     }
 
@@ -127,77 +90,6 @@ class EditEmployerProfile extends React.Component {
             this.initializeState()
         }
     );
-
-    handleChange = (name) => (event) => {
-        this.setState({[name]:event.nativeEvent.text});
-    };
-
-    closeModal = () =>{
-        const {editedSelectedCategories} = this.state
-        // console.log(originalSelectedCategories)
-        console.log(editedSelectedCategories)
-        this.setState({
-            modalVisible :0,
-            editedFirstName:'',
-            editedLastName:'',
-            editedImgUrl:'',
-        })
-    }
-
-    openModal = (keyId) =>{
-        this.setState({
-            modalVisible : keyId
-        })
-    }
-
-    editFullName = async() =>{
-        const uid = Authentication.currentUser().uid
-        const {editedFirstName,editedLastName}= this.state
-        const db= new DatabaseService;
-
-        let error =0;
-        if(editedFirstName ===''){
-            this.validate("editedFirstName")
-        }
-
-        if(editedLastName ===''){
-            this.validate("editedLastName")
-        }
-
-        if (error>0){
-            this.setState({modalReady:true})
-            return;
-        }
-
-        await db.updateEmployerFirstName(uid, editedFirstName);
-        await db.updateEmployerLastName(uid, editedLastName);
-
-        this.setState({
-            fullName : editedFirstName+ " " +editedLastName,
-        })
-
-        this.closeModal()
-    }
-
-    editCompanyName = async() =>{
-        const uid = Authentication.currentUser().uid;
-        const {editedCompanyName} = this.state;
-        const db = new DatabaseService
-
-        if(editedCompanyName===''){
-            this.validate("editCompanyName")
-            this.setState({modalReady:true})
-            return;
-        }
-
-        await db.updateEmployerCompanyName(uid, editedCompanyName)
-
-        this.setState({
-            companyName : editedCompanyName,
-        })
-        this.closeModal()
-    }
-
 
     setError = (errorField, message) => {
         const {error} = this.state;
@@ -234,16 +126,15 @@ class EditEmployerProfile extends React.Component {
         })
     }
 
-    updateFullName = (firstName,lastName) =>{
+    updateName(firstName, lastName) {
         this.setState({
-            firstName : firstName,
-            lastName : lastName
+            firstName: firstName,
+            lastName: lastName
         })
     }
 
     render(){
-        const {imgUrl, fullName,editedFirstName,editedLastName, editedCompanyName, companyName, categories, modalVisible, ready, modalReady} = this.state;
-        const {message, flags} = this.state.error;
+        const {imgUrl, firstName,lastName, companyName, categories, ready} = this.state;
         const uid = Authentication.currentUser().uid;
         return (
             <ScrollView contentContainerStyle={styles.ScrollContainer} ref={scrollView => this.scrollView = scrollView}>
@@ -252,46 +143,9 @@ class EditEmployerProfile extends React.Component {
                         <View style={styles.MainContainer}>
                             <CircularProfilePhoto url={imgUrl} diameter={150}/>
 
-                            <Text style={styles.ProfileName}>
-                                {fullName}
-                            </Text>
-                            <EditButton onPress={()=>this.openModal(1)}/>
-
-                            <Modal
-                                style={styles.ModalContainer}
-                                isVisible={modalVisible===1}
-                                onBackdropPress={()=>this.closeModal()}>
-                                {modalReady ? (
-                                    <View style={{
-                                        flex: 1,
-                                        backgroundColor: 'white'
-                                    }}>
-                                        <TextInputWithLabel
-                                            label="First name"
-                                            placeholder="First name"
-                                            value={editedFirstName}
-                                            hasError={flags.editedFirstName}
-                                            onBlur={() => this.validate("editedFirstName")}
-                                            onChange={this.handleChange("editedFirstName")}
-                                            errorMessage={message.editedFirstName}
-                                        />
-                                        <TextInputWithLabel
-                                            label="Last name"
-                                            placeholder="Last name"
-                                            value={editedLastName}
-                                            hasError={flags.editedLastName}
-                                            onBlur={() => this.validate("editedLastName")}
-                                            onChange={this.handleChange("editedLastName")}
-                                            errorMessage={message.editedLastName}
-                                        />
-                                        <SaveButton onPress={() => this.editFullName()}/>
-                                    </View>
-                                    ) : (
-                                        <DataLoading/>
-                                    )
-                                }
-
-                            </Modal>
+                            <EditableName firstName={firstName} lastName={lastName}
+                                          // userRole={"employer"}
+                                          updateName={this.updateName.bind(this)}/>
                             <EditableCompanyName
                                 companyName={companyName}
                                 updateCompanyName={this.updateCompanyName}
