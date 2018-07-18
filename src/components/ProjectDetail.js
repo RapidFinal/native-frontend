@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import { StyleSheet, Modal, Text, TouchableHighlight, View} from 'react-native';
+import { SocialIcon } from 'react-native-elements'
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
 import TagsSection from './TagsSection'
-import DatabaseService from "../api/databaseService";
 
 class ProjectDetail extends React.Component {
 
@@ -49,10 +49,8 @@ class ProjectDetail extends React.Component {
                 <Modal
                     animationType="slide"
                     transparent={false}
-                    visible={this.state.modalVisible}
-                    onRequestClose={() => {
-                        alert('Modal has been closed.');
-                    }}>
+                    visible={modalVisible}
+                >
                     <View style={{marginTop: 22}}>
                         <View>
                             <TouchableHighlight
@@ -62,9 +60,12 @@ class ProjectDetail extends React.Component {
                                 }}>
                                 <Text style={styles.closeText}>X</Text>
                             </TouchableHighlight>
-                            <Text style={styles.titleText}>{name}</Text>
-                            <Text>Description: {description}</Text>
-                            <Text>Date: {date}</Text>
+                            <View style={styles.allText}>
+                                <Text style={styles.titleText}>{name}</Text>
+                                <Text>{date}</Text>
+                                <Text style={styles.descText}>{description}</Text>
+                            </View>
+                            <allLinks />
                             <TagsSection tags={tags}/>
                         </View>
                     </View>
@@ -82,6 +83,19 @@ class ProjectDetail extends React.Component {
 
 }
 
+const allLinks = () => {
+    this.state.links.map((prop, key) => {
+        console.log(prop.type)
+        return (
+            <SocialIcon
+                title={prop.type}
+                button
+                type={prop.type}
+            />
+        )
+    })
+}
+
 const styles = StyleSheet.create({
     closeBtn: {
         alignItems: 'flex-end',
@@ -93,12 +107,22 @@ const styles = StyleSheet.create({
         fontSize: 20,
         color: '#007AFF',
     },
+    allText: {
+        marginTop: 10,
+        marginLeft: 30,
+        marginRight: 40,
+    },
     titleText: {
         fontSize: 30,
         fontWeight: 'bold',
         alignItems: 'flex-start',
-        marginLeft: 10,
-        color: '#39DAF3',
+        color: '#30C2D9',
+        marginBottom: 5,
+    },
+    descText: {
+        fontSize: 15,
+        marginTop: 20,
+        marginBottom: 10,
     }
 
 });
