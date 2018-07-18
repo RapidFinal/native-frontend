@@ -35,8 +35,8 @@ class ViewProfile extends React.Component {
         skillSets: [],
         projects: [],
         tags: [],
-        scrollView: null
-
+        scrollView: null,
+        isTimeline: true
     };
 
     static navigationOptions = ({navigation}) => ({
@@ -131,8 +131,26 @@ class ViewProfile extends React.Component {
         })
     }
 
+    switchView = () => {
+        this.setState({
+            isTimeline: !this.state.isTimeline
+        })
+    }
+
+
     render() {
-        const {imgUrl, fullName, status, description, experiences, skillSets, projects, tags, ready} = this.state;
+        const {
+            imgUrl,
+            fullName,
+            status,
+            description,
+            experiences,
+            skillSets,
+            projects,
+            tags,
+            ready,
+            isTimeline
+        } = this.state;
         return (
             <View>
                 {
@@ -143,7 +161,7 @@ class ViewProfile extends React.Component {
                                 ref={scrollView => this.scrollView = scrollView}
                             >
                                 <View style={styles.MainContainer}>
-                                    <SwitchButton/>
+                                    <SwitchButton onPress={() => this.switchView()}/>
                                     <CircularProfilePhoto url={imgUrl} diameter={150}/>
                                     <Text style={styles.ProfileName}>
                                         {fullName}
@@ -155,7 +173,12 @@ class ViewProfile extends React.Component {
                                     <TagsSection tags={tags}/>
                                     <ExperiencesCard experiences={experiences}/>
                                     <SkillSetsCard skills={skillSets}/>
-                                    <ProjectSection projects={projects} navigation={this.props.navigation}/>
+                                    { isTimeline ? (
+                                            <Text>Timeline</Text>
+                                        ) : (
+                                            <ProjectSection projects={projects} navigation={this.props.navigation}/>
+                                        )
+                                    }
                                 </View>
                             </ScrollView>
                             <FavButton/>
