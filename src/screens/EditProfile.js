@@ -9,11 +9,11 @@ import SkillSetsCard from '../components/SkillSetsCard';
 import CircularProfilePhoto from '../components/CircularProfilePhoto';
 import ProjectSection from '../components/ProjectSection';
 import DatabaseService from '../api/databaseService';
-import TagsSection from '../components/TagsSection';
 import {Authentication} from '../api'
 import EditableName from '../components/EditableName'
 import EditableDescription from '../components/EditableDescription';
 import EditableProjectSection from '../components/EditableProjectSection';
+import EditableTags from '../components/EditableTags';
 
 class EditProfile extends React.Component {
 
@@ -63,6 +63,18 @@ class EditProfile extends React.Component {
         db.deleteEmployeeProject(uid, projectId)
     }
 
+    deleteProjectFromState(index) {
+        console.log('delete from state')
+        console.log(index)
+        let projectsClone = this.state.projects
+        if (index > -1) {
+            projectsClone.splice(index, 1)
+            this.setState({
+                projects: projectsClone
+            });
+        }
+    }
+
     addProject() {
 
     }
@@ -75,16 +87,10 @@ class EditProfile extends React.Component {
 
     }
 
-    deleteProjectFromState(index) {
-        console.log('delete from state')
-        console.log(index)
-        let projectsClone = this.state.projects
-        if (index > -1) {
-            projectsClone.splice(index, 1)
-            this.setState({
-                projects: projectsClone
-            });
-        }
+    updateTags(tags) {
+        this.setState({
+            tags: tags
+        })
     }
 
     updateExperienceState(newExp) {
@@ -175,7 +181,7 @@ class EditProfile extends React.Component {
                             />
                             <StatusText status={status}/>
                             <EditableDescription description={description} update={this.update.bind(this)}/>
-                            <EditableTags tags={tags}/>
+                            <EditableTags tags={tags} updateTags={this.updateTags.bind(this)}/>
                             <ExperiencesCard experiences={experiences}/>
                             <SkillSetsCard skills={skillSets}/>
                             <EditableProjectSection projects={projects} deleteProject={this.deleteProject.bind(this)}/>
@@ -192,16 +198,6 @@ class EditProfile extends React.Component {
 const DataLoading = ({}) => (
     <View style={styles.MainContainer}>
         <Spinner color={"black"}/>
-    </View>
-);
-
-const EditableTags = ({tags}) => (
-    <View style={[styles.CenterAlign]}>
-        <TagsSection tags={tags}/>
-        <Image
-            source={require('../assets/images/edit.png')}
-            style={[styles.EditIcon, styles.TagsEditIcon]}
-        />
     </View>
 );
 
