@@ -1,6 +1,7 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
+import RecentView from '../components/RecentView'
 import {Text, Container} from "native-base";
 import HomeCard from '../components/HomeCard'
 import SwiperFlatList from 'react-native-swiper-flatlist'
@@ -50,15 +51,19 @@ class Home extends React.Component {
     }
 
     componentDidMount() {
+        this.fetchData();
+    }
+
+    fetchData() {
         let db = new DatabaseService;
         let currentUser = Authentication.currentUser();
         db.getUserRole(currentUser.uid).then((result) => {
             if (result === 'employee') {
                 let listView = [];
                 db.getEmployeeRecentView(currentUser.uid).then((result) => {
-                    for (let each in result) {
-                        listView.push(each);
-                    }
+                    result.forEach(re => {
+                        listView.push(re);
+                    })
                     this.setState({ recentView: listView});
                 })
             } else if (result === 'employer') {
@@ -72,8 +77,6 @@ class Home extends React.Component {
                 // })
             }
         })
-
-
     }
 
     goToProfile = (userID) => {
@@ -128,7 +131,6 @@ class Home extends React.Component {
                 status: "not looking HA"
             }
         ];
-        const recentV = ['EiVfGVxxV2QRV0kKFO9iLHiTwpG3', 'DKXeLqAIYndMkFeBPyzjIcJoNsH2', 'PwB3HOI5kVN8h4s9GAMCIYHDxj83'];
         return (
             <ScrollView>
                 <SearchBox
@@ -171,7 +173,7 @@ class Home extends React.Component {
                         index={0}
                     >
                         {
-                            recentV.map((prop, key) => {
+                            recentView.map((prop, key) => {
                                 return (
                                     <RecentView userId={prop} onPress={this.goToProfile} key={key}/>
                                 )
@@ -183,26 +185,6 @@ class Home extends React.Component {
 
         )
     }
-
-}
-
-const RecentView = ({userId, onPress, ...rest}) => {
-    const db = new DatabaseService;
-    const currentUser = Authentication.currentUser();
-    db.getEmployeeInfo(userId).then((result) => {
-        console.log('NAME: '+result.firstName)
-        return (
-            <TouchableHighlight
-                style={styles.button}
-                onPress={() => onPress(userId)}
-                underlayColor="#EAEAEA"
-            >
-                <HomeCard name={result.firstName + " " + result.lastName}
-                          major={result.major}
-                          status={result.status}/>
-            </TouchableHighlight>
-        )
-    })
 
 }
 
