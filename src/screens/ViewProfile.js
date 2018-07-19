@@ -63,8 +63,9 @@ class ViewProfile extends React.Component {
             fetchData: this.fetchData.bind(this),
             scrollToTop: this.scrollToTop.bind(this)
         })
-        this.setCanLike()
-        this.setLiked()
+        this.setCanLike();
+        this.setLiked();
+        this.updateRecentView();
     }
 
     scrollToTop() {
@@ -148,8 +149,8 @@ class ViewProfile extends React.Component {
         const {role} = this.props.context;
         const db = new DatabaseService;
 
-        // let paramUid = this.props.navigation.getParam('uid');
-        let paramUid = "amIBLV0xwWgP4xxrXjAGDEbvS492";
+        let paramUid = this.props.navigation.getParam('uid');
+
         db.getUserRole(paramUid).then(viewRole => {
             this.setState({
                 canLike: role === "employer" && viewRole === "employee"
@@ -191,6 +192,18 @@ class ViewProfile extends React.Component {
                 favIcon: "md-star"
             })
             db.likedEmployee(currentUser.uid, paramUid)
+        }
+    }
+
+    updateRecentView = () => {
+        const db = new DatabaseService;
+        const {currentUser, role} = this.props.context;
+        const paramUid = this.props.navigation.getParam('uid');
+
+        if (currentUser.uid !== paramUid) {
+            if (role === "employee") {
+                db.updateEmployeeRecentView(currentUser.uid, paramUid)
+            }
         }
     }
 
