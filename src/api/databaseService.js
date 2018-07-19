@@ -181,6 +181,8 @@ class DatabaseService {
           ret.major = val.major;
           resolve(ret)
         });
+      }).catch(e => {
+        reject(e);
       });
     });
   }
