@@ -18,7 +18,7 @@ class CategoriesSelection extends React.Component {
 
     static propTypes = {
         setSelectedState : PropTypes.func,
-        // selectedCategories: PropTypes.object
+        userRole: PropTypes.string,
     };
 
     state = {
@@ -45,16 +45,27 @@ class CategoriesSelection extends React.Component {
     }
 
     getSelectedCategories = () => {
-        const uid = this.props.uid;
+        const {uid,userRole} = this.props.uid;
         if(uid) {
             let db = new DatabaseService
-            db.getEmployerCategories(uid).then((result) => {
-                this.setState({
-                    selectedCategories: result,
-                    ready2: true
+            if(userRole==="employee"){
+                db.getEmployeeCategories(uid).then((result) => {
+                    this.setState({
+                        selectedCategories: result,
+                        ready2: true
+                    })
+                    this.props.setSelectedState(result)
                 })
-                this.props.setSelectedState(result)
-            })
+            }
+            else {
+                db.getEmployerCategories(uid).then((result) => {
+                    this.setState({
+                        selectedCategories: result,
+                        ready2: true
+                    })
+                    this.props.setSelectedState(result)
+                })
+            }
         }
         else{
             this.setState({
