@@ -1,29 +1,24 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import {StyleSheet, Text, View, Alert} from "react-native";
+import {StyleSheet, Text, View, Alert, TouchableOpacity} from "react-native";
 import {Body, Left, Right, Icon} from "native-base";
-import ClickButton from "./ClickButton";
 import DatabaseService from '../api/databaseService'
 import {Authentication} from "../api";
+import {Icon as MaterialIcon} from 'react-native-elements';
 
 const TitleBar = ({editable, children, onAddSkill}) => (
-    <View style={[styles.skillSetHeader]}>
-        <Left>
-            <Text style={styles.Title}>
-                {children}
-            </Text>
-        </Left>
-        <Body />
-        <Right>
-            {
-                editable && (
-                    <ClickButton transparent onPress={onAddSkill}>
-                        <Icon name={"add"} type={"MaterialIcons"} />
-                    </ClickButton>
-                )
-            }
-        </Right>
+    <View style={[styles.RowAlign]}>
+        <Text style={[styles.Title, {justifyContent: 'flex-start'}, styles.RowAlign]}>
+            {children}
+        </Text>
+        {
+            editable && (
+                <TouchableOpacity onPress={onAddSkill} style={[{justifyContent: 'flex-end'}, styles.RowAlign]}>
+                    <MaterialIcon name={"add-circle-outline"} type={"MaterialIcons"} />
+                </TouchableOpacity>
+            )
+        }
     </View>
 );
 
@@ -37,30 +32,31 @@ const SkillText = ({children, ...rest}) => (
 );
 
 const SkillDelete = ({onPress, iconStyle}) => (
-    <ClickButton transparent onPress={onPress} >
-        <Icon name={"delete"} type={"MaterialCommunityIcons"} style={iconStyle}/>
-    </ClickButton>
+    <TouchableOpacity onPress={onPress} >
+        <MaterialIcon
+            name='remove-circle-outline'
+            color='#517fa4'
+        />
+    </TouchableOpacity>
 );
 
 const SkillEdit = ({onPress, iconStyle}) => (
-    <ClickButton transparent onPress={onPress} >
-        <Icon name={"edit"} type={"FontAwesome"} style={iconStyle}/>
-    </ClickButton>
+    <TouchableOpacity onPress={onPress}>
+        <Icon name={"edit"} type={"FontAwesome"} style={[iconStyle, {marginRight: 10}]}/>
+    </TouchableOpacity>
 );
 
 const SkillCard = ({editable, id, isLast, onDelete, onEdit, children,...rest}) => {
     return (
-        <View style={[styles.skillSetHeader, !isLast ? styles.DividerLine : {}]}>
-            <Left>
-                <SkillText isLast={isLast} {...rest}>{children}</SkillText>
-            </Left>
-            <Body/>
+        <View style={[styles.RowAlign, !isLast ? styles.DividerLine : {}]}>
+
+            <SkillText isLast={isLast} {...rest}>{children}</SkillText>
             {
                 editable && (
-                    <Right style={styles.skillSetHeader}>
-                        <SkillEdit iconStyle={{ fontSize: 24 }} onPress={onEdit(id, children)} />
+                    <View style={[styles.RowAlign, {justifyContent: 'flex-end'}]}>
+                        <SkillEdit iconStyle={{ fontSize: 24 }} onPress={onEdit(id, children)}/>
                         <SkillDelete iconStyle={{ fontSize: 24 }} onPress={onDelete(id, children)} />
-                    </Right>
+                    </View>
                 )
             }
         </View>
@@ -175,10 +171,11 @@ const styles = StyleSheet.create({
         borderColor: '#ccc',
         paddingBottom: 15,
     },
-    skillSetHeader: {
+
+    RowAlign: {
         flex: 1,
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        alignItems: 'center'
     },
 });
 
