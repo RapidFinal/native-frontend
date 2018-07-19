@@ -1,10 +1,4 @@
 import React from 'react';
-<<<<<<< HEAD
-import compose from 'recompose/compose';
-import PropTypes from 'prop-types';
-import {StyleSheet, View, Text, ScrollView} from "react-native";
-import {Spinner} from 'native-base';
-=======
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
 import {StyleSheet, View, Text, ScrollView, Platform} from "react-native";

@@ -84,6 +84,23 @@ class SkillSetsCard extends React.Component {
         this.props.onOpenModal();
     };
 
+    deleteExperience = (experienceId, name) => () => {
+        const db = new DatabaseService();
+        const uid = Authentication.currentUser().uid;
+        Alert.alert(
+            `Delete \"${name}\"?`,
+            "Deleting this experience is permanent!",
+            [
+                {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+                {text: 'Delete', onPress: () => {
+                        db.deleteEmployeeSkillSet(uid, skillId)
+                        this.props.triggerRefresh()
+                    }, style: 'destructive'}
+            ],
+            { cancelable: false }
+        )
+    };
+
     deleteSkill = (skillId, skill) => () => {
         const db = new DatabaseService();
         const uid = Authentication.currentUser().uid;
@@ -99,7 +116,6 @@ class SkillSetsCard extends React.Component {
             ],
             { cancelable: false }
         )
-
     };
 
     render(){

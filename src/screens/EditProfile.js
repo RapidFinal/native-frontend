@@ -71,6 +71,10 @@ class EditProfile extends React.Component {
         skillInput: "",
         currentEditSkillId: null,
         showSkillModal: false,
+        ExperienceModal: false,
+        experienceNameInput: "",
+        experienceDescInput: "",
+        currentExperienceId: null,
         saveStatus: "Save",
         onSaving: false
     }
@@ -102,6 +106,60 @@ class EditProfile extends React.Component {
         this.setState({
             experiences: newExp
         })
+    }
+
+    showExperienceModal = (name, desc, id = null) => {
+        this.setState({
+            experienceModal: true,
+            experienceNameInput: name,
+            experienceDescInput: desc,
+            currentExperienceId: id,
+        })
+    }
+
+    hideExperienceModal = () => {
+        this.setState({
+            experienceModal: false,
+            experienceNameInput: "",
+            experienceDescInput: "",
+            currentExperienceId: null,
+        })
+    }
+
+    toggleExperienceModal = () => {
+        this.setState((prev) => ({showExperienceModal: !prev.showExperienceModal}))
+    }
+
+    updateExperienceNameInput = (e) => {
+        this.setState({
+            experienceNameInput: e.nativeEvent.text
+        })
+    }
+
+    updateExperienceDescInput = (e) => {
+        this.setState({
+            experienceDescInput: e.nativeEvent.text
+        })
+    }
+
+    setExperienceInput = (value) => {
+        this.setState({
+            experienceInput: value
+        })
+    }
+
+    onSaveExperience = () => {
+        const {currentExperienceId, experienceNameInput, experienceDescInput} = this.state;
+
+        const db = new DatabaseService();
+        const uid = Authentication.currentUser().uid;
+        if (experienceNameInput !== "" && experienceDescInput !== "") {
+            if (currentExperienceId)
+                db.updateEmployeeExperience(uid, currentExperienceId, experienceNameInput, experienceDescInput);
+            else
+                DatabaseService.createEmployeeExperiences(uid, experienceNameInput, experienceDescInput);
+        }
+        this.hideExperienceModal();
     }
 
     updateSkillSetsState(newSkills) {
@@ -190,6 +248,8 @@ class EditProfile extends React.Component {
         let db = new DatabaseService
         let uid = Authentication.currentUser().uid
         db.getEmployeeInfo(uid).then((result) => {
+            console.log(this);
+            console.log(this.getAllTags);
             this.getAllTags(result.tagIds)
             this.setState({
                 imgUrl: result.imgUrl,
@@ -238,7 +298,7 @@ class EditProfile extends React.Component {
     );
 
     render() {
-        const {ready, imgUrl, firstName, lastName, description, status, experiences, skillSets, projects, tags, showSkillModal, skillInput, saveStatus, onSaving} = this.state;
+        const {ready, imgUrl, firstName, lastName, description, status, experiences, skillSets, projects, tags, showSkillModal, skillInput, showExperienceModal, experienceModal, experienceNameInput, experienceDescInput, saveStatus, onSaving} = this.state;
         return (
             <View>
                 <ScrollView contentContainerStyle={styles.ScrollContainer} ref={scrollView => this.scrollView = scrollView}>
@@ -251,7 +311,7 @@ class EditProfile extends React.Component {
                                 <StatusText status={status}/>
                                 <EditableDescription description={description} update={this.update.bind(this)}/>
                                 <EditableTags tags={tags}/>
-                                <ExperiencesCard experiences={experiences}/>
+                                <ExperiencesCard experiences={experiences} isEditable={true} showModal={this.showExperienceModal} triggerRefresh={()=>{this.fetchData()}}/>
                                 <SkillSetsCard editable={true} triggerRefresh={this.fetchData} onCurrentEditSkill={this.setIdOnEdit} skills={skillSets} onOpenModal={this.showSkillModal} onCloseModal={this.hideSkillModal} setSkillInput={this.setSkillInput}  />
                                 <ProjectSection projects={projects} navigation={this.props.navigation}/>
                             </View>
@@ -263,6 +323,11 @@ class EditProfile extends React.Component {
                 <ModalPopup visible={showSkillModal} close={this.hideSkillModal}>
                     <TextInput text={"Skill"} onChange={this.updateSkillInput} value={skillInput} />
                     <ClickButton disabled={onSaving} onPress={this.onSaveSkill}>{saveStatus}</ClickButton>
+                </ModalPopup>
+                <ModalPopup visible={experienceModal} close={this.hideExperienceModal}>
+                    <TextInput text={"Name"} onChange={this.updateExperienceNameInput} value={experienceNameInput} />
+                    <TextInput text={"Description"} onChange={this.updateExperienceDescInput} value={experienceDescInput} />
+                    <ClickButton disabled={onSaving} onPress={this.onSaveExperience}>{saveStatus}</ClickButton>
                 </ModalPopup>
             </View>
         )
