@@ -48,6 +48,7 @@ class Home extends React.Component {
     state = {
         searchText: '',
         recentView: [],
+        showRecent: false,
     }
 
     componentDidMount() {
