@@ -2,20 +2,20 @@ import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
 import {StyleSheet, Text, View, Alert, TouchableOpacity} from "react-native";
-import {Body, Left, Right, Icon} from "native-base";
+import {Icon} from "native-base";
 import DatabaseService from '../api/databaseService'
 import {Authentication} from "../api";
 import {Icon as MaterialIcon} from 'react-native-elements';
 
 const TitleBar = ({editable, children, onAddSkill}) => (
     <View style={[styles.RowAlign]}>
-        <Text style={[styles.Title, {justifyContent: 'flex-start'}, styles.RowAlign]}>
+        <Text style={[styles.Title, {marginRight: 10}]}>
             {children}
         </Text>
         {
             editable && (
-                <TouchableOpacity onPress={onAddSkill} style={[{justifyContent: 'flex-end'}, styles.RowAlign]}>
-                    <MaterialIcon name={"add-circle-outline"} type={"MaterialIcons"} />
+                <TouchableOpacity onPress={onAddSkill}>
+                    <MaterialIcon name={"add-circle-outline"} color='#517fa4'/>
                 </TouchableOpacity>
             )
         }
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
     RowAlign: {
         flex: 1,
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
     },
 });
 

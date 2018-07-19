@@ -3,22 +3,21 @@ import compose from 'recompose/compose';
 import hoistStatics from 'recompose/hoistStatics';
 import { withContext } from '../context/withContext';
 import PropTypes from 'prop-types';
-import { StyleSheet, Text, View, Alert} from "react-native";
-import {Icon} from "native-base";
+import { StyleSheet, Text, View, Alert, TouchableOpacity} from "react-native";
 import ExperienceItem from './ExperienceItem';
-import ClickButton from "./ClickButton";
 import DatabaseService from '../api/databaseService';
+import {Icon as MaterialIcon} from 'react-native-elements';
 
 const TitleBar = ({isEditable, children, onPress}) => (
-    <View style={[styles.RowAlign]}>
-        <Text style={[styles.Title, {justifyContent: 'flex-start'}, styles.RowAlign]}>
+    <View style={styles.RowAlign}>
+        <Text style={[styles.Title, {marginRight: 10}]}>
             {children}
         </Text>
         {
             isEditable && (
-                <ClickButton transparent onPress={onPress} style={[{justifyContent: 'flex-end'}, styles.RowAlign]}>
-                    <Icon name={"add-circle-outline"} type={"MaterialIcons"} />
-                </ClickButton>
+                <TouchableOpacity transparent onPress={onPress}>
+                    <MaterialIcon name={"add-circle-outline"} color='#517fa4'/>
+                </TouchableOpacity>
             )
         }
     </View>
