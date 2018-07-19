@@ -12,9 +12,9 @@ class SearchResult extends React.Component {
 
     static propTypes = {
         textInput: PropTypes.string,
-	catergoryQuery: PropTypes.shape(
-	    {categoryId: PropTypes.string.isRequired,
-	     subCategoryId: PropTypes.string.isRequired}),
+        catergoryQuery: PropTypes.shape(
+        {categoryId: PropTypes.string.isRequired,
+        subCategoryId: PropTypes.string.isRequired}),
     }
 
     static navigationOptions = ({navigation}) => {
@@ -37,20 +37,34 @@ class SearchResult extends React.Component {
     }
 
     search = (textInput) => {
-	this.setState({loading: true});
-	Search.search(textInput).then((d) => {
+        this.setState({loading: true});
+        Search.search(textInput).then((d) => {
             this.setState({results: d, loading: false});
         }).catch(e => console.error(e));
+    }
+
+    categorySearch = (categoryQuery) => {
+        console.log('catSearch');
+        this.setState({loading: true});
+        Search.categorySearch(categoryQuery).then((d) => {
+            console.log("done");
+            this.setState({results: d, loading: false});
+        }).catch(e=>console.error(e));
     }
 
     componentDidMount() {
         //console.log(this.props.navigation.state.params);
         //console.log(this.props.navigation.getParam("textInput", ""));
         const textInput = this.props.navigation.getParam("textInput", "");
-	const categoryQuery = this.props.navigation.getParam("categoryQuery", null);
+        const categoryQuery = this.props.navigation.getParam("categoryQuery", null);
         //console.log('search: ', textInput);
-	this.setState({textInput});
-	this.search(textInput);
+        if (textInput !== "" ) {
+            this.setState({textInput});
+            this.search(textInput);
+        } else if (categoryQuery !== null) {
+            this.categorySearch(categoryQuery);
+            // Category Search
+        }
     }
 
     render(){
@@ -65,8 +79,8 @@ class SearchResult extends React.Component {
                     titleCancelColor="#007AFF"
                     onChangeText={(textInput) => this.setState({textInput})}
                     afterSearch={() => this.search(this.state.textInput)} >
-	        </SearchBox>
-	        {
+                </SearchBox>
+                {
                     !loading ? <DataLoaded results={results} onPress={this.goToProfile} /> : <DataLoading />
                 }
             </Content>

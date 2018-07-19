@@ -8,28 +8,24 @@ import {Authentication} from '../api';
 import {Icon} from 'native-base';
 import SaveButton from './SaveButton';
 
-class EditableName extends React.Component {
+class EditableMajor extends React.Component {
 
     static propTypes = {
-        firstName: PropTypes.string,
-        lastName: PropTypes.string,
-        updateName: PropTypes.func
+        major: PropTypes.string,
+        update: PropTypes.func
     }
 
     state = {
         modalVisible: false,
         credential: {
-            firstName: "",
-            lastName: "",
+            major: "",
         },
         error: {
             flags: {
-                firstName: false,
-                lastName: false,
+                major: false,
             },
             message: {
-                firstName: "Required",
-                lastName: "Required",
+                major: "Required",
             }
         }
     }
@@ -43,7 +39,7 @@ class EditableName extends React.Component {
     validate = (errorField) => {
         const {credential} = this.state;
         if (credential[errorField] === '') {
-            this.setError(errorField, "Required")
+            this.setError(errorField, this.state.error.message[errorField])
         }
         else {
             this.setError(errorField, null)
@@ -85,35 +81,29 @@ class EditableName extends React.Component {
 
     openModal() {
         const credential = {...this.state.credential};
-        credential['firstName'] = this.props.firstName;
-        credential['lastName'] = this.props.lastName;
+        credential['major'] = this.props.major;
         this.setState({credential});
         this.setModalVisible(!this.state.modalVisible)
     }
 
     save() {
         if (this.passAllFlags()) {
-            this.saveToDB(this.state.credential.firstName, this.state.credential.lastName)
-            this.props.updateName(this.state.credential.firstName, this.state.credential.lastName)
+            this.saveToDB(this.state.credential.major)
+            this.props.update('major', this.state.credential.major)
             this.setModalVisible(!this.state.modalVisible)
         }
     }
 
-    saveToDB(firstName, lastName) {
+    saveToDB(major) {
         let db = new DatabaseService()
         let uid = Authentication.currentUser().uid
-        if (this.props.userRole === 'employee') {
-            db.updateEmployeeFirstName(uid, firstName)
-            db.updateEmployeeLastName(uid, lastName)
-        } else {
-            db.updateEmployerFirstName(uid, firstName)
-            db.updateEmployerLastName(uid, lastName)
-        }
+        alert('Save to db')
+        // update employee major to db here
     }
 
     render() {
         const {modalVisible} = this.state;
-        const {firstName, lastName} = this.state.credential
+        const {major} = this.state.credential
         const {message, flags} = this.state.error;
         return (
             <View style={[styles.RowAlign, {marginTop: 10}]}>
@@ -134,28 +124,19 @@ class EditableName extends React.Component {
                             <Icon name='close'/>
                         </TouchableOpacity>
                         <TextInputWithLabel
-                            label="First name"
-                            placeholder="First name"
-                            value={firstName}
-                            hasError={flags.firstName}
-                            onBlur={() => this.validate("firstName")}
-                            onChange={this.handleChange("firstName")}
-                            errorMessage={message.firstName}
-                        />
-                        <TextInputWithLabel
-                            label="Last name"
-                            placeholder="Last name"
-                            value={lastName}
-                            hasError={flags.lastName}
-                            onBlur={() => this.validate("lastName")}
-                            onChange={this.handleChange("lastName")}
-                            errorMessage={message.lastName}
+                            label="Major"
+                            placeholder="Major"
+                            value={major}
+                            hasError={flags.major}
+                            onBlur={() => this.validate("major")}
+                            onChange={this.handleChange("major")}
+                            errorMessage={message.major}
                         />
                         <SaveButton onPress={this.save.bind(this)}/>
                     </View>
                 </Modal>
 
-                <Text style={styles.FullNameText}>{this.props.firstName + ' ' + this.props.lastName}</Text>
+                <Text style={styles.Text}>{this.props.major}</Text>
                 <TouchableOpacity
                     onPress={() => {
                         this.openModal();
@@ -164,7 +145,7 @@ class EditableName extends React.Component {
                     <Icon
                         type="FontAwesome"
                         name='edit'
-                        style={[styles.EditIcon, styles.FullNameEditIcon]}
+                        style={[styles.EditIcon, styles.EditIconPosition]}
                     />
                 </TouchableOpacity>
             </View>
@@ -187,11 +168,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
 
-    FullNameText: {
-        fontSize: 26,
+    Text: {
+        fontSize: 20,
     },
 
-    FullNameEditIcon: {
+    EditIconPosition: {
         marginLeft: 10,
     },
 
@@ -218,4 +199,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default compose()(EditableName)
+export default compose()(EditableMajor)

@@ -118,71 +118,92 @@ class DatabaseService {
 
   getEmployeeInfo(uid) {
     return new Promise((resolve, reject) => {
-      firebase.database().ref("employeeInfo/" + uid + "/").once('value').then((snapshot) => {
-        this.getStatus(snapshot.val().statusId).then(status => {
-          const ret = {};
-          let val = snapshot.val();
-          let ex = [];
-          if (typeof(val.experiences) !== 'undefined'){
-            Object.entries(val.experiences).forEach( ([id, info]) => {
-              ex.push({id: id, title: info.experience_title, description: info.experience_description});
-            });
-          } else {
-            ex = [];
-          }
+      this.getCategoriesInfo().then(allCats => {
+        firebase.database().ref("employeeInfo/" + uid + "/").once('value').then((snapshot) => {
+          this.getStatus(snapshot.val().statusId).then(status => {
+            const ret = {};
+            let val = snapshot.val();
 
-          let prog = [];
-          if (typeof(val.projects) !== 'undefined'){
-            let tmp = [];
-            Object.entries(val.projects).forEach( ([id, info]) => {
-              Object.entries(info.links).forEach(([id, val]) => {
-                let v = {};
-                v[id] = id;
-                v["type"] = val.type;
-                v["links"] = val.link;
-                tmp.push(v);
+            let cat = [];
+            Object.entries(val.categories).forEach(
+              ([categoryId, subCatIds]) => {
+                let tmp = {};
+                let arr = [];
+                subCatIds.subCategoryIds.forEach( (subCatId) => {
+                  let subCats = {
+                    subCategoryId: subCatId,
+                    subCategoryName: allCats[categoryId].subCategory[subCatId].subCategoryName
+                  };
+                  arr.push(subCats);
+                });
+                tmp.categoryId = categoryId;
+                tmp.categoryName = allCats[categoryId].categoryName;
+                tmp.subCategory = arr;
+                cat.push(tmp);
+              }
+            );
+
+            let ex = [];
+            if (typeof(val.experiences) !== 'undefined'){
+              Object.entries(val.experiences).forEach( ([id, info]) => {
+                ex.push({id: id, title: info.experience_title, description: info.experience_description});
               });
-              prog.push({id:id, name: info.projectName, description: info.projectDescription,
-                date: info.date, tags: info.tagIds, links: tmp});
-            });
-          } else {
-            prog = [];
-          }
+            } else {
+              ex = [];
+            }
 
-          let skills = [];
-          if (typeof(val.skillSet) !== 'undefined'){
-            Object.entries(val.skillSet).forEach( ([id, skill]) => {
-              let tmp = {
-                id: id,
-                skill: skill
-              };
-              skills.push(tmp);
-            });
-          } else {
-            skills = [];
-          }
+            let prog = [];
+            if (typeof(val.projects) !== 'undefined'){
+              Object.entries(val.projects).forEach( ([id, info]) => {
+                let tmp = [];
+                Object.entries(info.links).forEach(([id, val]) => {
+                  let v = {};
+                  v[id] = id;
+                  v["type"] = val.type;
+                  v["links"] = val.link;
+                  tmp.push(v);
+                });
+                prog.push({id:id, name: info.projectName, description: info.projectDescription,
+                  date: info.date, tags: info.tagIds, links: tmp});
+              });
+            } else {
+              prog = [];
+            }
 
-          let imgUrl = "";
-          if (typeof(val.imgUrl) !== 'undefined'){
-            imgUrl = val.imgUrl;
-          } else {
-            imgUrl = "";
-          }
+            let skills = [];
+            if (typeof(val.skillSet) !== 'undefined'){
+              Object.entries(val.skillSet).forEach( ([id, skill]) => {
+                let tmp = {
+                  id: id,
+                  skill: skill
+                };
+                skills.push(tmp);
+              });
+            } else {
+              skills = [];
+            }
 
-          ret.firstName = val.firstName;
-          ret.lastName = val.lastName;
-          ret.description = val.description;
-          ret.imgUrl = imgUrl;
-          ret.status = status;
-          ret.experiences = ex;
-          ret.tagIds = val.tagIds;
-          ret.projects = prog;
-          ret.skillSet = skills;
-          ret.major = val.major;
-          resolve(ret)
+            let imgUrl = "";
+            if (typeof(val.imgUrl) !== 'undefined'){
+              imgUrl = val.imgUrl;
+            } else {
+              imgUrl = "";
+            }
+
+            ret.firstName = val.firstName;
+            ret.lastName = val.lastName;
+            ret.description = val.description;
+            ret.imgUrl = imgUrl;
+            ret.status = status;
+            ret.experiences = ex;
+            ret.tagIds = val.tagIds;
+            ret.projects = prog;
+            ret.skillSet = skills;
+            ret.major = val.major;
+            ret.categories = cat;
+            resolve(ret)
+          });
         });
-      }).catch(e => {
-        reject(e);
       });
     });
   }
@@ -466,6 +487,49 @@ class DatabaseService {
         });
         resolve(ret);
       })
+    });
+  }
+
+  updateEmployerRecentView(uid, recentViewUid) {
+    this.getEmployerRecentView(uid).then(recentViews => {
+      let val = [];
+      if (recentViews === []) {
+        val.push(recentViewUid);
+        firebase.database().ref("employerInfo/" + uid + "/recentViews/").set(val);
+      } else {
+        val = recentViews.reverse();
+        if (recentViews.length < 5){
+          if (recentViews.includes(recentViewUid)){
+            let index = recentViews.indexOf(recentViewUid);
+            val.splice(index, 1);
+            val.push(recentViewUid)
+          } else {
+            val.push(recentViewUid);
+          }
+        } else {
+          if (recentViews.includes(recentViewUid)){
+            let index = recentViews.indexOf(recentViewUid);
+            val.splice(index, 1);
+            val.push(recentViewUid)
+          } else {
+            val.splice(0, 1);
+            val.push(recentViewUid);
+          }
+        }
+        firebase.database().ref("employerInfo/" + uid + "/recentViews/").set(val.reverse());
+      }
+    })
+  }
+
+  getEmployerRecentView(uid) {
+    return new Promise((resolve, reject) => {
+      firebase.database().ref("employerInfo/" + uid + "/recentViews/").once('value').then(function(snapshot) {
+        if (snapshot.val() === null){
+          resolve([])
+        } else {
+          resolve(snapshot.val())
+        }
+      });
     });
   }
 

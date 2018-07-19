@@ -1,13 +1,14 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import {StyleSheet, Image, View, Text, TouchableHighlight, Modal, TouchableOpacity} from "react-native";
-import TextInputWithLabel from './TextInputWithLabel';
+import {StyleSheet, View, Text, TouchableOpacity, Modal} from "react-native";
 import DatabaseService from "../api/databaseService";
 import {Authentication} from '../api'
 import TextInputMultipleLineWithLabel from '../components/TextInputMultipleLineWithLabel';
+import {Icon} from 'native-base';
+import SaveButton from './SaveButton';
 
-class CircularProfilePhoto extends React.Component {
+class EditableDescription extends React.Component {
 
     static propTypes = {
         description: PropTypes.string,
@@ -77,6 +78,10 @@ class CircularProfilePhoto extends React.Component {
         this.setState({modalVisible: visible});
     }
 
+    closeModal() {
+        this.setModalVisible(!this.state.modalVisible)
+    }
+
     openModal() {
         const credential = {...this.state.credential};
         credential['description'] = this.props.description;
@@ -111,49 +116,58 @@ class CircularProfilePhoto extends React.Component {
                     onRequestClose={() => {
                         alert('Modal has been closed.');
                     }}>
-                    <View style={{marginTop: 22}}>
-                        <View>
-                            <TextInputMultipleLineWithLabel
-                                label="Description"
-                                placeholder="Description"
-                                hasError={flags.description}
-                                multiline = {true}
-                                onChange={this.handleChange("description")}
-                                value={description}
-                                editable = {true}
-                                maxLength = {120}
-                                onBlur={() => this.validate("description")}
-                                errorMessage={message.description}
-                            />
-                            <TouchableOpacity
-                                onPress={() => this.save()}
-                                style={styles.button}
-                            >
-                                <Text style={styles.saveText}>Save</Text>
-                            </TouchableOpacity>
-                        </View>
+                    <View style={[styles.MainContainer]}>
+                        <TouchableOpacity
+                            style={styles.CloseIconPos}
+                            onPress={() => {
+                                this.closeModal();
+                            }}
+                        >
+                            <Icon name='close'/>
+                        </TouchableOpacity>
+                        <TextInputMultipleLineWithLabel
+                            label="Description"
+                            placeholder="Description"
+                            hasError={flags.description}
+                            multiline={true}
+                            onChange={this.handleChange("description")}
+                            value={description}
+                            editable={true}
+                            maxLength={120}
+                            onBlur={() => this.validate("description")}
+                            errorMessage={message.description}
+                        />
+                        <SaveButton onPress={this.save.bind(this)}/>
                     </View>
                 </Modal>
 
                 <Text style={styles.Text}>
                     {this.props.description}
                 </Text>
-                <TouchableHighlight
+                <TouchableOpacity
                     onPress={() => {
                         this.openModal();
                     }}
                 >
-                    <Image
-                        source={require('../assets/images/edit.png')}
-                        style={styles.EditIcon}
+                    <Icon
+                        type="FontAwesome"
+                        name='edit'
+                        style={[styles.EditIcon, styles.EditIconPosition]}
                     />
-                </TouchableHighlight>
+                </TouchableOpacity>
             </View>
         )
     }
 }
 
 const styles = StyleSheet.create({
+    MainContainer: {
+        width: '90%',
+        maxWidth: '90%',
+        marginTop: 20,
+        alignSelf: 'center'
+    },
+
     CenterAlign: {
         flex: 1,
         flexDirection: 'column',
@@ -166,25 +180,17 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
 
+    EditIconPosition: {
+      marginTop: 10,
+    },
+
     EditIcon: {
-        width: 20,
-        height: 20,
-        marginTop: 15,
+        fontSize: 25,
     },
 
-    button: {
-        alignSelf: 'center',
-        marginVertical: 40,
-        width: 120,
-        height: 30,
-        backgroundColor: '#8BD2EB',
-    },
-
-    saveText: {
-        textAlign: 'center',
-        fontSize: 20,
-        color: '#fff'
+    CloseIconPos: {
+        alignSelf: 'flex-end'
     }
 })
 
-export default compose()(CircularProfilePhoto)
+export default compose()(EditableDescription)
