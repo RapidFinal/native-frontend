@@ -48,7 +48,7 @@ class Home extends React.Component {
     state = {
         searchText: '',
         recentView: [],
-        showRecent: false,
+        showRecentView: false,
     }
 
     componentDidMount() {
@@ -68,16 +68,18 @@ class Home extends React.Component {
                     this.setState({ recentView: listView});
                 })
             } else if (result === 'employer') {
-                console.log('')
-                // let listView = [];
-                // db.getEmployeeRecentView(currentUser.uid).then((result) => {
-                //     for (let each in result) {
-                //         listView.push(each);
-                //     }
-                //     this.setState({ recentView: listView});
-                // })
+                let listView = [];
+                db.getEmployeeRecentView(currentUser.uid).then((result) => {
+                    for (let each in result) {
+                        listView.push(each);
+                    }
+                    this.setState({ recentView: listView});
+                })
             }
         })
+        if (this.state.recentView !== []){
+            this.setState({showRecentView: true});
+        }
     }
 
     goToProfile = (userID) => {
@@ -91,7 +93,6 @@ class Home extends React.Component {
 
     onChangeText = (text) => {
         this.setState({ searchText: text})
-        // console.log(text)
     }
 
     onSearchButtonPress = () => {
@@ -100,7 +101,7 @@ class Home extends React.Component {
     }
 
     render(){
-        const { recentView } = this.state;
+        const { recentView, showRecentView } = this.state;
         const userInfo = [
             {
                 uid: 1,
@@ -164,24 +165,28 @@ class Home extends React.Component {
                         })}
                     </SwiperFlatList>
                 </Card>
-                <Card containerStyle={styles.cardContainer}>
-                    <Text style={styles.titleText}>
-                        Recently Viewed
-                    </Text>
-                    <SwiperFlatList
-                        style={styles.swipeBox}
-                        renderAll={true}
-                        index={0}
-                    >
-                        {
-                            recentView.map((prop, key) => {
-                                return (
-                                    <RecentView userId={prop} onPress={this.goToProfile} key={key}/>
-                                )
-                            })
-                        }
-                    </SwiperFlatList>
-                </Card>
+                { showRecentView ?
+                    (<Card containerStyle={styles.cardContainer}>
+                        <Text style={styles.titleText}>
+                            Recently Viewed
+                        </Text>
+                        <SwiperFlatList
+                            style={styles.swipeBox}
+                            renderAll={true}
+                            index={0}
+                        >
+                            {
+                                recentView.map((prop, key) => {
+                                    return (
+                                        <RecentView userId={prop} onPress={this.goToProfile} key={key}/>
+                                    )
+                                })
+                            }
+                        </SwiperFlatList>
+                    </Card>)
+                    :
+                    (null)
+                }
             </ScrollView>
 
         )
