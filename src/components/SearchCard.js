@@ -11,7 +11,7 @@ class SearchCard extends Component {
 
     static propTypes = {
         results: PropTypes.array.isRequired,
-	onPress: PropTypes.func.isRequired
+        onPress: PropTypes.func.isRequired
     };
     state = { };
 
