@@ -4,27 +4,23 @@ import hoistStatics from 'recompose/hoistStatics';
 import { withContext } from '../context/withContext';
 import PropTypes from 'prop-types';
 import { StyleSheet, Text, View, Alert} from "react-native";
-import {Body, Left, Right, Icon} from "native-base";
+import {Icon} from "native-base";
 import ExperienceItem from './ExperienceItem';
 import ClickButton from "./ClickButton";
 import DatabaseService from '../api/databaseService';
 
 const TitleBar = ({isEditable, children, onPress}) => (
     <View style={[styles.RowAlign]}>
-        <Left>
-            <Text style={styles.Title}>
-                {children}
-            </Text>
-        </Left>
-        <Right>
-            {
-                isEditable && (
-                    <ClickButton transparent onPress={onPress} style={{alignSelf: 'flex-end'}}>
-                        <Icon name={"add-circle-outline"} type={"MaterialIcons"} />
-                    </ClickButton>
-                )
-            }
-        </Right>
+        <Text style={[styles.Title, {justifyContent: 'flex-start'}, styles.RowAlign]}>
+            {children}
+        </Text>
+        {
+            isEditable && (
+                <ClickButton transparent onPress={onPress} style={[{justifyContent: 'flex-end'}, styles.RowAlign]}>
+                    <Icon name={"add-circle-outline"} type={"MaterialIcons"} />
+                </ClickButton>
+            )
+        }
     </View>
 );
 
@@ -96,7 +92,6 @@ class ExperiencesCard extends React.Component {
                             />
                         );
                     }
-
                 })}
             </View>
         );
@@ -126,7 +121,7 @@ const styles = StyleSheet.create({
     },
 
     Item: {
-        marginBottom: 10,
+        marginBottom: 20,
     },
 
     DividerLine: {
@@ -134,17 +129,16 @@ const styles = StyleSheet.create({
         borderColor: '#ccc',
         paddingBottom: 15,
     },
-    experienceHeader: {
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-    },
 
     RowAlign: {
         flex: 1,
         flexDirection: 'row',
         alignItems: 'center'
     },
+
+    AddIconPosition: {
+        alignSelf: 'flex-end',
+    }
 });
 
 export default hoistStatics(compose(withContext))(ExperiencesCard);

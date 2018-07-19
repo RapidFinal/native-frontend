@@ -32,7 +32,7 @@ class ExperienceItem extends React.Component {
     render(){
       const {isEditable = false, title, desc, onDelete=()=>{}, onEdit=()=>{}} = this.props;
         return (
-            <View style={styles.MainContainer}>
+            <View style={[styles.MainContainer, this.props.style]}>
                 <View style={styles.TextSection}>
                     <Text style={styles.Title}>{title}</Text>
                     <Text style={styles.Description}>{desc}</Text>
