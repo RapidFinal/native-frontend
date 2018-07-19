@@ -42,7 +42,7 @@ class CategoryCard extends React.Component {
     }
 
     save(){
-        const {uid,userRole} = this.props.uid
+        const {uid,userRole} = this.props
         const {selectedCategories}= this.state
         console.log(selectedCategories)
         if (Object.keys(selectedCategories).length <1){
