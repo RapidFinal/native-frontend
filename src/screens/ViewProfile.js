@@ -13,6 +13,7 @@ import TagsSection from '../components/TagsSection';
 import {Authentication} from '../api'
 import {withContext} from "../context/withContext";
 import hoistStatics from "recompose/hoistStatics";
+import CategoryCard from "../components/CategoryCard";
 
 class ViewProfile extends React.Component {
 
@@ -41,7 +42,9 @@ class ViewProfile extends React.Component {
         isTimeline: true,
         canLike: false,
         favIcon: "md-star-outline",
-        liked: false
+        liked: false,
+        major: "",
+        categories: []
     };
 
     static navigationOptions = ({navigation}) => ({
@@ -96,6 +99,8 @@ class ViewProfile extends React.Component {
                 experiences: result.experiences,
                 projects: result.projects,
                 skillSets: result.skillSet,
+                major: result.major,
+                categories: result.categories,
                 ready: true
             });
         }).catch((error) => {
@@ -226,8 +231,14 @@ class ViewProfile extends React.Component {
             ready,
             isTimeline,
             canLike,
-            favIcon
+            favIcon,
+            major,
+            categories
         } = this.state;
+
+        const uid = Authentication.currentUser().uid;
+
+        // TODO major, category,
         return (
             <View style={styles.Flex}>
                 {
@@ -244,6 +255,7 @@ class ViewProfile extends React.Component {
                                         {fullName}
                                     </Text>
                                     <StatusText status={status}/>
+                                    <Text style={styles.Text}>{major}</Text>
                                     <Text style={styles.Description}>
                                         {description}
                                     </Text>
@@ -256,6 +268,12 @@ class ViewProfile extends React.Component {
                                         onCloseModal={null}
                                         setSkillInput={null}
                                         onCurrentEditSkill={null}
+                                    />
+                                    <CategoryCard
+                                        categories={categories}
+                                        editable={false}
+                                        uid={uid}
+                                        userRole="employee"
                                     />
                                     { isTimeline ? (
                                             <Text>Timeline</Text>
@@ -355,6 +373,11 @@ const styles = StyleSheet.create({
         width: "110%",
         height: "110%",
         borderRadius: 50
+    },
+
+    Text: {
+        marginTop: "2%",
+        fontSize: 20,
     }
 });
 
