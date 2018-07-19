@@ -62,17 +62,20 @@ class EditableTags extends React.Component {
 
     handleTagTextChange = (event) => {
         let tag = event.nativeEvent.text
-        this.setState({text: tag});
+        if (tag !== " ") {
+            this.setState({text: tag});
 
-        const lastTyped = tag.charAt(tag.length - 1);
-        const parseWhen = [',', ' ', ';', '\n'];
+            const lastTyped = tag.charAt(tag.length - 1);
+            const parseWhen = [',', ' ', ';', '\n'];
 
-        if (parseWhen.indexOf(lastTyped) > -1) {
-            this.setState({
-                tags: [...this.state.tags, this.state.text],
-                text: "",
-            });
+            if (parseWhen.indexOf(lastTyped) > -1) {
+                this.setState({
+                    tags: [...this.state.tags, this.state.text],
+                    text: "",
+                });
+            }
         }
+
     }
 
     render() {
@@ -95,7 +98,8 @@ class EditableTags extends React.Component {
                         >
                             <Icon name='close'/>
                         </TouchableOpacity>
-                        <Text>Edit Tags</Text>
+                        <Text style={styles.Title}>Edit Tags</Text>
+                        <Text style={styles.Description}>Click on the tag to remove</Text>
                         <Tags
                             initialTags={tags}
                             readonly={true}
@@ -158,6 +162,17 @@ const styles = StyleSheet.create({
     CloseIconPos: {
         alignSelf: 'flex-end'
     },
+
+    Title: {
+        fontSize: 30,
+        marginBottom: 20,
+    },
+
+    Description: {
+        marginBottom: 10,
+    },
+
+
 });
 
 export default compose()(EditableTags)
