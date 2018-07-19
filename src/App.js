@@ -37,11 +37,11 @@ class App extends React.Component {
             major: "",
         },
         statusId: "",
-        selectedCategories:{},
         authProvider: null,
         emailVerified: null,
         photoURL: null,
-        role: null
+        role: null,
+        selectedCategories: null
     };
 
     componentDidMount(){

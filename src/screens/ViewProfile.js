@@ -1,7 +1,7 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import {StyleSheet, View, Text, ScrollView} from "react-native";
+import {StyleSheet, View, Text, ScrollView, Platform} from "react-native";
 import {Spinner} from 'native-base';
 import StatusText from '../components/StatusText';
 import ExperiencesCard from '../components/ExperiencesCard';
@@ -23,7 +23,7 @@ class ViewProfile extends React.Component {
         skillSets: PropTypes.array,
         projects: PropTypes.array,
         tags: PropTypes.array,
-    }
+    };
 
     state = {
         ready: false,
@@ -36,7 +36,6 @@ class ViewProfile extends React.Component {
         projects: [],
         tags: [],
         scrollView: null
-
     };
 
     static navigationOptions = ({navigation}) => ({
@@ -60,6 +59,8 @@ class ViewProfile extends React.Component {
         })
     }
 
+
+
     scrollToTop() {
         this.scrollView.scrollTo({x: 0, y: 0, animated: true})
     }
@@ -74,6 +75,7 @@ class ViewProfile extends React.Component {
         } else {
             uid = this.props.uid
         }
+        console.log("uid : " + uid)
         db.getEmployeeInfo(uid).then((result) => {
             console.log(result)
             this.getAllTags(result.tagIds)
@@ -148,7 +150,7 @@ class ViewProfile extends React.Component {
                             </Text>
                             <TagsSection tags={tags}/>
                             <ExperiencesCard experiences={experiences}/>
-                            <SkillSetsCard skills={skillSets}/>
+                            <SkillSetsCard editable={false} skills={skillSets} onOpenModal={null} onCloseModal={null} setSkillInput={null} onCurrentEditSkill={null}/>
                             <ProjectSection projects={projects} navigation={this.props.navigation}/>
                         </View>
                     ) : (
@@ -186,7 +188,7 @@ const styles = StyleSheet.create({
         marginTop: 20,
         maxWidth: '90%',
         textAlign: 'center'
-    }
+    },
 });
 
 export default compose()(ViewProfile)
