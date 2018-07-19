@@ -185,8 +185,8 @@ class DatabaseService {
     });
   }
 
-  updateEmployeeDegree(uid, degree) {
-    firebase.database().ref("employeeInfo/" + uid + "/degree").set(degree);
+  updateEmployeeMajor(uid, major) {
+    firebase.database().ref("employeeInfo/" + uid + "/major").set(major);
   }
 
   updateEmployeeFirstName(uid, firstName) {
@@ -365,6 +365,33 @@ class DatabaseService {
           resolve(snapshot.val())
         }
       });
+    });
+  }
+
+  // cat = map of categoey-subcategory that selected
+  // {
+  //   "categoryId1": ["subcategoryId1", "subcategoryId2", "subcategoryId3"],
+  //   "categoryId2": ["subcategoryId1", "subcategoryId2", "subcategoryId3"]
+  // }
+  updateEmployeeCategories(uid, cat) {
+    let val = {}
+    Object.entries(cat).forEach(
+      ([categoryId, subCatIds]) => {
+        val[categoryId] = {subCategoryIds: subCatIds}
+      }
+    );
+    firebase.database().ref("employeeInfo/" + uid + "/categories/").set(val);
+  }
+
+  getEmployeeCategories(uid){
+    return new Promise((resolve, reject) => {
+      firebase.database().ref("employeeInfo/" + uid + "/categories/").once('value').then((snapshot) => {
+        let ret = {}
+        snapshot.forEach(s => {
+          ret[s.key] = s.val().subCategoryIds;
+        })
+        resolve(ret);
+      })
     });
   }
 
