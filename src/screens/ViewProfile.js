@@ -252,7 +252,7 @@ class ViewProfile extends React.Component {
                                     }
                                 </View>
                             </ScrollView>
-                            { canLike ?
+                            { true ?
                                 (<FavButton
                                     onPress={this.toggleLikeProfile}
                                     favIcon={favIcon}
@@ -286,8 +286,15 @@ const SwitchButton = ({onPress}) => (
 );
 
 const FavButton = ({onPress, favIcon}) => (
-    <Fab onPress={onPress}>
-        <Icon type={"Ionicons"} name={favIcon}/>
+    <Fab
+        style={styles.Fab}
+        onPress={onPress}
+    >
+        <Icon
+            type={"Ionicons"}
+            name={favIcon}
+            style={styles.Icon}
+        />
     </Fab>
 );
 
@@ -314,12 +321,27 @@ const styles = StyleSheet.create({
     },
 
     SwitchButton: {
+        backgroundColor: "#15BBCF",
         alignSelf: 'flex-end',
         marginRight: "4%"
     },
 
     Flex: {
         flex: 1
+    },
+
+    Icon: {
+        color: '#15BBCF',
+        fontSize: 40
+    },
+
+    Fab: {
+        backgroundColor: "white",
+        borderColor: "#15BBCF",
+        borderWidth: 1,
+        width: "110%",
+        height: "110%",
+        borderRadius: 50
     }
 });
 
