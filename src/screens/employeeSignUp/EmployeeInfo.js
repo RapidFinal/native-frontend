@@ -5,8 +5,9 @@ import _ from 'lodash'
 import {ScrollView, StyleSheet, View} from "react-native";
 import {
     Button,
-    Container, Content,
+    Container,
     H3,
+    Spinner,
     Text,
 } from "native-base";
 import {
@@ -22,26 +23,23 @@ import DatabaseService from "../../api/databaseService";
 import Tags from "react-native-tags";
 import hoistStatics from "recompose/hoistStatics";
 
-const MyAwesomeButton = ({onPress, children}) => (
-    <Button
-        small
-        style={styles.button}
-        onPress={onPress(children)}
-    >
-        <Text uppercase={false}>{"+ " + children}</Text>
-    </Button>
+const SuggestedTags = ({suggestedTags, func}) => (
+    <View style={styles.TagsContainer}>
+        <Tags
+            readonly
+            initialTags={suggestedTags}
+            onTagPress={(index, tagLabel, event) => func(tagLabel)}
+            tagContainerStyle={{height: 40}}
+            tagTextStyle={{fontSize: 16}}
+        />
+    </View>
 )
 
-const SuggestedTags = ({suggestedTags, func}) => (
-    <Tags
-        readonly
-        initialTags={suggestedTags}
-        onTagPress={(index, tagLabel, event) => func(tagLabel)}
-        containerStyle={{justifyContent: "center"}}
-        tagContainerStyle={{alignItems: 'center', height: 40}}
-        tagTextStyle={{fontSize: 16}}
-    />
-)
+const DataLoading = () => (
+    <View style={styles.MainContainer}>
+        <Spinner color={"black"} />
+    </View>
+);
 
 class EmployeeInfo extends React.Component {
 
@@ -50,7 +48,7 @@ class EmployeeInfo extends React.Component {
         major: PropTypes.string,
         error: PropTypes.object,
         suggestionTags: PropTypes.array,
-        statusId: PropTypes.string
+        statusId: PropTypes.string,
     };
 
     static navigationOptions = () => {
@@ -80,6 +78,7 @@ class EmployeeInfo extends React.Component {
             statusId: false,
         },
         suggestionTags: [],
+        ready: false
     };
 
 
@@ -122,6 +121,9 @@ class EmployeeInfo extends React.Component {
                 d = shuffle(d);
                 let fiveTags = d.slice(0, 5);
                 this.setState({suggestionTags:fiveTags})
+            })
+            .then(() => {
+                this.setState({ready: true})
             })
     }
 
@@ -225,53 +227,56 @@ class EmployeeInfo extends React.Component {
     }
 
     render() {
-        const {tags, major, error, suggestionTags} = this.state; // to easily access state put desire variable in the curly brace so it may become const {variable} = this.state;
+        const {tags, major, error, suggestionTags, ready} = this.state; // to easily access state put desire variable in the curly brace so it may become const {variable} = this.state;
         return (
             <Container>
-                <Content>
-                    <Stepper
-                        currentPosition={2}
-                        stepCount={4}
-                    />
-                    <ScrollView>
-                        <SignUpForm>
-                            <H3>Your top skills</H3>
-                            <Text style={styles.text}>Suggestion of popular tags</Text>
+                {
+                    ready ?
+                    <View>
+                        <Stepper
+                            currentPosition={2}
+                            stepCount={4}
+                        />
+                        <ScrollView contentContainerStyle={styles.contentContainer}>
+                            <SignUpForm>
+                                <H3>Your top skills</H3>
+                                <Text style={styles.text}>Suggestion of popular tags</Text>
 
-                            <SuggestedTags suggestedTags={suggestionTags} func={this.putTagInTextInput}/>
+                                <SuggestedTags suggestedTags={suggestionTags} func={this.putTagInTextInput}/>
 
-                            {tags.map((tag, index) => (
-                                <TextInput
-                                    key={index}
-                                    placeholder={`${index + 1}. Add ...`}
-                                    value={tag}
-                                    onChange={this.handleChange(index)}
-                                    hasError={error.tags[index]}
-                                    errorMessage={error.message}
-                                    onBlur={() => this.validate(index)}
+                                {tags.map((tag, index) => (
+                                    <TextInput
+                                        key={index}
+                                        placeholder={`${index + 1}. Add ...`}
+                                        value={tag}
+                                        onChange={this.handleChange(index)}
+                                        hasError={error.tags[index]}
+                                        errorMessage={error.message}
+                                        onBlur={() => this.validate(index)}
+                                    />
+                                ))}
+
+                                <View style={styles.marginVertical}>
+                                    <TextInputWithLabel
+                                        label={"Major"}
+                                        placeholder={"Major"}
+                                        value={major}
+                                        onChange={this.handleChange("major")}
+                                        hasError={error.major}
+                                        errorMessage={error.message}
+                                        onBlur={() => this.validate("major")}
+                                    />
+                                </View>
+                                <Text>Status</Text>
+                                <StatusDropdown func={this.setStatusState} hasError={error.statusId}/>
+                                {error.statusId ? <Text style={styles.error}>{error.message}</Text> : null}
+                                <NextButton
+                                    onPress={() => this.attemptSubmit()}
                                 />
-                            ))}
-
-                            <View style={styles.marginVertical}>
-                                <TextInputWithLabel
-                                    label={"Major"}
-                                    placeholder={"Major"}
-                                    value={major}
-                                    onChange={this.handleChange("major")}
-                                    hasError={error.major}
-                                    errorMessage={error.message}
-                                    onBlur={() => this.validate("major")}
-                                />
-                            </View>
-                            <Text>Status</Text>
-                            <StatusDropdown func={this.setStatusState} hasError={error.statusId}/>
-                            {error.statusId ? <Text style={styles.error}>{error.message}</Text> : null}
-                            <NextButton
-                                onPress={() => this.attemptSubmit()}
-                            />
-                        </SignUpForm>
-                    </ScrollView>
-                </Content>
+                            </SignUpForm>
+                        </ScrollView>
+                    </View> : <DataLoading/>
+                }
             </Container>
         )
     }
@@ -300,6 +305,18 @@ const styles = StyleSheet.create({
     error: {
         color: "red",
         fontSize: 14,
+    },
+    MainContainer: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    TagsContainer: {
+        marginBottom: 10,
+        justifyContent: "center"
+    },
+    contentContainer: {
+        paddingBottom: 70
     }
 });
 
