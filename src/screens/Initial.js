@@ -12,13 +12,24 @@ class Initial extends React.Component {
         const db = new DatabaseService;
         const navigation = this.props.navigation;
         Authentication.onAuthStateChanged((currentUser) => {
-            if (currentUser) db.getUserRole(currentUser.uid).then((result) => {
-                if (result === "employer") navigation.navigate("MainEmployer");
-                else if (result === "employee") navigation.navigate("MainCandidate");
+            if (currentUser)
+                db.getUserRole(currentUser.uid).then((result) => {
+                    if (result === "employer") {
+                        this.props.setContext({
+                            role: "employer"
+                        }, () => navigation.navigate("MainEmployer"));
+                    }
+                else if (result === "employee") {
+                        this.props.setContext({
+                            role: "employee"
+                        }, () =>  navigation.navigate("MainCandidate"))
+                    }
                 else /* invalid or null */ {
                     if (!currentUser.additionalUserInfo.isNewUser) {
                         alert("Invalid user role for current user");
-                        navigation.navigate("AccountWrapper")
+                        this.props.setContext({
+                            role: null
+                        }, () => navigation.navigate("AccountWrapper"))
                     }
                 }
             }).catch((error) => {

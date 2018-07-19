@@ -32,6 +32,8 @@ import ChangePassword from "../screens/accountmanagement/ChangePassword"
 import ViewEmployerProfile from "../screens/ViewEmployerProfile"
 import {View} from "react-native";
 import Initial from "../screens/Initial";
+import EditProfile from "../screens/EditProfile"
+import EditEmployerProfile from "../screens/EditEmployerProfile";
 
 /* REQUIRED in both EmployerMainStack & CandidateMainStack  */
 const headerOptions = () => ({
@@ -70,7 +72,7 @@ const CandidateTabStack = createBottomTabNavigator(
     {
         View: ViewCandidateProfile,
         Home: Home,
-        Edit: Edit_Test,
+        Edit: EditProfile,
     },
     {
         navigationOptions: ({navigation}) => ({
@@ -102,6 +104,7 @@ const EmployerMainStack = createStackNavigator(
         SearchResult: SearchResult,
         ChangePassword: ChangePassword,
         ChangeEmail: ChangeEmail,
+        EditEmployerProfile: EditEmployerProfile,
         View: ViewCandidateProfile, // View on tabbar for employer, will go to their profile
     },
     {
@@ -133,19 +136,26 @@ const AuthenticationMainStack = createStackNavigator(
         employeeCredentialSignUp: EmployeeCredentialSignUp,
         employeeInfo: EmployeeInfo,
         workExp: WorkExp,
-        employerCredentialSignUp : EmployerCredentialSignUp,
-        employerCategorySelect : EmployerCategorySelect,
+        employerCredentialSignUp: EmployerCredentialSignUp,
+        employerCategorySelect: EmployerCategorySelect,
         /*********************/
         CredentialSignin: CredentialSignin,
         ForgotPassword: ForgotPassword,
         AccountWrapper: AccountWrapper,
+        /* Others */
+        Home: Home,
+        SideMenu: SideMenu,
+        SubCategorySideMenu: SubCategorySideMenu,
+        SearchResult: SearchResult,
+        View: ViewCandidateProfile,
     },
     {
-        initialRouteName: 'AccountWrapper'
+        initialRouteName: 'Home',
+        navigationOptions: headerOptions
     }
 );
 
-EmployerTabStack.navigationOptions = ({ navigation }) => {
+EmployerTabStack.navigationOptions = ({navigation}) => {
     return setHeaderTabItems(navigation);
 };
 
