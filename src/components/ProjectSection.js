@@ -19,9 +19,10 @@ class ProjectSection extends React.Component {
                 <Text style={styles.Title}>Projects</Text>
                 {
                     projects.map((value, index) => {
+                        console.log(value);
                         return (
-                            <ProjectCard title={value.projectName}
-                                         description={value.projectDescription}
+                            <ProjectCard title={value.name}
+                                         description={value.description}
                                          date={value.date}
                                          links={value.links}
                                          tagIds={value.tagIds}

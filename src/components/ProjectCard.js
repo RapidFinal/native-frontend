@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import {StyleSheet, View, Text, TouchableOpacity, TouchableHighlight, Modal, Linking} from "react-native";
 import { SocialIcon, Icon } from 'react-native-elements'
 import TagsSection from '../components/TagsSection'
+import DatabaseService from "../api/databaseService";
 
 class ProjectDetail extends React.Component {
 
@@ -19,18 +20,23 @@ class ProjectDetail extends React.Component {
     state = {
         modalVisible: false,
         tags: [],
+        tagIds: [],
     };
 
     componentDidMount() {
         this.fetchData();
+        console.log("ABC",this.props.links)
     };
 
     fetchData() {
-        let tagIds = this.props.tagIds;
+        let db = new DatabaseService();
+        this.setState({tagIds: this.props.tagIds});
         let listTags = [];
-        tagIds.forEach(tag => {
-            listTags.push(tag)
-        })
+        this.state.tagIds.forEach(tag => {
+            db.getTagName(tag).then((result) => {
+                listTags.push(result);
+            });
+        });
         this.setState({tags: listTags});
     }
 
@@ -96,6 +102,8 @@ class ProjectDetail extends React.Component {
 }
 
 const AllLinks = ({links, component, onPress}) => {
+
+    console.log("links", links)
     return (
         links.map((prop,key) => {
             if (prop.type === 'website') {
@@ -104,7 +112,7 @@ const AllLinks = ({links, component, onPress}) => {
                         name={'web'}
                         type={'FontAwesome'}
                         component={component}
-                        onPress={onPress(prop.link)}
+                        onPress={onPress(prop.links)}
                         raised
                         color={'white'}
                         containerStyle={{backgroundColor: '#1D7BCD'}}
@@ -118,7 +126,7 @@ const AllLinks = ({links, component, onPress}) => {
                     <SocialIcon
                         style={styles.iconLink}
                         component={component}
-                        onPress={onPress(prop.link)}
+                        onPress={onPress(prop.links)}
                         button
                         light
                         type={prop.type}
@@ -131,7 +139,7 @@ const AllLinks = ({links, component, onPress}) => {
                     <SocialIcon
                         style={styles.iconLink}
                         component={component}
-                        onPress={onPress(prop.link)}
+                        onPress={onPress(prop.links)}
                         button
                         type={prop.type}
                         key={key}
