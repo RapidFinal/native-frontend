@@ -22,7 +22,8 @@ class StatusDropdown extends React.Component {
     }
 
     getStatusFromDB = () => {
-        DatabaseService.getAllStatus().
+        const db = new DatabaseService;
+        db.getAllStatus().
         then(
             statusFromDB => {
                 this.setState({

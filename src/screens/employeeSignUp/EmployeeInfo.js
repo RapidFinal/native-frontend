@@ -94,7 +94,8 @@ class EmployeeInfo extends React.Component {
             return;
         }
         const k = Object.keys(selectedCategories);
-        const dataPromises = k.map(val => DatabaseService.getSuggestedTagsFrom(val))
+        const db = new DatabaseService;
+        const dataPromises = k.map(val => db.getSuggestedTagsFrom(val))
 
         Promise
             .all(dataPromises)
