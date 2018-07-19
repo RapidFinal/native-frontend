@@ -10,7 +10,7 @@ import ClickButton from "./ClickButton";
 import DatabaseService from '../api/databaseService';
 
 const TitleBar = ({isEditable, children, onPress}) => (
-    <View style={[styles.experienceHeader]}>
+    <View style={[styles.RowAlign]}>
         <Left>
             <Text style={styles.Title}>
                 {children}
@@ -19,8 +19,8 @@ const TitleBar = ({isEditable, children, onPress}) => (
         <Right>
             {
                 isEditable && (
-                    <ClickButton transparent onPress={onPress}>
-                        <Icon name={"add"} type={"MaterialIcons"} />
+                    <ClickButton transparent onPress={onPress} style={{alignSelf: 'flex-end'}}>
+                        <Icon name={"add-circle-outline"} type={"MaterialIcons"} />
                     </ClickButton>
                 )
             }
@@ -138,6 +138,12 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-between'
+    },
+
+    RowAlign: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center'
     },
 });
 
