@@ -45,7 +45,7 @@ class CategoriesSelection extends React.Component {
     }
 
     getSelectedCategories = () => {
-        const {uid,userRole} = this.props.uid;
+        const {uid,userRole} = this.props;
         if(uid) {
             let db = new DatabaseService
             if(userRole==="employee"){
