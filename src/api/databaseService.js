@@ -154,8 +154,8 @@ class DatabaseService {
 
             let prog = [];
             if (typeof(val.projects) !== 'undefined'){
-              let tmp = [];
               Object.entries(val.projects).forEach( ([id, info]) => {
+                let tmp = [];
                 Object.entries(info.links).forEach(([id, val]) => {
                   let v = {};
                   v[id] = id;
