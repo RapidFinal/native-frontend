@@ -1,48 +1,47 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import {StyleSheet, View, Text, TouchableHighlight, Modal, TouchableOpacity} from "react-native";
+import {StyleSheet, Image, View, Text, TouchableHighlight, Modal, TouchableOpacity} from "react-native";
 import TextInputWithLabel from './TextInputWithLabel';
 import DatabaseService from "../api/databaseService";
-import {Authentication} from '../api';
-import {Icon} from 'native-base';
-import SaveButton from './SaveButton';
+import {Authentication} from '../api'
 
-class EditableName extends React.Component {
+class EditExperienceModal extends React.Component {
 
     static propTypes = {
-        firstName: PropTypes.string,
-        lastName: PropTypes.string,
-        updateName: PropTypes.func
+        name: PropTypes.string,
+        description: PropTypes.string,
+        updateExperience: PropTypes.func,
     }
 
     state = {
         modalVisible: false,
-        credential: {
-            firstName: "",
-            lastName: "",
+        experience: {
+            name: "",
+            description: "",
         },
         error: {
             flags: {
-                firstName: false,
-                lastName: false,
+                name: false,
+                description: false,
             },
             message: {
-                firstName: "Required",
-                lastName: "Required",
+                name: "Required",
+                description: "Required",
             }
         }
     }
 
     handleChange = (name) => (event) => {
-        const credential = {...this.state.credential};
-        credential[name] = event.nativeEvent.text;
-        this.setState({credential});
+        const experience = {...this.state.experience};
+        experience[name] = event.nativeEvent.text;
+        this.setState({experience});
     };
 
     validate = (errorField) => {
-        const {credential} = this.state;
-        if (credential[errorField] === '') {
+        const {name, description} = this.state.credential;
+        const {experience} = this.state;
+        if (experience[errorField] === '') {
             this.setError(errorField, "Required")
         }
         else {
@@ -79,22 +78,19 @@ class EditableName extends React.Component {
         this.setState({modalVisible: visible});
     }
 
-    closeModal() {
-        this.setModalVisible(!this.state.modalVisible)
-    }
-
     openModal() {
-        const credential = {...this.state.credential};
-        credential['firstName'] = this.props.firstName;
-        credential['lastName'] = this.props.lastName;
+        const credential = {...this.state.experience};
+        credential['firstName'] = this.props.name;
+        credential['lastName'] = this.props.description;
         this.setState({credential});
         this.setModalVisible(!this.state.modalVisible)
     }
 
     save() {
         if (this.passAllFlags()) {
-            this.saveToDB(this.state.credential.firstName, this.state.credential.lastName)
-            this.props.updateName(this.state.credential.firstName, this.state.credential.lastName)
+          console.log('save Experience');
+            //this.saveToDB(this.state.credential.firstName, this.state.credential.lastName)
+            //this.props.updateExperience(this.state.credential.firstName, this.state.credential.lastName)
             this.setModalVisible(!this.state.modalVisible)
         }
     }
@@ -113,73 +109,67 @@ class EditableName extends React.Component {
 
     render() {
         const {modalVisible} = this.state;
-        const {firstName, lastName} = this.state.credential
+        const {name, description} = this.state.experience
         const {message, flags} = this.state.error;
         return (
-            <View style={[styles.RowAlign, {marginTop: 10}]}>
+            <View style={styles.RowAlign}>
                 <Modal
                     animationType="slide"
                     transparent={false}
                     visible={modalVisible}
                     onRequestClose={() => {
+                        console.log('modal request closed');
                         alert('Modal has been closed.');
                     }}>
-                    <View style={[styles.MainContainer]}>
-                        <TouchableOpacity
-                            style={styles.CloseIconPos}
-                            onPress={() => {
-                                this.closeModal();
-                            }}
-                        >
-                            <Icon name='close'/>
-                        </TouchableOpacity>
-                        <TextInputWithLabel
-                            label="First name"
-                            placeholder="First name"
-                            value={firstName}
-                            hasError={flags.firstName}
-                            onBlur={() => this.validate("firstName")}
-                            onChange={this.handleChange("firstName")}
-                            errorMessage={message.firstName}
-                        />
-                        <TextInputWithLabel
-                            label="Last name"
-                            placeholder="Last name"
-                            value={lastName}
-                            hasError={flags.lastName}
-                            onBlur={() => this.validate("lastName")}
-                            onChange={this.handleChange("lastName")}
-                            errorMessage={message.lastName}
-                        />
-                        <SaveButton onPress={this.save.bind(this)}/>
+                    <View style={{marginTop: 22}}>
+                        <View>
+                            <TextInputWithLabel
+                                label="Experience Name"
+                                placeholder="Name"
+                                value={name}
+                                hasError={flags.name}
+                                onBlur={() => this.validate("name")}
+                                onChange={this.handleChange("name")}
+                                errorMessage={message.name}
+                            />
+                            <TextInputWithLabel
+                                label="Experience Description"
+                                placeholder="Description"
+                                value={description}
+                                hasError={flags.description}
+                                onBlur={() => this.validate("description")}
+                                onChange={this.handleChange("description")}
+                                errorMessage={message.description}
+                            />
+                            <TouchableOpacity
+                                onPress={() => this.save()}
+                                style={styles.button}
+                            >
+                                <Text style={styles.saveText}>Save</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </Modal>
 
-                <Text style={styles.FullNameText}>{this.props.firstName + ' ' + this.props.lastName}</Text>
-                <TouchableOpacity
+                {
+                  //(<Text style={styles.FullNameText}>{this.props.firstName + ' ' + this.props.lastName}</Text>)
+                }
+                <TouchableHighlight
                     onPress={() => {
                         this.openModal();
                     }}
                 >
-                    <Icon
-                        type="FontAwesome"
-                        name='edit'
+                    <Image
+                        source={require('../assets/images/edit.png')}
                         style={[styles.EditIcon, styles.FullNameEditIcon]}
                     />
-                </TouchableOpacity>
+                </TouchableHighlight>
             </View>
         )
     }
 }
 
 const styles = StyleSheet.create({
-    MainContainer: {
-        width: '90%',
-        maxWidth: '90%',
-        marginTop: 20,
-        alignSelf: 'center'
-    },
-
     RowAlign: {
         flex: 1,
         flexDirection: 'row',
@@ -193,10 +183,12 @@ const styles = StyleSheet.create({
 
     FullNameEditIcon: {
         marginLeft: 10,
+        paddingTop: 15,
     },
 
     EditIcon: {
-        fontSize: 25,
+        width: 20,
+        height: 20,
     },
 
     button: {
@@ -211,11 +203,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 20,
         color: '#fff'
-    },
-
-    CloseIconPos: {
-        alignSelf: 'flex-end'
     }
 })
 
-export default compose()(EditableName)
+export default compose()(EditExperienceModal)

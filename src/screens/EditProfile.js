@@ -8,12 +8,15 @@ import StatusText from '../components/StatusText';
 import ExperiencesCard from '../components/ExperiencesCard';
 import SkillSetsCard from '../components/SkillSetsCard';
 import CircularProfilePhoto from '../components/CircularProfilePhoto';
-import ProjectSection from '../components/ProjectSection';
 import DatabaseService from '../api/databaseService';
-import TagsSection from '../components/TagsSection';
 import {Authentication} from '../api'
 import EditableName from '../components/EditableName'
 import EditableDescription from '../components/EditableDescription';
+import EditableProjectSection from '../components/EditableProjectSection';
+import EditableTags from '../components/EditableTags';
+import EditableStatus from '../components/EditableStatus';
+import CategoryCard from "../components/CategoryCard";
+import EditableMajor from '../components/EditableMajor';
 import ClickButton from "../components/ClickButton";
 
 const ModalPopup = ({visible, close, children }) => (
@@ -46,33 +49,29 @@ class EditProfile extends React.Component {
     state = {
         ready: false,
         imgUrl: "",
-        firstName: "Josep",
-        lastName: "Bort",
-        description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-        status: "Looking for job",
-        experiences: [
-            {
-                title: "Web",
-                description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
-            }
-        ],
-        skillSets: ["Python", "Java"],
-        projects: [
-            {
-                name: "Notey",
-                description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                date: "15/06/2018"
-            }
-        ],
-        tags: ["Python", "Java"],
+        firstName: "",
+        lastName: "",
+        description: "",
+        status: "",
+        experiences: [],
+        skillSets: [],
+        projects: [],
+        tags: [],
         scrollView: null,
         descriptionModal: false,
         tagModal: false,
         skillInput: "",
         currentEditSkillId: null,
         showSkillModal: false,
+        ExperienceModal: false,
+        experienceNameInput: "",
+        experienceDescInput: "",
+        currentExperienceId: null,
         saveStatus: "Save",
-        onSaving: false
+        onSaving: false,
+        selectedCategories: {},
+        categories: [],
+        major: "",
     }
 
     componentDidMount(){
@@ -98,10 +97,109 @@ class EditProfile extends React.Component {
         })
     }
 
+    updateProjects() {
+
+    }
+
+    deleteProject(index) {
+        this.deleteProjectFromDB(this.state.projects[index].id)
+        this.deleteProjectFromState(index)
+    }
+
+    deleteProjectFromDB(projectId) {
+        let db = DatabaseService()
+        let uid = Authentication.currentUser().uid
+        db.deleteEmployeeProject(uid, projectId)
+    }
+
+    deleteProjectFromState(index) {
+        console.log('delete from state')
+        console.log(index)
+        let projectsClone = this.state.projects
+        if (index > -1) {
+            projectsClone.splice(index, 1)
+            this.setState({
+                projects: projectsClone
+            });
+        }
+    }
+
+    addProject() {
+
+    }
+
+    addProjectToState() {
+
+    }
+
+    addProjectToDB() {
+
+    }
+
+    updateTags(tags) {
+        this.setState({
+            tags: tags
+        })
+    }
+
     updateExperienceState(newExp) {
         this.setState({
             experiences: newExp
         })
+    }
+
+    showExperienceModal = (name, desc, id = null) => {
+        this.setState({
+            experienceModal: true,
+            experienceNameInput: name,
+            experienceDescInput: desc,
+            currentExperienceId: id,
+        })
+    }
+
+    hideExperienceModal = () => {
+        this.setState({
+            experienceModal: false,
+            experienceNameInput: "",
+            experienceDescInput: "",
+            currentExperienceId: null,
+        })
+    }
+
+    toggleExperienceModal = () => {
+        this.setState((prev) => ({showExperienceModal: !prev.showExperienceModal}))
+    }
+
+    updateExperienceNameInput = (e) => {
+        this.setState({
+            experienceNameInput: e.nativeEvent.text
+        })
+    }
+
+    updateExperienceDescInput = (e) => {
+        this.setState({
+            experienceDescInput: e.nativeEvent.text
+        })
+    }
+
+    setExperienceInput = (value) => {
+        this.setState({
+            experienceInput: value
+        })
+    }
+
+    onSaveExperience = () => {
+        const {currentExperienceId, experienceNameInput, experienceDescInput} = this.state;
+
+        const db = new DatabaseService();
+        const uid = Authentication.currentUser().uid;
+        if (experienceNameInput !== "" && experienceDescInput !== "") {
+            if (currentExperienceId)
+                db.updateEmployeeExperience(uid, currentExperienceId, experienceNameInput, experienceDescInput);
+            else
+                DatabaseService.createEmployeeExperiences(uid, experienceNameInput, experienceDescInput);
+        }
+        this.hideExperienceModal();
     }
 
     updateSkillSetsState(newSkills) {
@@ -154,7 +252,6 @@ class EditProfile extends React.Component {
                 }), () => {
                     this.hideSkillModal();
                     this.fetchData();
-
                 })
 
             };
@@ -173,6 +270,12 @@ class EditProfile extends React.Component {
 
     }
 
+    updateCategories = (categories) => {
+        this.setState({
+            categories: categories
+        })
+    }
+
     getAllTags(tagIds) {
         let db = new DatabaseService
         tagIds.forEach((id) => {
@@ -186,10 +289,11 @@ class EditProfile extends React.Component {
         })
     }
 
-    fetchData() {
+    fetchData = () => {
         let db = new DatabaseService
         let uid = Authentication.currentUser().uid
         db.getEmployeeInfo(uid).then((result) => {
+            console.log(result)
             this.getAllTags(result.tagIds)
             this.setState({
                 imgUrl: result.imgUrl,
@@ -200,6 +304,8 @@ class EditProfile extends React.Component {
                 experiences: result.experiences,
                 projects: result.projects,
                 skillSets: result.skillSet,
+                major: result.major,
+                categories: result.categories,
                 ready: true
             })
         }).catch((error) => {
@@ -215,6 +321,7 @@ class EditProfile extends React.Component {
             lastName: "",
             description: "",
             status: "",
+            major: "",
             experiences: [],
             skillSets: [],
             projects: [],
@@ -238,7 +345,8 @@ class EditProfile extends React.Component {
     );
 
     render() {
-        const {ready, imgUrl, firstName, lastName, description, status, experiences, skillSets, projects, tags, showSkillModal, skillInput, saveStatus, onSaving} = this.state;
+        const {ready, imgUrl, firstName, lastName, description, status, experiences, skillSets, projects, tags, showSkillModal, skillInput, saveStatus, onSaving, major, categories, showExperienceModal, experienceModal, experienceNameInput, experienceDescInput} = this.state;
+        const uid = Authentication.currentUser().uid;
         return (
             <View>
                 <ScrollView contentContainerStyle={styles.ScrollContainer} ref={scrollView => this.scrollView = scrollView}>
@@ -246,14 +354,25 @@ class EditProfile extends React.Component {
                         ready ? (
                             <View style={styles.MainContainer}>
                                 <CircularProfilePhoto url={imgUrl} diameter={150}/>
-                                <EditableName firstName={firstName} lastName={lastName}
-                                              updateName={this.updateName.bind(this)}/>
-                                <StatusText status={status}/>
+                                <EditableName firstName={firstName}
+                                              lastName={lastName}
+                                              updateName={this.updateName.bind(this)}
+                                              userRole="employee"
+                                />
+                                <EditableStatus status={status} update={this.update.bind(this)}/>
+                                <EditableMajor major={major} update={this.update.bind(this)}/>
                                 <EditableDescription description={description} update={this.update.bind(this)}/>
-                                <EditableTags tags={tags}/>
-                                <ExperiencesCard experiences={experiences}/>
+                                <EditableTags tags={tags} updateTags={this.updateTags.bind(this)}/>
+                                <ExperiencesCard experiences={experiences} isEditable={true} showModal={this.showExperienceModal} triggerRefresh={()=>{this.fetchData()}}/>
                                 <SkillSetsCard editable={true} triggerRefresh={this.fetchData} onCurrentEditSkill={this.setIdOnEdit} skills={skillSets} onOpenModal={this.showSkillModal} onCloseModal={this.hideSkillModal} setSkillInput={this.setSkillInput}  />
-                                <ProjectSection projects={projects} navigation={this.props.navigation}/>
+                                <CategoryCard
+                                    categories={categories}
+                                    editable={true}
+                                    uid={uid}
+                                    updateCategories={this.updateCategories}
+                                    userRole="employee"
+                                />
+                                <EditableProjectSection projects={projects} deleteProject={this.deleteProject.bind(this)}/>
                             </View>
                         ) : (
                             <DataLoading/>
@@ -264,6 +383,11 @@ class EditProfile extends React.Component {
                     <TextInput text={"Skill"} onChange={this.updateSkillInput} value={skillInput} />
                     <ClickButton disabled={onSaving} onPress={this.onSaveSkill}>{saveStatus}</ClickButton>
                 </ModalPopup>
+                <ModalPopup visible={experienceModal} close={this.hideExperienceModal}>
+                    <TextInput text={"Name"} onChange={this.updateExperienceNameInput} value={experienceNameInput} />
+                    <TextInput text={"Description"} onChange={this.updateExperienceDescInput} value={experienceDescInput} />
+                    <ClickButton disabled={onSaving} onPress={this.onSaveExperience}>{saveStatus}</ClickButton>
+                </ModalPopup>
             </View>
         )
     }
@@ -272,16 +396,6 @@ class EditProfile extends React.Component {
 const DataLoading = ({}) => (
     <View style={styles.MainContainer}>
         <Spinner color={"black"}/>
-    </View>
-);
-
-const EditableTags = ({tags}) => (
-    <View style={[styles.CenterAlign]}>
-        <TagsSection tags={tags}/>
-        <Image
-            source={require('../assets/images/edit.png')}
-            style={[styles.EditIcon, styles.TagsEditIcon]}
-        />
     </View>
 );
 
