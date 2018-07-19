@@ -76,6 +76,7 @@ class ProjectDetail extends React.Component {
                     animationType="slide"
                     transparent={false}
                     visible={modalVisible}
+                    onRequestClose={this.toggleModal}
                 >
                     <View style={{marginTop: 22}}>
                         <View>
