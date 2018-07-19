@@ -11,6 +11,8 @@ import ProjectSection from '../components/ProjectSection';
 import DatabaseService from '../api/databaseService';
 import TagsSection from '../components/TagsSection';
 import {Authentication} from '../api'
+import {withContext} from "../context/withContext";
+import hoistStatics from "recompose/hoistStatics";
 
 class ViewProfile extends React.Component {
 
@@ -36,7 +38,10 @@ class ViewProfile extends React.Component {
         projects: [],
         tags: [],
         scrollView: null,
-        isTimeline: true
+        isTimeline: true,
+        canLike: false,
+        favIcon: "md-star-outline",
+        liked: false
     };
 
     static navigationOptions = ({navigation}) => ({
@@ -58,6 +63,8 @@ class ViewProfile extends React.Component {
             fetchData: this.fetchData.bind(this),
             scrollToTop: this.scrollToTop.bind(this)
         })
+        this.setCanLike()
+        this.setLiked()
     }
 
     scrollToTop() {
@@ -67,7 +74,7 @@ class ViewProfile extends React.Component {
     fetchData() {
         console.log("fetching data..")
         let db = new DatabaseService
-        let uid = ""
+        let uid = "";
         let paramUid = this.props.navigation.getParam('uid')
         if (paramUid !== null || paramUid !== "" || typeof(paramUid) !== "undefined") {
             uid = paramUid
@@ -137,6 +144,55 @@ class ViewProfile extends React.Component {
         })
     }
 
+    setCanLike = () => {
+        const {role} = this.props.context;
+        const db = new DatabaseService;
+
+        // let paramUid = this.props.navigation.getParam('uid');
+        let paramUid = "amIBLV0xwWgP4xxrXjAGDEbvS492";
+        db.getUserRole(paramUid).then(viewRole => {
+            this.setState({
+                canLike: role === "employer" && viewRole === "employee"
+            })
+        })
+    }
+
+    setLiked = () => {
+        const db = new DatabaseService;
+        const {currentUser} = this.props.context;
+        const paramUid = this.props.navigation.getParam('uid');
+
+        db.getLikedEmployee(currentUser.uid)
+            .then(result => {
+                if (result[paramUid]) {
+                    this.setState({
+                        liked: true,
+                        favIcon: "md-star"
+                    })
+                }
+            })
+    }
+
+    toggleLikeProfile = () => {
+        const {liked} = this.state;
+        const paramUid = this.props.navigation.getParam('uid');
+        const {currentUser} = this.props.context;
+        const db = new DatabaseService;
+        if (liked) {
+            this.setState({
+                liked: false,
+                favIcon: "md-star-outline"
+            })
+            db.unLikedEmployee(currentUser.uid, paramUid);
+        }
+        else {
+            this.setState({
+                liked: true,
+                favIcon: "md-star"
+            })
+            db.likedEmployee(currentUser.uid, paramUid)
+        }
+    }
 
     render() {
         const {
@@ -149,10 +205,12 @@ class ViewProfile extends React.Component {
             projects,
             tags,
             ready,
-            isTimeline
+            isTimeline,
+            canLike,
+            favIcon
         } = this.state;
         return (
-            <View>
+            <View style={styles.Flex}>
                 {
                     ready ? (
                         <View>
@@ -181,7 +239,14 @@ class ViewProfile extends React.Component {
                                     }
                                 </View>
                             </ScrollView>
-                            <FavButton/>
+                            { canLike ?
+                                (<FavButton
+                                    onPress={this.toggleLikeProfile}
+                                    favIcon={favIcon}
+                                />)
+                                    :
+                                (null)
+                            }
                         </View>
                     ) : (
                         <DataLoading/>
@@ -207,9 +272,9 @@ const SwitchButton = ({onPress}) => (
     </Button>
 );
 
-const FavButton = () => (
-    <Fab>
-        <Icon type={"Ionicons"} name={"md-star-outline"}/>
+const FavButton = ({onPress, favIcon}) => (
+    <Fab onPress={onPress}>
+        <Icon type={"Ionicons"} name={favIcon}/>
     </Fab>
 );
 
@@ -238,7 +303,11 @@ const styles = StyleSheet.create({
     SwitchButton: {
         alignSelf: 'flex-end',
         marginRight: "4%"
+    },
+
+    Flex: {
+        flex: 1
     }
 });
 
-export default compose()(ViewProfile)
+export default hoistStatics(compose(withContext)) (ViewProfile)
