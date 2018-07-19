@@ -3,7 +3,7 @@ import compose from 'recompose/compose';
 import hoistStatics from 'recompose/hoistStatics';
 import { withContext } from '../context/withContext';
 import PropTypes from 'prop-types';
-import { StyleSheet, Text, View} from "react-native";
+import { StyleSheet, Text, View, Alert} from "react-native";
 import {Body, Left, Right, Icon} from "native-base";
 import ExperienceItem from './ExperienceItem';
 import ClickButton from "./ClickButton";
@@ -41,7 +41,7 @@ class ExperiencesCard extends React.Component {
         modalVisible: false,
     }
 
-    onDelete = (experienceID) => () => {
+    onDelete = (experienceID, name) => () => {
         let db = new DatabaseService();
         const uid =  this.props.context.currentUser.uid;
         Alert.alert(
@@ -79,7 +79,7 @@ class ExperiencesCard extends React.Component {
                                 desc={value.description}
                                 key={index.toString()}
                                 isEditable={isEditable}
-                                onDelete={this.onDelete(value.id)}
+                                onDelete={this.onDelete(value.id, value.title)}
                                 onEdit={this.onEdit(value)}
                             />
                         );
@@ -91,7 +91,7 @@ class ExperiencesCard extends React.Component {
                                 desc={value.description}
                                 key={index.toString()}
                                 isEditable={isEditable}
-                                onDelete={this.onDelete(value.id)}
+                                onDelete={this.onDelete(value.id, value.title)}
                                 onEdit={this.onEdit(value)}
                             />
                         );
