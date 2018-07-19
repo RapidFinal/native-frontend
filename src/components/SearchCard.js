@@ -33,14 +33,11 @@ class SearchCard extends Component {
                                       {i.status} <Icon name='circle' color='green' style={{fontSize: 12, color: 'green'}}/>
                                 </Text>
                                 <Text note style={styles.majorText}>{i.major}</Text>
-                                <TagInput
-                                      value={(i.tags) ? i.tags : []}
-                                      labelExtractor={ l => <Text style={styles.tagText}>{l}</Text> }
-                                      editable={false}
-                                      text={""}
-                                      onChange={() => null}
-                                      onChangeText={() => ""}
-                                      inputProps={{placeholder: ""}}
+                                <Tags
+                                    initialTags={(i.tags) ? i.tags : []}
+                                    readonly={true}
+                                    tagTextStyle={{fontSize: 11}}
+                                    onTagPress={() => {return null;}}
                                 />
                             </Body>
                         </Left>
