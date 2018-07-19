@@ -207,6 +207,9 @@ class ViewProfile extends React.Component {
             if (role === "employee") {
                 db.updateEmployeeRecentView(currentUser.uid, paramUid)
             }
+            else {
+                db.updateEmployerRecentView(currentUser.uid, paramUid)
+            }
         }
     }
 
