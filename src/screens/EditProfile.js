@@ -361,7 +361,7 @@ class EditProfile extends React.Component {
                                 <EditableMajor major={major} update={this.update.bind(this)}/>
                                 <EditableDescription description={description} update={this.update.bind(this)}/>
                                 <EditableTags tags={tags} updateTags={this.updateTags.bind(this)}/>
-                                <ExperiencesCard experiences={experiences}/>
+                                <ExperiencesCard experiences={experiences} isEditable={true} showModal={this.showExperienceModal} triggerRefresh={()=>{this.fetchData()}}/>
                                 <SkillSetsCard editable={true} triggerRefresh={this.fetchData} onCurrentEditSkill={this.setIdOnEdit} skills={skillSets} onOpenModal={this.showSkillModal} onCloseModal={this.hideSkillModal} setSkillInput={this.setSkillInput}  />
                                 <CategoryCard
                                     categories={categories}
