@@ -1,25 +1,28 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
+import RecentView from '../components/RecentView'
 import {Text, Container} from "native-base";
 import HomeCard from '../components/HomeCard'
 import SwiperFlatList from 'react-native-swiper-flatlist'
 import SearchBox from 'react-native-search-box'
-import {
-    Card
-} from 'react-native-elements'
+import { Card } from 'react-native-elements'
 import {
     StyleSheet,
     ScrollView,
-    TouchableHighlight
+    TouchableHighlight,
+    View
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import DatabaseService from "../api/databaseService";
+import {Authentication} from "../api";
 
 class Home extends React.Component {
 
     static propTypes = {
-        searchText: PropTypes.string
+        searchText: PropTypes.string,
+        recentViewUsers: PropTypes.arrayOf(PropTypes.string),
     };
 
     static navigationOptions = ({ navigation }) => ({
@@ -43,12 +46,46 @@ class Home extends React.Component {
     });
 
     state = {
-        searchText: ''
+        searchText: '',
+        recentView: [],
+        showRecentView: false,
+    }
+
+    componentDidMount() {
+        this.fetchData();
+    }
+
+    fetchData() {
+        let db = new DatabaseService;
+        let currentUser = Authentication.currentUser();
+        db.getUserRole(currentUser.uid).then((result) => {
+            if (result === 'employee') {
+                let listView = [];
+                db.getEmployeeRecentView(currentUser.uid).then((result) => {
+                    result.forEach(re => {
+                        listView.push(re);
+                    })
+                    this.setState({ recentView: listView});
+                })
+            } else if (result === 'employer') {
+                let listView = [];
+                db.getEmployeeRecentView(currentUser.uid).then((result) => {
+                    for (let each in result) {
+                        listView.push(each);
+                    }
+                    this.setState({ recentView: listView});
+                })
+            }
+        })
+        if (this.state.recentView !== []){
+            this.setState({showRecentView: true});
+        }
     }
 
     goToProfile = (userID) => {
         this.props.navigation.navigate("View", { userID: userID });
     };
+
     drawer = () => {
         this.props.navigation.openDrawer();
         console.log("drawer open")
@@ -56,7 +93,6 @@ class Home extends React.Component {
 
     onChangeText = (text) => {
         this.setState({ searchText: text})
-        // console.log(text)
     }
 
     onSearchButtonPress = () => {
@@ -65,7 +101,7 @@ class Home extends React.Component {
     }
 
     render(){
-        const { } = this.state;
+        const { recentView, showRecentView } = this.state;
         const userInfo = [
             {
                 uid: 1,
@@ -127,31 +163,30 @@ class Home extends React.Component {
                                 </TouchableHighlight>
                             );
                         })}
-
                     </SwiperFlatList>
                 </Card>
-                <Card containerStyle={styles.cardContainer}>
-                    <Text style={styles.titleText}>
-                        Recently Viewed
-                    </Text>
-                    <SwiperFlatList
-                        style={styles.swipeBox}
-                        index={0}
-                    >
-                        {userInfo.map((prop, key) => {
-                            return (
-                                <TouchableHighlight
-                                    style={styles.button}
-                                    onPress={() => this.goToProfile(prop.uid)}
-                                    underlayColor="#EAEAEA"
-                                    key={key}
-                                >
-                                    <HomeCard name={prop.name} major={prop.major} status={prop.status}/>
-                                </TouchableHighlight>
-                            );
-                        })}
-                    </SwiperFlatList>
-                </Card>
+                { showRecentView ?
+                    (<Card containerStyle={styles.cardContainer}>
+                        <Text style={styles.titleText}>
+                            Recently Viewed
+                        </Text>
+                        <SwiperFlatList
+                            style={styles.swipeBox}
+                            renderAll={true}
+                            index={0}
+                        >
+                            {
+                                recentView.map((prop, key) => {
+                                    return (
+                                        <RecentView userId={prop} onPress={this.goToProfile} key={key}/>
+                                    )
+                                })
+                            }
+                        </SwiperFlatList>
+                    </Card>)
+                    :
+                    (null)
+                }
             </ScrollView>
 
         )

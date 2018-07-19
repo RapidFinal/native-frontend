@@ -13,17 +13,19 @@ class ProjectSection extends React.Component {
     }
 
     render() {
+        const {projects} = this.props;
         return (
             <View style={styles.MainContainer}>
                 <Text style={styles.Title}>Projects</Text>
                 {
-                    this.props.projects.map((value, index) => {
+                    projects.map((value, index) => {
+                        console.log(value);
                         return (
                             <ProjectCard title={value.name}
                                          description={value.description}
                                          date={value.date}
-                                         projectId={value.id}
-                                         navigation={this.props.navigation}
+                                         links={value.links}
+                                         tagIds={value.tagIds}
                                          key={value.name}
                             />
                         )
