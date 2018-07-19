@@ -84,6 +84,23 @@ class SkillSetsCard extends React.Component {
         this.props.onOpenModal();
     };
 
+    deleteExperience = (experienceId, name) => () => {
+        const db = new DatabaseService();
+        const uid = Authentication.currentUser().uid;
+        Alert.alert(
+            `Delete \"${name}\"?`,
+            "Deleting this experience is permanent!",
+            [
+                {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+                {text: 'Delete', onPress: () => {
+                        db.deleteEmployeeSkillSet(uid, skillId)
+                        this.props.triggerRefresh()
+                    }, style: 'destructive'}
+            ],
+            { cancelable: false }
+        )
+    };
+
     deleteSkill = (skillId, skill) => () => {
         const db = new DatabaseService();
         const uid = Authentication.currentUser().uid;
@@ -99,14 +116,13 @@ class SkillSetsCard extends React.Component {
             ],
             { cancelable: false }
         )
-
     };
 
     render(){
         const {skills: {length: skillLength}, skills, editable} = this.props
         return (
             <View style={styles.MainContainer}>
-                <TitleBar editable={true} onAddSkill={this.showModal}>Skill Sets</TitleBar>
+                <TitleBar editable={editable} onAddSkill={this.showModal}>Skill Sets</TitleBar>
                 <View>
                     {
                         skills.map((v, i) => (

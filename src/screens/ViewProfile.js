@@ -50,7 +50,7 @@ class ViewProfile extends React.Component {
         headerRight: <View></View>,
         tabBarOnPress: () => {
             if(navigation.isFocused()){
-                navigation.state.params.scrollToTop()
+                navigation.state.params.scrollToTop();
             }
             else {
                 navigation.navigate('View', { uid: Authentication.currentUser().uid});
@@ -71,7 +71,7 @@ class ViewProfile extends React.Component {
 
 
     scrollToTop() {
-        this.scrollView.scrollTo({x: 0, y: 0, animated: true})
+        this.scrollView.scrollTo({x: 0, y: 0, animated: true});
     }
 
     fetchData() {
@@ -80,14 +80,14 @@ class ViewProfile extends React.Component {
         let uid = "";
         let paramUid = this.props.navigation.getParam('uid')
         if (paramUid !== null || paramUid !== "" || typeof(paramUid) !== "undefined") {
-            uid = paramUid
+            uid = paramUid;
         } else {
-            uid = this.props.uid
+            uid = this.prop.uid;
         }
         console.log("uid : " + uid)
         db.getEmployeeInfo(uid).then((result) => {
-            console.log(result)
-            this.getAllTags(result.tagIds)
+            console.log(result);
+            this.getAllTags(result.tagIds);
             this.setState({
                 imgUrl: result.imgUrl,
                 fullName: result.firstName + ' ' + result.lastName,
@@ -97,10 +97,10 @@ class ViewProfile extends React.Component {
                 projects: result.projects,
                 skillSets: result.skillSet,
                 ready: true
-            })
+            });
         }).catch((error) => {
-            console.log(error)
-        })
+            console.error(error);
+        });
     }
 
     resetState() {
@@ -114,32 +114,32 @@ class ViewProfile extends React.Component {
             skillSets: [],
             projects: [],
             tags: [],
-        })
+        });
     }
 
     initializeState() {
-        this.resetState()
-        this.fetchData()
+        this.resetState();
+        this.fetchData();
     }
 
     didBlurSubscription = this.props.navigation.addListener(
         'didFocus',
         payload => {
-            this.initializeState()
+            this.initializeState();
         }
     );
 
     getAllTags(tagIds) {
-        let db = new DatabaseService
+        let db = new DatabaseService;
         tagIds.forEach((id) => {
             db.getTagName(id).then((tagName) => {
                 this.setState(prevState => ({
                     tags: [...prevState.tags, tagName]
-                }))
+                }));
             }).catch((error) => {
-                console.log(error)
-            })
-        })
+                console.log(error);
+            });
+        });
     }
 
     switchView = () => {
