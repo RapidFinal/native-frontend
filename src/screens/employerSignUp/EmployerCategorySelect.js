@@ -11,10 +11,16 @@ import DatabaseService from "../../api/databaseService";
 import hoistStatics from "recompose/hoistStatics";
 import {CredentialAuthentication} from "../../api/authentication";
 
+
 class EmployerCategorySelect extends React.Component {
 
     static propTypes = {
+
     };
+
+    state = {
+        selectedCategories:{},
+    }
 
     static navigationOptions = () => {
         return ({
@@ -24,10 +30,17 @@ class EmployerCategorySelect extends React.Component {
         })
     };
 
+    setSelectedCategoriesState = (selected) => {
+        this.setState({
+            selectedCategories: selected
+        })
+    }
+
     submit = async () =>{
-        
-        const {employer, selectedCategories} = this.props.context
-        const {navigation, setContext} = this.props;
+        const {employer} = this.props.context
+        const {selectedCategories} = this.state
+        const {navigation, setContext} = this.props
+        console.log(selectedCategories)
         
         if (Object.keys(selectedCategories).length <1){
             Toast.show({
@@ -45,7 +58,8 @@ class EmployerCategorySelect extends React.Component {
 
         try {
             const auth = await CredentialAuthentication.signup({email, password})
-            const uid = this.props.context.currentUser.uid
+            const uid = this.props.context.currentUser.uid;
+
             console.log('auth')
             console.log(auth)
             DatabaseService.createEmployerInfo(
@@ -55,7 +69,11 @@ class EmployerCategorySelect extends React.Component {
                 employer.companyName,
                 selectedCategories
             )
-            setContext({employer: null});
+            setContext({
+                employer: null,
+            });
+            this.setState({selectedCategories:""})
+
             navigation.navigate("MainEmployer")
         }
         catch (error) {
@@ -64,22 +82,25 @@ class EmployerCategorySelect extends React.Component {
     }
 
     render(){
+        const {selectedCategories} = this.state
         return (
             <Container>
-                <Content>
-                    <Stepper
-                        currentPosition={1}
-                        stepCount={2}
-                    />
-                    <CategoriesSelection/>
-                    <Button
-                        style={[styles.submitButton, styles.center]}
-                        onPress={this.submit}
-                    >
-                        <Text>Submit</Text>
-                    </Button>
-                </Content>
-
+                    <Content>
+                        <Stepper
+                            currentPosition={1}
+                            stepCount={2}
+                        />
+                        {console.log(selectedCategories)}
+                        <CategoriesSelection
+                            setSelectedState={this.setSelectedCategoriesState}
+                        />
+                        <Button
+                            style={[styles.submitButton, styles.center]}
+                            onPress={this.submit}
+                        >
+                            <Text>Submit</Text>
+                        </Button>
+                    </Content>
             </Container>
         )
     }

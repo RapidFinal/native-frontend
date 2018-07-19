@@ -37,11 +37,11 @@ class App extends React.Component {
             major: "",
         },
         statusId: "",
-        selectedCategories:{},
         authProvider: null,
         emailVerified: null,
         photoURL: null,
-        role: null
+        role: null,
+        selectedCategories: null
     };
 
     componentDidMount(){
@@ -54,7 +54,7 @@ class App extends React.Component {
                     loading: false,
                     currentUser,
                     ...this.extractCurrentUserData(currentUser)
-                }, () => console.log("LOGIN STATE: ",this.state))
+                }, () => console.log("LOGIN STATE: ", this.state))
             } else {
                 console.log("currentUser null");
                 this.setState({

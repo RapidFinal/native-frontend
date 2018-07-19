@@ -122,7 +122,7 @@ class Edit_Test extends React.Component {
                               "Project Youtube: " + this.state.projectVideo + "\n" +
                               "Project Tags: " + this.state.projectTags)
                 }>
-                <Icon name={"plus"} size={4 0} />
+                <Icon name={"plus"} size={40} />
               </TouchableOpacity>
             </ScrollView>
 

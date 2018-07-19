@@ -112,8 +112,8 @@ class DatabaseService {
     });
   }
 
-  createEmployeeSkillSet(uid, skill) {
-    firebase.database().ref("employeeInfo/" + uid + "/skillSet/").push(skill);
+  createEmployeeSkillSet(uid, skill, cb) {
+    firebase.database().ref("employeeInfo/" + uid + "/skillSet/").push(skill, cb);
   }
 
   getEmployeeInfo(uid) {
@@ -181,12 +181,14 @@ class DatabaseService {
           ret.major = val.major;
           resolve(ret)
         });
+      }).catch(e => {
+        reject(e);
       });
     });
   }
 
-  updateEmployeeDegree(uid, degree) {
-    firebase.database().ref("employeeInfo/" + uid + "/degree").set(degree);
+  updateEmployeeMajor(uid, major) {
+    firebase.database().ref("employeeInfo/" + uid + "/major").set(major);
   }
 
   updateEmployeeFirstName(uid, firstName) {
@@ -233,12 +235,12 @@ class DatabaseService {
     });
   }
 
-  updateEmployeeSkillSet(uid, skillId, skill) {
-    firebase.database().ref("employeeInfo/" + uid + "/skillSet/" + skillId + "/").set(skill);
+  updateEmployeeSkillSet(uid, skillId, skill, onComplete) {
+    firebase.database().ref("employeeInfo/" + uid + "/skillSet/" + skillId + "/").set(skill, onComplete);
   }
 
-  deleteEmployeeSkillSet(uid, skillId) {
-    firebase.database().ref("employeeInfo/" + uid + "/skillSet/" + skillId + "/").remove();
+  deleteEmployeeSkillSet(uid, skillId, onComplete) {
+    firebase.database().ref("employeeInfo/" + uid + "/skillSet/" + skillId + "/").remove(onComplete);
   }
 
   updateEmployeeExperience(uid, expId, title, desc) {
@@ -328,7 +330,7 @@ class DatabaseService {
   updateEmployeeRecentView(uid, recentViewUid) {
     this.getEmployeeRecentView(uid).then(recentViews => {
       let val = [];
-      if (recentViews === null) {
+      if (recentViews === []) {
         val.push(recentViewUid);
         firebase.database().ref("employeeInfo/" + uid + "/recentViews/").set(val);
       } else {
@@ -359,8 +361,39 @@ class DatabaseService {
   getEmployeeRecentView(uid) {
     return new Promise((resolve, reject) => {
       firebase.database().ref("employeeInfo/" + uid + "/recentViews/").once('value').then(function(snapshot) {
-        resolve(snapshot.val())
+        if (snapshot.val() === null){
+          resolve([])
+        } else {
+          resolve(snapshot.val())
+        }
       });
+    });
+  }
+
+  // cat = map of categoey-subcategory that selected
+  // {
+  //   "categoryId1": ["subcategoryId1", "subcategoryId2", "subcategoryId3"],
+  //   "categoryId2": ["subcategoryId1", "subcategoryId2", "subcategoryId3"]
+  // }
+  updateEmployeeCategories(uid, cat) {
+    let val = {}
+    Object.entries(cat).forEach(
+      ([categoryId, subCatIds]) => {
+        val[categoryId] = {subCategoryIds: subCatIds}
+      }
+    );
+    firebase.database().ref("employeeInfo/" + uid + "/categories/").set(val);
+  }
+
+  getEmployeeCategories(uid){
+    return new Promise((resolve, reject) => {
+      firebase.database().ref("employeeInfo/" + uid + "/categories/").once('value').then((snapshot) => {
+        let ret = {}
+        snapshot.forEach(s => {
+          ret[s.key] = s.val().subCategoryIds;
+        })
+        resolve(ret);
+      })
     });
   }
 
