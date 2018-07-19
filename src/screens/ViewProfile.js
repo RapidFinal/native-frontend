@@ -252,7 +252,7 @@ class ViewProfile extends React.Component {
                                     }
                                 </View>
                             </ScrollView>
-                            { true ?
+                            { canLike ?
                                 (<FavButton
                                     onPress={this.toggleLikeProfile}
                                     favIcon={favIcon}
