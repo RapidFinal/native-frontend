@@ -5,7 +5,6 @@ import {ScrollView, StyleSheet, View} from "react-native";
 import {
     Button,
     Container,
-    Content,
     H3,
     Icon,
     Toast,
@@ -166,30 +165,28 @@ class WorkExp extends React.Component {
         const {experiences} = this.state; // to easily access state put desire variable in the curly brace so it may become const {variable} = this.state;
         return (
             <Container>
-                <Content>
-                    <Stepper
-                        currentPosition={3}
-                        stepCount={4}
+                <Stepper
+                    currentPosition={3}
+                    stepCount={4}
+                />
+                <ScrollView>
+                    <SignUpForm>
+                        <H3>Work Experience (Optional)</H3>
+                        {experiences.map((experience, idx) =>
+                            this.renderBox(experience, idx)
+                    )}
+                    </SignUpForm>
+                    <PlusButton
+                        style={[styles.plusButton, styles.center]}
+                        onPress={this.addMoreWorkExp}
                     />
-                    <ScrollView>
-                        <SignUpForm>
-                            <H3>Work Experience (Optional)</H3>
-                            {experiences.map((experience, idx) =>
-                                this.renderBox(experience, idx)
-                        )}
-                        </SignUpForm>
-                        <PlusButton
-                            style={[styles.plusButton, styles.center]}
-                            onPress={this.addMoreWorkExp}
-                        />
-                        <Button
-                            style={[styles.submitButton, styles.center]}
-                            onPress={this.submit}
-                        >
-                            <Text>Submit</Text>
-                        </Button>
-                    </ScrollView>
-                </Content>
+                    <Button
+                        style={[styles.submitButton, styles.center]}
+                        onPress={this.submit}
+                    >
+                        <Text>Submit</Text>
+                    </Button>
+                </ScrollView>
             </Container>
         )
     }

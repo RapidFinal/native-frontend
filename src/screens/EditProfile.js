@@ -1,8 +1,9 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import {StyleSheet, View, ScrollView, Image} from "react-native";
-import {Spinner} from 'native-base';
+import {StyleSheet, View, ScrollView, Image, Platform} from "react-native";
+import Modal from 'react-native-modal'
+import {Input, Item, Spinner} from 'native-base';
 import StatusText from '../components/StatusText';
 import ExperiencesCard from '../components/ExperiencesCard';
 import SkillSetsCard from '../components/SkillSetsCard';
@@ -16,6 +17,30 @@ import EditableTags from '../components/EditableTags';
 import EditableStatus from '../components/EditableStatus';
 import CategoryCard from "../components/CategoryCard";
 import EditableMajor from '../components/EditableMajor';
+import ClickButton from "../components/ClickButton";
+
+const ModalPopup = ({visible, close, children }) => (
+    <Modal
+        isVisible={visible}
+        onBackdropPress={close}
+        style={styles.bottomModal}
+        avoidKeyboard={Platform.OS === 'ios'}
+    >
+        <View style={styles.scrollableModal}>
+            <View style={styles.modalContent}>
+                {children}
+            </View>
+        </View>
+    </Modal>
+);
+
+const TextInput = ({text, onChange, value, ...rest}) => (
+    <View style={styles.textInput}>
+        <Item regular>
+            <Input placeholder={text} onChange={onChange} value={value} {...rest}/>
+        </Item>
+    </View>
+);
 
 class EditProfile extends React.Component {
 
@@ -35,9 +60,24 @@ class EditProfile extends React.Component {
         scrollView: null,
         descriptionModal: false,
         tagModal: false,
+        skillInput: "",
+        currentEditSkillId: null,
+        showSkillModal: false,
+        saveStatus: "Save",
+        onSaving: false,
         selectedCategories: {},
         categories: [],
         major: "",
+    }
+
+    componentDidMount(){
+
+    }
+
+    setIdOnEdit = (id) => {
+        this.setState({
+            currentEditSkillId: id
+        })
     }
 
     updateName(firstName, lastName) {
@@ -110,6 +150,68 @@ class EditProfile extends React.Component {
         })
     }
 
+    showSkillModal = () => {
+        this.setState({
+            showSkillModal: true
+        })
+    }
+
+    hideSkillModal = () => {
+        this.setState({
+            showSkillModal: false,
+            skillInput: "",
+            currentEditSkillId: null
+        })
+    }
+
+    toggleSkillModal = () => {
+        this.setState((prev) => ({showSkillModal: !prev.showSkillModal}))
+    }
+
+    updateSkillInput = (e) => {
+        this.setState({
+            skillInput: e.nativeEvent.text
+        })
+    }
+
+    setSkillInput = (value) => {
+        this.setState({
+            skillInput: value
+        })
+    }
+
+    onSaveSkill = () => {
+
+        this.setState({
+            saveStatus: "Saving...",
+            onSaving: true
+        }, () => {
+
+            const saved = () => {
+                this.setState(({
+                    saveStatus: "Save",
+                    onSaving: false
+                }), () => {
+                    this.hideSkillModal();
+                    this.fetchData();
+                })
+
+            };
+            const {currentEditSkillId, skillInput} = this.state
+            const db = new DatabaseService();
+            const uid = Authentication.currentUser().uid;
+            if (currentEditSkillId === null){
+                db.createEmployeeSkillSet(uid, skillInput, saved);
+            } else {
+                db.updateEmployeeSkillSet(uid, currentEditSkillId, skillInput, saved)
+            }
+
+
+        })
+
+
+    }
+
     updateCategories = (categories) => {
         this.setState({
             categories: categories
@@ -129,11 +231,10 @@ class EditProfile extends React.Component {
         })
     }
 
-    fetchData() {
+    fetchData = () => {
         let db = new DatabaseService
         let uid = Authentication.currentUser().uid
         db.getEmployeeInfo(uid).then((result) => {
-            console.log(result)
             this.getAllTags(result.tagIds)
             this.setState({
                 imgUrl: result.imgUrl,
@@ -165,6 +266,9 @@ class EditProfile extends React.Component {
             skillSets: [],
             projects: [],
             tags: [],
+            showSkillModal: false,
+            skillInput: "",
+            currentEditSkillId: null
         })
     }
 
@@ -181,38 +285,45 @@ class EditProfile extends React.Component {
     );
 
     render() {
-        const {ready, imgUrl, firstName, lastName, description, status, experiences, skillSets, projects, major, tags, categories} = this.state;
+        const {ready, imgUrl, firstName, lastName, description, status, experiences, skillSets, projects, tags, showSkillModal, skillInput, saveStatus, onSaving, major, categories} = this.state;
         const uid = Authentication.currentUser().uid;
         return (
-            <ScrollView contentContainerStyle={styles.ScrollContainer} ref={scrollView => this.scrollView = scrollView}>
-                {
-                    ready ? (
-                        <View style={styles.MainContainer}>
-                            <CircularProfilePhoto url={imgUrl} diameter={150}/>
-                            <EditableName firstName={firstName}
-                                          lastName={lastName}
-                                          updateName={this.updateName.bind(this)}
-                                          userRole="employee"
-                            />
-                            <EditableStatus status={status} update={this.update.bind(this)}/>
-                            <EditableMajor major={major} update={this.update.bind(this)}/>
-                            <EditableDescription description={description} update={this.update.bind(this)}/>
-                            <EditableTags tags={tags} updateTags={this.updateTags.bind(this)}/>
-                            <ExperiencesCard experiences={experiences}/>
-                            <SkillSetsCard skills={skillSets}/>
-                            <CategoryCard
-                                categories={categories}
-                                editable={true}
-                                uid={uid}
-                                updateCategories={this.updateCategories}
-                            />
-                            <EditableProjectSection projects={projects} deleteProject={this.deleteProject.bind(this)}/>
-                        </View>
-                    ) : (
-                        <DataLoading/>
-                    )
-                }
-            </ScrollView>
+            <View>
+                <ScrollView contentContainerStyle={styles.ScrollContainer} ref={scrollView => this.scrollView = scrollView}>
+                    {
+                        ready ? (
+                            <View style={styles.MainContainer}>
+                                <CircularProfilePhoto url={imgUrl} diameter={150}/>
+                                <EditableName firstName={firstName}
+                                              lastName={lastName}
+                                              updateName={this.updateName.bind(this)}
+                                              userRole="employee"
+                                />
+                                <EditableStatus status={status} update={this.update.bind(this)}/>
+                                <EditableMajor major={major} update={this.update.bind(this)}/>
+                                <EditableDescription description={description} update={this.update.bind(this)}/>
+                                <EditableTags tags={tags} updateTags={this.updateTags.bind(this)}/>
+                                <ExperiencesCard experiences={experiences}/>
+                                <SkillSetsCard editable={true} triggerRefresh={this.fetchData} onCurrentEditSkill={this.setIdOnEdit} skills={skillSets} onOpenModal={this.showSkillModal} onCloseModal={this.hideSkillModal} setSkillInput={this.setSkillInput}  />
+                                <CategoryCard
+                                    categories={categories}
+                                    editable={true}
+                                    uid={uid}
+                                    updateCategories={this.updateCategories}
+                                    userRole="employee"
+                                />
+                                <EditableProjectSection projects={projects} deleteProject={this.deleteProject.bind(this)}/>
+                            </View>
+                        ) : (
+                            <DataLoading/>
+                        )
+                    }
+                </ScrollView>
+                <ModalPopup visible={showSkillModal} close={this.hideSkillModal}>
+                    <TextInput text={"Skill"} onChange={this.updateSkillInput} value={skillInput} />
+                    <ClickButton disabled={onSaving} onPress={this.onSaveSkill}>{saveStatus}</ClickButton>
+                </ModalPopup>
+            </View>
         )
     }
 }
@@ -281,7 +392,20 @@ const styles = StyleSheet.create({
 
     TagsEditIcon: {
         marginTop: 15,
-    }
+    },
+    bottomModal: {
+        justifyContent: "flex-end",
+        margin: 0,
+    },
+    modalContent: {
+        backgroundColor: "white",
+        padding: 22,
+
+    },
+    scrollableModal: {
+        maxHeight: '60%',
+        backgroundColor: "white",
+    },
 
 });
 

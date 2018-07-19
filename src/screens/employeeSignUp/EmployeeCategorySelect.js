@@ -25,16 +25,18 @@ class EmployeeCategorySelect extends React.Component {
         selectedCategories:{}
     }
 
-    componentDidMount(){
+    setSelectedCategoriesState = (selected) => {
         this.setState({
-            selectedCategories: this.props.context.selectedCategories
+            selectedCategories: selected
         })
     }
 
     submit = () => {
-        const {context, navigation} = this.props;
+        const {navigation, setContext} = this.props;
+        const {selectedCategories} = this.state;
 
-        if (Object.keys(context.selectedCategories).length === 0){
+        console.log(selectedCategories)
+        if (Object.keys(selectedCategories).length === 0){
             Toast.show({
                 text: "Please select at least one category!",
                 buttonText: "Okay",
@@ -42,6 +44,7 @@ class EmployeeCategorySelect extends React.Component {
             })
         }
         else {
+            setContext({selectedCategories})
             navigation.navigate("employeeInfo");
         }
     };
@@ -53,7 +56,9 @@ class EmployeeCategorySelect extends React.Component {
                     currentPosition={1}
                     stepCount={4}
                 />
-                <CategoriesSelection/>
+                <CategoriesSelection
+                    setSelectedState={this.setSelectedCategoriesState}
+                />
                 <NextButton
                     onPress={this.submit}
                     style={styles.submitButton}>

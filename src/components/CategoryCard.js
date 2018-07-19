@@ -15,6 +15,7 @@ class CategoryCard extends React.Component {
     static propTypes = {
         editable:PropTypes.bool,
         updateCategories:PropTypes.func,
+        userRole:PropTypes.string,
     }
 
     state = {
@@ -41,7 +42,7 @@ class CategoryCard extends React.Component {
     }
 
     save(){
-        const uid = this.props.uid
+        const {uid,userRole} = this.props.uid
         const {selectedCategories}= this.state
         console.log(selectedCategories)
         if (Object.keys(selectedCategories).length <1){
@@ -54,18 +55,29 @@ class CategoryCard extends React.Component {
             return;
         }
 
+
         let db= new DatabaseService;
-        db.updateEmployerCategories(uid,selectedCategories)
-        db.getEmployerInfo(uid).then(result=>{
-            this.props.updateCategories(result.categories)
-        })
+
+        if(userRole==="employee"){
+            db.updateEmployeeCategories(uid,selectedCategories)
+            db.getEmployeeInfo(uid).then(result=>{
+                this.props.updateCategories(result.categories)
+            })
+        }
+        else{
+            db.updateEmployerCategories(uid,selectedCategories)
+            db.getEmployerInfo(uid).then(result=>{
+                this.props.updateCategories(result.categories)
+            })
+        }
+
         this.closeModal()
     }
 
 
     render() {
         const {isModalVisible} = this.state;
-        const {categories,editable,uid} = this.props;
+        const {categories,editable,uid,userRole} = this.props;
         return (
             <View style={styles.MainContainer}>
                 <View style={styles.Inline}>
@@ -104,6 +116,7 @@ class CategoryCard extends React.Component {
 
                                         <CategoriesSelection
                                             uid={uid}
+                                            userRole={userRole}
                                             setSelectedState={this.setSelectedState}
                                         />
                                     </View>
