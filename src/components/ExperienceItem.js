@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import ClickButton from "./ClickButton";
 import { StyleSheet, View } from "react-native";
 import { Container,Content, Button, Icon, Left, Right, ListItem } from "native-base";
-import {Text, TouchableOpacity} from "react-native";
+import {TouchableOpacity, Text} from "react-native";
 import {Icon as MaterialIcon} from 'react-native-elements';
 
 ExperienceEdit = ({onPress, iconStyle}) => (
@@ -29,15 +29,13 @@ class ExperienceItem extends React.Component {
         onEdit: PropTypes.func,
     };
 
-
-
     render(){
       const {isEditable = false, title, desc, onDelete=()=>{}, onEdit=()=>{}} = this.props;
         return (
             <View style={styles.MainContainer}>
                 <View style={styles.TextSection}>
-                    <Text styles={styles.Title}>{title}</Text>
-                    <Text styles={styles.Description}>{desc}</Text>
+                    <Text style={styles.Title}>{title}</Text>
+                    <Text style={styles.Description}>{desc}</Text>
                 </View>
                 {
                   isEditable && (
@@ -87,9 +85,10 @@ const styles = StyleSheet.create({
     },
 
     Title: {
-        fontSize: 20,
+        fontSize: 18,
         marginBottom: 3,
     },
+
     Description: {
         color: '#999999',
     },
