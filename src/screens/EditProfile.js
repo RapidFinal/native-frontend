@@ -293,6 +293,7 @@ class EditProfile extends React.Component {
         let db = new DatabaseService
         let uid = Authentication.currentUser().uid
         db.getEmployeeInfo(uid).then((result) => {
+            console.log(result)
             this.getAllTags(result.tagIds)
             this.setState({
                 imgUrl: result.imgUrl,
@@ -304,6 +305,7 @@ class EditProfile extends React.Component {
                 projects: result.projects,
                 skillSets: result.skillSet,
                 major: result.major,
+                categories: result.categories,
                 ready: true
             })
         }).catch((error) => {
