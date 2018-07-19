@@ -106,7 +106,7 @@ class SkillSetsCard extends React.Component {
         const {skills: {length: skillLength}, skills, editable} = this.props
         return (
             <View style={styles.MainContainer}>
-                <TitleBar editable={true} onAddSkill={this.showModal}>Skill Sets</TitleBar>
+                <TitleBar editable={editable} onAddSkill={this.showModal}>Skill Sets</TitleBar>
                 <View>
                     {
                         skills.map((v, i) => (
