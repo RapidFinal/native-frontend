@@ -40,7 +40,8 @@ class App extends React.Component {
         authProvider: null,
         emailVerified: null,
         photoURL: null,
-        role: null
+        role: null,
+        selectedCategories: null
     };
 
     componentDidMount(){
