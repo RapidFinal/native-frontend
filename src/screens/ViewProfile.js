@@ -235,10 +235,8 @@ class ViewProfile extends React.Component {
             major,
             categories
         } = this.state;
-
         const uid = Authentication.currentUser().uid;
 
-        // TODO major, category,
         return (
             <View style={styles.Flex}>
                 {
@@ -249,7 +247,10 @@ class ViewProfile extends React.Component {
                                 ref={scrollView => this.scrollView = scrollView}
                             >
                                 <View style={styles.MainContainer}>
-                                    <SwitchButton onPress={() => this.switchView()}/>
+                                    <SwitchButton
+                                        onPress={() => this.switchView()}
+                                        isTimeline={isTimeline}
+                                    />
                                     <CircularProfilePhoto url={imgUrl} diameter={150}/>
                                     <Text style={styles.ProfileName}>
                                         {fullName}
@@ -307,12 +308,17 @@ const DataLoading = ({}) => (
     </View>
 );
 
-const SwitchButton = ({onPress}) => (
+const SwitchButton = ({onPress, isTimeline}) => (
     <Button
-        style={styles.SwitchButton}
+        style={[styles.SwitchButton, isTimeline ? styles.SwitchButtonTimeline : styles.SwitchButtonNormal]}
         onPress={onPress}
     >
-        <Text uppercase={false}>Switch View</Text>
+        <Text
+            uppercase={false}
+            style={[!isTimeline ? styles.ButtonText : undefined]}
+        >
+            Switch View
+        </Text>
     </Button>
 );
 
@@ -352,9 +358,22 @@ const styles = StyleSheet.create({
     },
 
     SwitchButton: {
-        backgroundColor: "#15BBCF",
         alignSelf: 'flex-end',
         marginRight: "4%"
+    },
+
+    SwitchButtonTimeline: {
+        backgroundColor: "#15BBCF",
+    },
+
+    SwitchButtonNormal: {
+        backgroundColor: "white",
+        borderColor: "#15BBCF",
+        borderWidth: 1,
+    },
+
+    ButtonText: {
+        color: "#15BBCF"
     },
 
     Flex: {
