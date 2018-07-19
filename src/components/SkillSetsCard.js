@@ -35,7 +35,7 @@ const SkillDelete = ({onPress, iconStyle}) => (
     <TouchableOpacity onPress={onPress} >
         <MaterialIcon
             name='remove-circle-outline'
-            color='#517fa4'
+            color='#921100'
         />
     </TouchableOpacity>
 );
@@ -48,7 +48,7 @@ const SkillEdit = ({onPress, iconStyle}) => (
 
 const SkillCard = ({editable, id, isLast, onDelete, onEdit, children,...rest}) => {
     return (
-        <View style={[styles.RowAlign, !isLast ? styles.DividerLine : {}]}>
+        <View style={[styles.RowAlign, {marginTop: 10}, !isLast ? styles.DividerLine : {}]}>
 
             <SkillText isLast={isLast} {...rest}>{children}</SkillText>
             {
@@ -162,14 +162,14 @@ const styles = StyleSheet.create({
 
     Item: {
         marginBottom: 8,
-        fontSize: 20,
+        fontSize: 18,
         paddingLeft: 10,
     },
 
     DividerLine: {
         borderBottomWidth: 1,
         borderColor: '#ccc',
-        paddingBottom: 15,
+        paddingBottom: 5,
     },
 
     RowAlign: {

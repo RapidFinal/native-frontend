@@ -60,7 +60,7 @@ class ExperienceItem extends React.Component {
                           >
                               <MaterialIcon
                                   name='remove-circle-outline'
-                                  color='#517fa4'
+                                  color='#921100'
                               />
                           </TouchableOpacity>
                       </View>
