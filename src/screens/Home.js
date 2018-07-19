@@ -64,15 +64,15 @@ class Home extends React.Component {
                 db.getEmployeeRecentView(currentUser.uid).then((result) => {
                     result.forEach(re => {
                         listView.push(re);
-                    })
+                    });
                     this.setState({ recentView: listView});
                 })
             } else if (result === 'employer') {
                 let listView = [];
                 db.getEmployeeRecentView(currentUser.uid).then((result) => {
-                    for (let each in result) {
-                        listView.push(each);
-                    }
+                    result.forEach(re => {
+                        listView.push(re);
+                    });
                     this.setState({ recentView: listView});
                 })
             }
