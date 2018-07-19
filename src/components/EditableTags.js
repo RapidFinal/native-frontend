@@ -18,7 +18,6 @@ class EditableTags extends React.Component {
     state = {
         tags: [],
         text: "",
-        emails: ['asdf', 'bfdb', 'eqwe'],
         modalVisible: false,
     }
 
@@ -51,7 +50,7 @@ class EditableTags extends React.Component {
 
     save() {
         let tags = this.state.tags
-        // this.updateTagsToDB(tags)
+        this.updateTagsToDB(tags)
         this.props.updateTags(tags)
         this.setModalVisible(!this.state.modalVisible)
     }
