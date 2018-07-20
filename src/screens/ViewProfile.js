@@ -85,7 +85,7 @@ class ViewProfile extends React.Component {
         if (paramUid !== null || paramUid !== "" || typeof(paramUid) !== "undefined") {
             uid = paramUid;
         } else {
-            uid = this.prop.uid;
+            uid = this.props.uid;
         }
         console.log("uid : " + uid)
         db.getEmployeeInfo(uid).then((result) => {

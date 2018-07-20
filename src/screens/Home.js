@@ -53,10 +53,31 @@ class Home extends React.Component {
         showRecentView: false,
     };
 
+    resetState() {
+        this.setState({
+            searchText: '',
+            recentView: [],
+            recommendedUsers: [],
+            showRecentView: false,
+        });
+    }
+
     componentDidMount = () => {
-        console.log('hi');
-        this.fetchData();
+        // console.log('hi');
+        // this.fetchData();
     };
+
+    initializeState() {
+        this.resetState();
+        this.fetchData();
+    }
+
+    didBlurSubscription = this.props.navigation.addListener(
+        'didFocus',
+        payload => {
+            this.initializeState();
+        }
+    );
 
     fetchData = () => {
         let db = new DatabaseService;
@@ -75,7 +96,7 @@ class Home extends React.Component {
         let realLink = 'recommendation.jobme.teparak.me/getRecommendation?uid='+uid;
         let testLink = 'http://172.20.10.2:5000/getRecommendation?uid='+uid;
         let data;
-        axios.get(realLink)
+        axios.get(testLink)
             .then((response) =>  {
                 // handle success
                 console.log('response:', response.data);
@@ -124,8 +145,8 @@ class Home extends React.Component {
         }
     }
 
-    goToProfile = (userID) => {
-        this.props.navigation.navigate("View", { userID: userID });
+    goToProfile = (uid) => {
+        this.props.navigation.navigate("View", { uid: uid });
     };
 
     drawer = () => {
@@ -169,7 +190,7 @@ class Home extends React.Component {
                         {
                             recommendedUsers.map((prop, key) => {
                                 return (
-                                    <RecentView userId={prop} onPress={this.goToProfile} key={key}/>
+                                    <RecentView uid={prop} onPress={this.goToProfile} key={key}/>
                                 )
                             })
                         }
@@ -188,7 +209,7 @@ class Home extends React.Component {
                             {
                                 recentView.map((prop, key) => {
                                     return (
-                                        <RecentView userId={prop} onPress={this.goToProfile} key={key}/>
+                                        <RecentView uid={prop} onPress={this.goToProfile} key={key}/>
                                     )
                                 })
                             }

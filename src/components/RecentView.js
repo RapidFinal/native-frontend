@@ -19,8 +19,7 @@ class RecentView extends React.Component {
 
     fetchData = () => {
         const db = new DatabaseService;
-        db.getEmployeeInfo(this.props.userId).then((result) => {
-
+        db.getEmployeeInfo(this.props.uid).then((result) => {
             this.setState({
                 firstName: result.firstName,
                 lastName: result.lastName,
@@ -38,13 +37,13 @@ class RecentView extends React.Component {
             status
         } = this.state;
         const {
-            userId,
+            uid,
             onPress
         } = this.props;
         return (
             <TouchableHighlight
                 style={styles.button}
-                onPress={() => onPress(userId)}
+                onPress={() => onPress(uid)}
                 underlayColor="#EAEAEA"
             >
                 <HomeCard name={`${firstName} ${lastName}`}
