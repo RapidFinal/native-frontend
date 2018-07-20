@@ -14,6 +14,20 @@ import {Authentication} from '../api'
 let deleteSnackbarTimer;
 let restoreSnackbarTimer;
 
+const StatusIcon = ({status}) => {
+    let color = 'grey';
+    if (status === 'looking for job') {
+        color = 'green';
+    } else if (status === 'looking for opportunity') {
+        color = '#EF9B0F';
+    } else {
+        color = 'grey';
+    }
+    return (
+        <Icon name='circle' color={color} style={{fontSize: 12, color: `${color}`}}/>
+    )
+};
+
 class LikeCard extends Component {
 
     static propTypes = {
@@ -67,7 +81,7 @@ class LikeCard extends Component {
                                         <Body>
                                         <Text>{i.firstName} {i.lastName}</Text>
                                         <Text note style={styles.statusText}>
-                                            {i.status} <Icon name='circle' color='green' style={{fontSize: 12, color: 'green'}}/>
+                                            {i.status} <StatusIcon status={i.status}/>
                                         </Text>
                                         <Text note style={styles.majorText}>{i.major}</Text>
                                         <Tags
@@ -112,7 +126,7 @@ class LikeCard extends Component {
     restoreProfileToDB = () => {
         const profileBackup = this.state.profileBackup;
         this.db.likedEmployee(this.currentUser.uid, profileBackup.uid);
-         this.setState({
+        this.setState({
             restoreSnackbarMessage: profileBackup.firstName + " " + profileBackup.lastName + " was restored",
             showDeleteSnackbar: false,
             showRestoreSnackbar: true,
