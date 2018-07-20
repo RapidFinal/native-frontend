@@ -16,12 +16,12 @@ class CircularProfilePhoto extends React.Component {
                 {this.props.url === "" ? (
                     <Image
                         source={require('../assets/images/default.jpeg')}
-                        style={{width: this.props.diameter, height: this.props.diameter, borderRadius: this.props.diameter / 2}}
+                        style={[{width: this.props.diameter, height: this.props.diameter, borderRadius: this.props.diameter / 2}, this.props.style]}
                     />
                 ) : (
                     <Image
                         source={{uri: this.props.url}}
-                        style={{width: this.props.diameter, height: this.props.diameter, borderRadius: this.props.diameter / 2}}
+                        style={[{width: this.props.diameter, height: this.props.diameter, borderRadius: this.props.diameter / 2}, this.props.style]}
                     />
                     )
                 }
