@@ -3,7 +3,7 @@ import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
 import {StyleSheet} from "react-native";
 import Timeline from 'react-native-timeline-listview';
-import {Text, View} from "native-base";
+import {View} from "native-base";
 import ProjectCard from "./ProjectCard";
 
 class TimelineProjectCard extends React.Component {
@@ -33,19 +33,30 @@ class TimelineProjectCard extends React.Component {
 
     render(){
         const {projects} = this.props;
+        const colorTheme = "#15BBCF";
+
         return (
-            <Timeline
-                showTime={false}
-                data={projects}
-                renderDetail={this.renderDetail}
-            />
+            <View style={styles.MainContainer}>
+                <Timeline
+                    circleSize={20}
+                    showTime={false}
+                    data={projects}
+                    circleColor={colorTheme}
+                    lineColor={colorTheme}
+                    renderDetail={this.renderDetail}
+                />
+            </View>
         )
     }
 
 }
 
 const styles = StyleSheet.create({
-
+    MainContainer: {
+        marginTop: 20,
+        marginRight: 20,
+        marginLeft: 10,
+    }
 });
 
 export default compose() (TimelineProjectCard)
