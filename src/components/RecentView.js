@@ -13,11 +13,11 @@ class RecentView extends React.Component {
         status: ""
     }
 
-    componentDidMount(){
+    componentDidMount = () =>{
         this.fetchData()
     }
 
-    fetchData() {
+    fetchData = () => {
         const db = new DatabaseService;
         db.getEmployeeInfo(this.props.userId).then((result) => {
 
