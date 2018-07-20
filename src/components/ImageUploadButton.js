@@ -2,6 +2,7 @@ import React from 'react';
 import RNfirebase from 'react-native-firebase'
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
+import {Authentication} from '../api'
 import { View, StyleSheet, Text, ScrollView, TouchableOpacity } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import RNFetchBlob from 'react-native-fetch-blob';
@@ -18,7 +19,7 @@ class ImageUploadButton extends React.Component {
     return (
       <ScrollView contentContainerStyle = {styles.buttonContainer}>
         <TouchableOpacity
-          style = {[styles.button, this.props.style]}
+          style = {styles.button}
           onPress = {this.uploadImage}>
           <Icon name={"camera"} size={15} />
         </TouchableOpacity>
@@ -49,7 +50,7 @@ class ImageUploadButton extends React.Component {
         let uploadBlob = null
         let mime = 'image/jpg'
 
-        const {uid} = context.props.currentUser
+        const uid = Authentication.currentUser().uid;
         const imageRef = RNfirebase.storage().ref('profile-photo/').child(`${uid}.jpg`)
 
         fs.readFile(imagePath, 'base64')
