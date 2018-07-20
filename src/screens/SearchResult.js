@@ -81,7 +81,7 @@ class SearchResult extends React.Component {
                     afterSearch={() => this.search(this.state.textInput)} >
                 </SearchBox>
                 {
-                    !loading ? <DataLoaded results={results} onPress={this.goToProfile} /> : <DataLoading />
+                    !loading ? <SearchCard results={results} onPress={this.goToProfile}/> : <Spinner color={"black"} />
                 }
             </Content>
         );
@@ -91,7 +91,6 @@ class SearchResult extends React.Component {
 
 const DataLoaded = ({results, onPress}) => (
     <View style={styles.MainContainer}>
-        <Text>Search Results</Text>
         <SearchCard results={results} onPress={onPress}/>
     </View>
 )
