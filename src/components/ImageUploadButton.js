@@ -1,14 +1,10 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import { View, StyleSheet, Text, ScrollView, TouchableOpacity, TextInput } from "react-native";
-import { TextField } from 'react-native-material-textfield';
-import { Button, Divider } from 'react-native-elements';
-import Tags from "react-native-tags";
-import TagInput from "react-native-tag-input";
+import { View, StyleSheet, Text, ScrollView, TouchableOpacity } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome';
-import DatePicker from 'react-native-datepicker';
-import RNFetchBlob from 'react-native-fetch-blob'
+import RNFetchBlob from 'react-native-fetch-blob';
+import ImagePicker from 'react-native-image-crop-picker';
 
 
 class ImageUploadButton extends React.Component {
@@ -20,17 +16,7 @@ class ImageUploadButton extends React.Component {
   render() {
     <TouchableOpacity
       style = {styles.button}
-      /**
-       * Placeholder for database function call
-       */
-      onPress = {
-        () => alert("Project Name: " + this.state.projectName + "\n" +
-                    "Project Description: " + this.state.projectDescription + "\n" +
-                    "Project Date: " + this.state.projectDate + "\n" +
-                    "Project Git: " + this.state.projectGit + "\n" +
-                    "Project Youtube: " + this.state.projectVideo + "\n" +
-                    "Project Tags: " + this.state.projectTags)
-      }>
+      onPress = {this.uploadImage}>
       <Icon name={"edit"} size={10} />
     </TouchableOpacity>
   }
