@@ -1,7 +1,8 @@
 import React from 'react';
 import RNfirebase from 'react-native-firebase'
-import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
+import compose from 'recompose/compose'
+import DatabaseService from '../api/databaseService';
 import {Authentication} from '../api'
 import { View, StyleSheet, Text, ScrollView, TouchableOpacity } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -10,6 +11,10 @@ import ImagePicker from 'react-native-image-crop-picker';
 
 
 class ImageUploadButton extends React.Component {
+
+  static propTypes = {
+      update: PropTypes.func
+  }
 
   constructor(props) {
     super(props);
@@ -64,8 +69,13 @@ class ImageUploadButton extends React.Component {
           return imageRef.getDownloadURL()
         })
         .then((url) => {
+
+          if (url !== "") {
+              const db = new DatabaseService();
+              db.updateEmployeeImgUrl(uid, url);
+          }
+          this.props.update('imgUrl', url)
           resolve(url)
-          this.props.update(url)
         })
         .catch((error) => {
           reject(error)

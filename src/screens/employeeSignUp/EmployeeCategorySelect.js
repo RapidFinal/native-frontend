@@ -2,10 +2,16 @@ import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
 import {StyleSheet, View} from "react-native";
-import {Container, Toast} from "native-base";
+import {Container, Spinner, Toast} from "native-base";
 import {CategoriesSelection, NextButton, Stepper} from "../../components";
 import {withContext} from "../../context/withContext";
 import hoistStatics from "recompose/hoistStatics";
+
+const DataLoading = () => (
+    <View style={styles.MainContainer}>
+        <Spinner color={"black"} />
+    </View>
+);
 
 class EmployeeCategorySelect extends React.Component {
 
@@ -22,7 +28,8 @@ class EmployeeCategorySelect extends React.Component {
     };
 
     state = {
-        selectedCategories:{}
+        selectedCategories:{},
+        ready: false
     }
 
     setSelectedCategoriesState = (selected) => {
@@ -35,7 +42,6 @@ class EmployeeCategorySelect extends React.Component {
         const {navigation, setContext} = this.props;
         const {selectedCategories} = this.state;
 
-        console.log(selectedCategories)
         if (Object.keys(selectedCategories).length === 0){
             Toast.show({
                 text: "Please select at least one category!",
@@ -49,7 +55,14 @@ class EmployeeCategorySelect extends React.Component {
         }
     };
 
+    setReady = (isReady) =>{
+        this.setState({
+            ready: isReady
+        })
+    }
+
     render(){
+        const {ready} = this.state;
         return (
             <Container style={{flex:1}} >
                 <Stepper
@@ -58,12 +71,13 @@ class EmployeeCategorySelect extends React.Component {
                 />
                 <CategoriesSelection
                     setSelectedState={this.setSelectedCategoriesState}
+                    setReady={this.setReady}
                 />
-                <NextButton
-                    onPress={this.submit}
-                    style={styles.submitButton}>
-
-                </NextButton>
+                {ready ? (
+                    <NextButton
+                        onPress={this.submit}
+                    />
+                ) : null}
 
             </Container>
         )
@@ -71,24 +85,11 @@ class EmployeeCategorySelect extends React.Component {
 }
 
 const styles = StyleSheet.create({
-
-    submitButton:{
-        alignSelf:'center',
-        padding:20,
-        margin:5
+    MainContainer: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
-    submitText:{
-        padding:10,
-        color:'white',
-        fontWeight:'bold',
-    },
-    title:{
-        color: 'black',
-        fontWeight: 'bold',
-        fontSize: 25,
-        alignSelf:'center',
-    },
-
 });
 
 export default hoistStatics(compose(withContext)) (EmployeeCategorySelect)

@@ -205,12 +205,14 @@ const styles = StyleSheet.create({
     },
     plusButton: {
         marginVertical: 30,
+        backgroundColor: "#15BBCF",
     },
     center: {
         alignSelf: "center",
     },
     submitButton: {
         marginVertical: 60,
+        backgroundColor: "#15BBCF"
     },
     leftAlign: {
         alignSelf: "flex-end"

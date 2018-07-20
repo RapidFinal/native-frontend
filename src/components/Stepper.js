@@ -37,8 +37,17 @@ const styles = StyleSheet.create({
     }
 });
 
-const customStyles = {
+const colorTheme = "#15BBCF";
+const lighterColorTheme = "#9ee5ed";
 
+const customStyles = {
+    stepStrokeCurrentColor: colorTheme,
+    stepStrokeFinishedColor: colorTheme,
+    stepStrokeUnFinishedColor: colorTheme,
+    separatorFinishedColor: colorTheme,
+    separatorUnFinishedColor: lighterColorTheme,
+    stepIndicatorFinishedColor: colorTheme,
+    stepIndicatorUnFinishedColor: lighterColorTheme,
 }
 
 export default compose() (Stepper)
