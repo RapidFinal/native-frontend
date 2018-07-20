@@ -355,7 +355,7 @@ class EditProfile extends React.Component {
                         ready ? (
                             <View style={styles.MainContainer}>
                                 <CircularProfilePhoto url={imgUrl} diameter={150}/>
-                                <ImageUploadButton update={this.update}/>
+                                <ImageUploadButton update={this.update.bind(this)}/>
                                 <EditableName firstName={firstName}
                                               lastName={lastName}
                                               updateName={this.updateName.bind(this)}
