@@ -14,6 +14,7 @@ import {Authentication} from '../api'
 import {withContext} from "../context/withContext";
 import hoistStatics from "recompose/hoistStatics";
 import CategoryCard from "../components/CategoryCard";
+import TimelineProjectCard from "../components/TimelineProjectCard";
 
 class ViewProfile extends React.Component {
 
@@ -44,7 +45,7 @@ class ViewProfile extends React.Component {
         favIcon: "md-star-outline",
         liked: false,
         major: "",
-        categories: []
+        categories: [],
     };
 
     static navigationOptions = ({navigation}) => ({
@@ -103,6 +104,7 @@ class ViewProfile extends React.Component {
                 categories: result.categories,
                 ready: true
             });
+
         }).catch((error) => {
             console.error(error);
         });
@@ -182,26 +184,26 @@ class ViewProfile extends React.Component {
             })
     }
 
-    toggleLikeProfile = () => {
+    toggleLikeProfile = async () => {
         const {liked} = this.state;
         const paramUid = this.props.navigation.getParam('uid');
         const {currentUser} = this.props.context;
         const db = new DatabaseService;
         if (liked) {
+            let result = await db.unLikedEmployee(currentUser.uid, paramUid);
             this.setState({
                 liked: false,
                 favIcon: "md-star-outline"
-            })
-            db.unLikedEmployee(currentUser.uid, paramUid);
+            });
         }
         else {
+            let result = await db.likedEmployee(currentUser.uid, paramUid);
             this.setState({
                 liked: true,
                 favIcon: "md-star"
-            })
-            db.likedEmployee(currentUser.uid, paramUid)
+            });
         }
-    }
+    };
 
     updateRecentView = () => {
         const db = new DatabaseService;
@@ -235,7 +237,7 @@ class ViewProfile extends React.Component {
             major,
             categories
         } = this.state;
-        const uid = Authentication.currentUser().uid;
+        const uid = this.props.navigation.getParam('uid');
 
         return (
             <View style={styles.Flex}>
@@ -276,13 +278,15 @@ class ViewProfile extends React.Component {
                                         uid={uid}
                                         userRole="employee"
                                     />
-                                    { isTimeline ? (
-                                            <Text>Timeline</Text>
-                                        ) : (
-                                            <ProjectSection projects={projects} navigation={this.props.navigation}/>
-                                        )
-                                    }
                                 </View>
+                                { isTimeline ? (
+                                        <TimelineProjectCard projects={projects}/>
+                                    ) : (
+                                        <View style={styles.MainContainer}>
+                                            <ProjectSection projects={projects} navigation={this.props.navigation}/>
+                                        </View>
+                                    )
+                                }
                             </ScrollView>
                             { canLike ?
                                 (<FavButton
