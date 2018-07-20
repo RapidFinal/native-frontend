@@ -60,7 +60,10 @@ class Home extends React.Component {
         let currentUser;
         if (Authentication.currentUser() !== null){
             currentUser = Authentication.currentUser();
-            this.fetchRecentView(db, currentUser.ui);
+            this.fetchRecentView(db, currentUser.uid);
+        }
+        if (this.state.recentView !== []){
+            this.setState({showRecentView: true});
         }
     };
 
@@ -84,9 +87,6 @@ class Home extends React.Component {
                 })
             }
         });
-        if (this.state.recentView !== []){
-            this.setState({showRecentView: true});
-        }
     };
 
     goToProfile = (userID) => {
