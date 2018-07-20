@@ -161,11 +161,13 @@ class ViewProfile extends React.Component {
 
         let paramUid = this.props.navigation.getParam('uid');
 
-        db.getUserRole(paramUid).then(viewRole => {
-            this.setState({
-                canLike: role === "employer" && viewRole === "employee"
+        if (role) {
+            db.getUserRole(paramUid).then(viewRole => {
+                this.setState({
+                    canLike: role === "employer" && viewRole === "employee"
+                })
             })
-        })
+        }
     }
 
     setLiked = () => {
@@ -173,15 +175,17 @@ class ViewProfile extends React.Component {
         const {currentUser} = this.props.context;
         const paramUid = this.props.navigation.getParam('uid');
 
-        db.getLikedEmployee(currentUser.uid)
-            .then(result => {
-                if (result[paramUid]) {
-                    this.setState({
-                        liked: true,
-                        favIcon: "md-star"
-                    })
-                }
-            })
+        if (currentUser) {
+            db.getLikedEmployee(currentUser.uid)
+                .then(result => {
+                    if (result[paramUid]) {
+                        this.setState({
+                            liked: true,
+                            favIcon: "md-star"
+                        })
+                    }
+                })
+        }
     }
 
     toggleLikeProfile = async () => {
@@ -210,7 +214,7 @@ class ViewProfile extends React.Component {
         const {currentUser, role} = this.props.context;
         const paramUid = this.props.navigation.getParam('uid');
 
-        if (currentUser.uid !== paramUid) {
+        if (currentUser && currentUser.uid !== paramUid) {
             if (role === "employee") {
                 db.updateEmployeeRecentView(currentUser.uid, paramUid)
             }
