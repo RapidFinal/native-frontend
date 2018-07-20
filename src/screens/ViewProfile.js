@@ -235,7 +235,7 @@ class ViewProfile extends React.Component {
             major,
             categories
         } = this.state;
-        const uid = Authentication.currentUser().uid;
+        const uid = this.props.navigation.getParam('uid');
 
         return (
             <View style={styles.Flex}>
