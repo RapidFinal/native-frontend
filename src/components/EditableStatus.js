@@ -62,7 +62,8 @@ class EditableStatus extends React.Component {
     }
 
     getStatusFromDB = () => {
-        DatabaseService.getAllStatus().then(
+        let db = new DatabaseService
+        db.getAllStatus().then(
             statusFromDB => {
                 this.getCurrentStatusId(statusFromDB, this.props.status)
                 this.setState({
