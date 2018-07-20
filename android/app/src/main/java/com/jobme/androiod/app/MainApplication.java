@@ -1,24 +1,27 @@
 package com.jobme.androiod.app;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 
+import com.RNFetchBlob.RNFetchBlobPackage;
 import com.facebook.CallbackManager;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.react.ReactApplication;
-import com.jobme.androiod.app.BuildConfig;
-import com.oblador.vectoricons.VectorIconsPackage;
-import io.invertase.firebase.RNFirebasePackage;
-import io.invertase.firebase.auth.RNFirebaseAuthPackage;
-import io.invertase.firebase.database.RNFirebaseDatabasePackage;
-
-import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
+import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.facebook.soloader.SoLoader;
+import com.oblador.vectoricons.VectorIconsPackage;
+import com.reactnative.ivpusic.imagepicker.PickerPackage;
 
 import java.util.Arrays;
 import java.util.List;
+
+import io.invertase.firebase.RNFirebasePackage;
+import io.invertase.firebase.auth.RNFirebaseAuthPackage;
+import io.invertase.firebase.database.RNFirebaseDatabasePackage;
+import io.invertase.firebase.storage.RNFirebaseStoragePackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -38,17 +41,19 @@ public class MainApplication extends Application implements ReactApplication {
 
     private CallbackManager mCallbackManager;
 
-
-
+   @SuppressLint("MissingPermission")
     @Override
     protected List<ReactPackage> getPackages() {
       ReactPackage packages[] = new ReactPackage[]{
               new VectorIconsPackage(),
               new MainReactPackage(),
+            new PickerPackage(),
+            new RNFetchBlobPackage(),
               new RNFirebasePackage(),
+              new RNFirebaseDatabasePackage(),
+              new RNFirebaseStoragePackage(),
               new FBSDKPackage(mCallbackManager),
               new RNFirebaseAuthPackage(),
-              new RNFirebaseDatabasePackage()
       };
       return Arrays.asList(packages);
     }
