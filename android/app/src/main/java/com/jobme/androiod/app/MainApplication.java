@@ -1,5 +1,6 @@
 package com.jobme.androiod.app;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 
 import com.facebook.CallbackManager;
@@ -16,6 +17,7 @@ import io.invertase.firebase.RNFirebasePackage;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import io.invertase.firebase.auth.RNFirebaseAuthPackage;
 import io.invertase.firebase.database.RNFirebaseDatabasePackage;
+import io.invertase.firebase.storage.RNFirebaseStoragePackage;
 
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -41,6 +43,7 @@ public class MainApplication extends Application implements ReactApplication {
       return BuildConfig.DEBUG;
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
@@ -50,6 +53,7 @@ public class MainApplication extends Application implements ReactApplication {
             new VectorIconsPackage(),
               new RNFirebasePackage(),
               new RNFirebaseDatabasePackage(),
+              new RNFirebaseStoragePackage(),
               new RNFirebaseAuthPackage(),
               new FBSDKPackage(mCallbackManager)
       );

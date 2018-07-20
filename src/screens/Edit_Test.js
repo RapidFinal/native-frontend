@@ -1,6 +1,7 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
+import ImageUploadButton from '../components/ImageUploadButton'
 import { View, StyleSheet, Text, ScrollView, TouchableOpacity, TextInput } from "react-native";
 import { TextField } from 'react-native-material-textfield';
 import { Button, Divider } from 'react-native-elements';
@@ -142,6 +143,7 @@ class Edit_Test extends React.Component {
                 }>
                 <Icon name={"edit"} size={30} />
               </TouchableOpacity>
+              <ImageUploadButton/>
             </ScrollView>
 
           </ScrollView>
