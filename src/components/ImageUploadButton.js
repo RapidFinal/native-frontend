@@ -2,6 +2,7 @@ import React from 'react';
 import RNfirebase from 'react-native-firebase'
 import PropTypes from 'prop-types'
 import compose from 'recompose/compose'
+import DatabaseService from '../api/databaseService';
 import {Authentication} from '../api'
 import { View, StyleSheet, Text, ScrollView, TouchableOpacity } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -68,7 +69,11 @@ class ImageUploadButton extends React.Component {
           return imageRef.getDownloadURL()
         })
         .then((url) => {
-          alert(url)
+
+          if (url !== "") {
+              const db = new DatabaseService();
+              db.updateEmployeeImgUrl(uid, url);
+          }
           this.props.update('imgUrl', url)
           resolve(url)
         })
