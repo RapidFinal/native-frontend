@@ -49,38 +49,45 @@ class Home extends React.Component {
         searchText: '',
         recentView: [],
         showRecentView: false,
-    }
+    };
 
     componentDidMount() {
         this.fetchData();
-    }
+    };
 
     fetchData() {
         let db = new DatabaseService;
-        let currentUser = Authentication.currentUser();
-        db.getUserRole(currentUser.uid).then((result) => {
+        let currentUser;
+        if (Authentication.currentUser() !== null){
+            currentUser = Authentication.currentUser();
+            this.fetchRecentView(db, currentUser.ui);
+        }
+    };
+
+    fetchRecentView(db, uid) {
+        db.getUserRole(uid).then((result) => {
             if (result === 'employee') {
                 let listView = [];
-                db.getEmployeeRecentView(currentUser.uid).then((result) => {
+                db.getEmployeeRecentView(uid).then((result) => {
                     result.forEach(re => {
                         listView.push(re);
-                    })
+                    });
                     this.setState({ recentView: listView});
                 })
             } else if (result === 'employer') {
                 let listView = [];
-                db.getEmployeeRecentView(currentUser.uid).then((result) => {
-                    for (let each in result) {
-                        listView.push(each);
-                    }
+                db.getEmployeeRecentView(uid).then((result) => {
+                    result.forEach(re => {
+                        listView.push(re);
+                    });
                     this.setState({ recentView: listView});
                 })
             }
-        })
+        });
         if (this.state.recentView !== []){
             this.setState({showRecentView: true});
         }
-    }
+    };
 
     goToProfile = (userID) => {
         this.props.navigation.navigate("View", { userID: userID });
@@ -89,19 +96,23 @@ class Home extends React.Component {
     drawer = () => {
         this.props.navigation.openDrawer();
         console.log("drawer open")
-    }
+    };
 
     onChangeText = (text) => {
         this.setState({ searchText: text})
-    }
+    };
 
     onSearchButtonPress = () => {
         console.log('OnSearchPress:', this.state.searchText);
         this.props.navigation.navigate("SearchResult", { textInput: this.state.searchText });
-    }
+    };
 
     render(){
-        const { recentView, showRecentView } = this.state;
+        const {
+            recentView,
+            showRecentView
+        } = this.state;
+
         const userInfo = [
             {
                 uid: 1,

@@ -58,11 +58,12 @@ class EditableStatus extends React.Component {
     saveToDB(statusId) {
         let db = new DatabaseService
         let uid = Authentication.currentUser().uid
-        db.updateEmployeeStatus(uid, this.state.selectedStatusId)
+        db.updateEmployeeStatus(uid, statusId)
     }
 
     getStatusFromDB = () => {
-        DatabaseService.getAllStatus().then(
+        let db = new DatabaseService
+        db.getAllStatus().then(
             statusFromDB => {
                 this.getCurrentStatusId(statusFromDB, this.props.status)
                 this.setState({
