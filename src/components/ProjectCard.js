@@ -25,7 +25,6 @@ class ProjectDetail extends React.Component {
 
     componentDidMount() {
         this.fetchData();
-        console.log("ABC",this.props.links)
     };
 
     fetchData() {
@@ -104,7 +103,6 @@ class ProjectDetail extends React.Component {
 
 const AllLinks = ({links, component, onPress}) => {
 
-    console.log("links", links)
     return (
         links.map((prop,key) => {
             if (prop.type === 'website') {
