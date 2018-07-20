@@ -1,7 +1,7 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import {StyleSheet, View, ScrollView, Text} from "react-native";
+import {StyleSheet, View, ScrollView} from "react-native";
 import CategoryCard from "../components/CategoryCard";
 import DatabaseService from "../api/databaseService";
 import CircularProfilePhoto from "../components/CircularProfilePhoto";
@@ -144,7 +144,6 @@ class EditEmployerProfile extends React.Component {
                             <CircularProfilePhoto url={imgUrl} diameter={150}/>
 
                             <EditableName firstName={firstName} lastName={lastName}
-                                          // userRole={"employer"}
                                           updateName={this.updateName.bind(this)}/>
                             <EditableCompanyName
                                 companyName={companyName}
@@ -191,6 +190,27 @@ const styles = StyleSheet.create({
     ModalContainer:{
         flex:1,
         backgroundColor:'white'
+    },
+
+    under:{
+        zIndex:1,
+    },
+
+    over:{
+        position: 'absolute',
+        left:50,
+        top: 120,
+        zIndex: -1,
+        borderWidth: 1,
+        borderColor: '#ddd',
+        shadowColor: '#989898',
+        shadowOffset:{
+            widget: 5,
+            height: 5,
+        },
+        shadowOpacity:1,
+        shadowRadius:5,
+
     }
 });
 
