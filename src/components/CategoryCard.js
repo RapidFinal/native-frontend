@@ -1,7 +1,7 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import {StyleSheet, Text, View, Button, TouchableHighlight} from "react-native";
+import {StyleSheet, Text, View, Button, TouchableHighlight, TouchableOpacity} from "react-native";
 import SubCategoryItem from './SubCategoryList'
 import {Icon, Toast} from "native-base";
 import CategoriesSelection from "./CategoriesSelection";
@@ -21,6 +21,7 @@ class CategoryCard extends React.Component {
     state = {
         isModalVisible:false,
         selectedCategories:{},
+        showSave:false,
     }
 
     openModal(){
@@ -37,7 +38,13 @@ class CategoryCard extends React.Component {
 
     setSelectedState = (selected) => {
         this.setState({
-            selectedCategories: selected
+            selectedCategories: selected,
+        })
+    }
+
+    setReady = (status) =>{
+        this.setState({
+            showSave: status
         })
     }
 
@@ -76,7 +83,7 @@ class CategoryCard extends React.Component {
 
 
     render() {
-        const {isModalVisible} = this.state;
+        const {isModalVisible,showSave} = this.state;
         const {categories,editable,uid,userRole} = this.props;
         return (
             <View style={styles.MainContainer}>
@@ -85,7 +92,7 @@ class CategoryCard extends React.Component {
 
                     {editable ? (
                         <View>
-                            <TouchableHighlight
+                            <TouchableOpacity
                                 onPress={() => {
                                     this.openModal();
                                 }}
@@ -94,21 +101,20 @@ class CategoryCard extends React.Component {
                                     style={styles.EditIcon}
                                     type="FontAwesome"
                                     name='edit' />
-                            </TouchableHighlight>
+                            </TouchableOpacity>
                             <Modal
                                 style={styles.Modal}
                                 isVisible={isModalVisible}
-                                // onBackdropPress={()=>this.closeModal()}
                             >
                                 <View style={styles.ModalContent}>
-                                    <TouchableHighlight
+                                    <TouchableOpacity
                                         style={styles.CloseIconPos}
                                         onPress={() => {
                                             this.closeModal();
                                         }}
                                     >
                                         <Icon name='close' />
-                                    </TouchableHighlight>
+                                    </TouchableOpacity>
 
                                     <View style={{
                                         marginTop:40,
@@ -118,10 +124,12 @@ class CategoryCard extends React.Component {
                                             uid={uid}
                                             userRole={userRole}
                                             setSelectedState={this.setSelectedState}
+                                            setReady={this.setReady}
                                         />
                                     </View>
-
-                                    <SaveButton onPress={()=>this.save()}/>
+                                    { showSave ? (
+                                        <SaveButton onPress={()=>this.save()}/>)
+                                    : null}
                                 </View>
                             </Modal>
                         </View>

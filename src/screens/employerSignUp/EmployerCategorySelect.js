@@ -20,6 +20,7 @@ class EmployerCategorySelect extends React.Component {
 
     state = {
         selectedCategories:{},
+        showSubmit:false,
     }
 
     static navigationOptions = () => {
@@ -32,7 +33,13 @@ class EmployerCategorySelect extends React.Component {
 
     setSelectedCategoriesState = (selected) => {
         this.setState({
-            selectedCategories: selected
+            selectedCategories: selected,
+        })
+    }
+
+    setReady = (status) =>{
+        this.setState({
+            showSubmit: status
         })
     }
 
@@ -60,9 +67,8 @@ class EmployerCategorySelect extends React.Component {
             const auth = await CredentialAuthentication.signup({email, password})
             const uid = this.props.context.currentUser.uid;
 
-            console.log('auth')
-            console.log(auth)
-            DatabaseService.createEmployerInfo(
+            let db = new DatabaseService
+            db.createEmployerInfo(
                 uid,
                 employer.firstName,
                 employer.lastName,
@@ -82,7 +88,7 @@ class EmployerCategorySelect extends React.Component {
     }
 
     render(){
-        const {selectedCategories} = this.state
+        const {selectedCategories,showSubmit} = this.state
         return (
             <Container>
                     <Content>
@@ -93,13 +99,17 @@ class EmployerCategorySelect extends React.Component {
                         {console.log(selectedCategories)}
                         <CategoriesSelection
                             setSelectedState={this.setSelectedCategoriesState}
+                            setReady={this.setReady}
                         />
-                        <Button
-                            style={[styles.submitButton, styles.center]}
-                            onPress={this.submit}
-                        >
-                            <Text>Submit</Text>
-                        </Button>
+                        {showSubmit ? (
+                            <Button
+                                style={[styles.submitButton, styles.center]}
+                                onPress={this.submit}
+                            >
+                                <Text>Submit</Text>
+                            </Button>
+
+                        ) : null}
                     </Content>
             </Container>
         )

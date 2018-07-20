@@ -18,6 +18,7 @@ class CategoriesSelection extends React.Component {
 
     static propTypes = {
         setSelectedState : PropTypes.func,
+        setReady : PropTypes.func,
         userRole: PropTypes.string,
     };
 
@@ -31,16 +32,20 @@ class CategoriesSelection extends React.Component {
     };
 
     componentDidMount(){
+
         this.getCategoriesData()
         this.getSelectedCategories()
     }
 
     getCategoriesData = () => {
-        DatabaseService.getAllCategories().then(result=>{
+        let db = new DatabaseService
+        this.props.setReady(false)
+        db.getAllCategories().then(result=>{
             this.setState({
                 categories: result,
                 ready1: true
             })
+            this.props.setReady(true)
         })
     }
 

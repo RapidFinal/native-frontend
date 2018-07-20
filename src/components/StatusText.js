@@ -2,6 +2,22 @@ import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
 import {StyleSheet, Image, View, Text} from "react-native";
+import Icon from 'react-native-vector-icons/FontAwesome';
+
+const StatusIcon = ({status}) => {
+    let color = 'grey';
+    if (status === 'looking for job') {
+        color = 'green';
+    } else if (status === 'looking for opportunity') {
+        color = '#EF9B0F';
+    } else {
+        color = 'grey';
+    }
+    console.log(status, color);
+    return (
+        <Icon name='circle' color={color} style={{fontSize: 20, color: `${color}`}}/>
+    )
+}
 
 class StatusText extends React.Component {
 
@@ -22,8 +38,9 @@ class StatusText extends React.Component {
     render(){
         return (
             <View style={styles.StatusBox}>
-                <Text style={styles.StatusText}>{this.props.status}</Text>
-                {this.statusPicker()}
+                <Text style={styles.StatusText}>{this.props.status + " "}</Text>
+                <StatusIcon status={this.props.status}/>
+                {/* {this.statusPicker()} */}
             </View>
         )
     }
