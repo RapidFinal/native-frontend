@@ -49,6 +49,10 @@ target 'JobMe' do
 
   pod 'ReactNativeSearchBar', :path => '../node_modules/react-native-search-bar'
 
+  pod 'react-native-fetch-blob', :path => '../node_modules/react-native-fetch-blob'
+
+  pod 'RNImageCropPicker', :path => '../node_modules/react-native-image-crop-picker'
+
   target 'JobMeTests' do
     inherit! :search_paths
     # Pods for testing
