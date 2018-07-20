@@ -211,6 +211,7 @@ const styles = StyleSheet.create({
     },
     submitButton: {
         marginVertical: 60,
+        backgroundColor: "#15BBCF"
     },
     leftAlign: {
         alignSelf: "flex-end"
