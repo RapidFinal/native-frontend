@@ -46,9 +46,7 @@ class ViewProfile extends React.Component {
         liked: false,
         major: "",
         categories: [],
-        timelineProjects: []
     };
-    // TODO project: [{title: "string", description: "string"}]
 
     static navigationOptions = ({navigation}) => ({
         title: 'View',
@@ -94,7 +92,6 @@ class ViewProfile extends React.Component {
         db.getEmployeeInfo(uid).then((result) => {
             console.log(result);
             this.getAllTags(result.tagIds);
-            let timelineProjects = this.getFormattedTimelineProjects(result.projects);
             this.setState({
                 imgUrl: result.imgUrl,
                 fullName: result.firstName + ' ' + result.lastName,
@@ -105,7 +102,6 @@ class ViewProfile extends React.Component {
                 skillSets: result.skillSet,
                 major: result.major,
                 categories: result.categories,
-                timelineProjects: timelineProjects,
                 ready: true
             });
 
@@ -224,18 +220,6 @@ class ViewProfile extends React.Component {
         }
     }
 
-    getFormattedTimelineProjects = (projects) => {
-        let timelineProjects = [];
-        projects.forEach(project => {
-            const formattedProject = {
-                title: project.name,
-                description: project.description
-            };
-            timelineProjects.push(formattedProject)
-        });
-        return timelineProjects;
-    }
-
     render() {
         const {
             imgUrl,
@@ -251,8 +235,7 @@ class ViewProfile extends React.Component {
             canLike,
             favIcon,
             major,
-            categories,
-            timelineProjects
+            categories
         } = this.state;
         const uid = this.props.navigation.getParam('uid');
 
@@ -297,7 +280,7 @@ class ViewProfile extends React.Component {
                                     />
                                 </View>
                                 { isTimeline ? (
-                                        <TimelineProjectCard projects={timelineProjects}/>
+                                        <TimelineProjectCard projects={projects}/>
                                     ) : (
                                         <View style={styles.MainContainer}>
                                             <ProjectSection projects={projects} navigation={this.props.navigation}/>
