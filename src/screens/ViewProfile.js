@@ -14,6 +14,7 @@ import {Authentication} from '../api'
 import {withContext} from "../context/withContext";
 import hoistStatics from "recompose/hoistStatics";
 import CategoryCard from "../components/CategoryCard";
+import TimelineProjectCard from "../components/TimelineProjectCard";
 
 class ViewProfile extends React.Component {
 
@@ -44,8 +45,10 @@ class ViewProfile extends React.Component {
         favIcon: "md-star-outline",
         liked: false,
         major: "",
-        categories: []
+        categories: [],
+        timelineProjects: []
     };
+    // TODO project: [{title: "string", description: "string"}]
 
     static navigationOptions = ({navigation}) => ({
         title: 'View',
@@ -91,6 +94,7 @@ class ViewProfile extends React.Component {
         db.getEmployeeInfo(uid).then((result) => {
             console.log(result);
             this.getAllTags(result.tagIds);
+            let timelineProjects = this.getFormattedTimelineProjects(result.projects);
             this.setState({
                 imgUrl: result.imgUrl,
                 fullName: result.firstName + ' ' + result.lastName,
@@ -101,8 +105,10 @@ class ViewProfile extends React.Component {
                 skillSets: result.skillSet,
                 major: result.major,
                 categories: result.categories,
+                timelineProjects: timelineProjects,
                 ready: true
             });
+
         }).catch((error) => {
             console.error(error);
         });
@@ -218,6 +224,18 @@ class ViewProfile extends React.Component {
         }
     }
 
+    getFormattedTimelineProjects = (projects) => {
+        let timelineProjects = [];
+        projects.forEach(project => {
+            const formattedProject = {
+                title: project.name,
+                description: project.description
+            };
+            timelineProjects.push(formattedProject)
+        });
+        return timelineProjects;
+    }
+
     render() {
         const {
             imgUrl,
@@ -233,7 +251,8 @@ class ViewProfile extends React.Component {
             canLike,
             favIcon,
             major,
-            categories
+            categories,
+            timelineProjects
         } = this.state;
         const uid = this.props.navigation.getParam('uid');
 
@@ -276,13 +295,15 @@ class ViewProfile extends React.Component {
                                         uid={uid}
                                         userRole="employee"
                                     />
-                                    { isTimeline ? (
-                                            <Text>Timeline</Text>
-                                        ) : (
-                                            <ProjectSection projects={projects} navigation={this.props.navigation}/>
-                                        )
-                                    }
                                 </View>
+                                { isTimeline ? (
+                                        <TimelineProjectCard projects={timelineProjects}/>
+                                    ) : (
+                                        <View style={styles.MainContainer}>
+                                            <ProjectSection projects={projects} navigation={this.props.navigation}/>
+                                        </View>
+                                    )
+                                }
                             </ScrollView>
                             { canLike ?
                                 (<FavButton
