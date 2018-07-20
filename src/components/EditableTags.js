@@ -3,11 +3,13 @@ import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
 import {StyleSheet, View, Modal, TouchableOpacity} from "react-native";
 import {Text, Icon} from "native-base";
-import Tags from "react-native-tags";
+import TagInput from "react-native-tag-input";
 import TagsSection from './TagsSection';
 import DatabaseService from "../api/databaseService";
 import {Authentication} from '../api'
 import SaveButton from './SaveButton';
+import Tags from "react-native-tags";
+import TextInputWithLabel from './TextInputWithLabel';
 
 class EditableTags extends React.Component {
 
@@ -15,6 +17,7 @@ class EditableTags extends React.Component {
 
     state = {
         tags: [],
+        text: "",
         modalVisible: false,
     }
 
@@ -33,12 +36,6 @@ class EditableTags extends React.Component {
         this.setState({modalVisible: visible});
     }
 
-    handleTagsChange = (tags) => {
-        this.setState({tags: tags})
-        this.updateTagsToDB(tags)
-        this.props.updateTags(tags)
-    }
-
     updateTagsToDB(tags) {
         let db = new DatabaseService
         let uid = Authentication.currentUser().uid
@@ -52,11 +49,36 @@ class EditableTags extends React.Component {
     }
 
     save() {
+        let tags = this.state.tags
+        this.updateTagsToDB(tags)
+        this.props.updateTags(tags)
         this.setModalVisible(!this.state.modalVisible)
     }
 
+    handleTagsChange = (tags) => {
+        this.setState({tags: tags})
+    }
+
+    handleTagTextChange = (event) => {
+        let tag = event.nativeEvent.text
+        if (tag !== " ") {
+            this.setState({text: tag});
+
+            const lastTyped = tag.charAt(tag.length - 1);
+            const parseWhen = [',', ' ', ';', '\n'];
+
+            if (parseWhen.indexOf(lastTyped) > -1) {
+                this.setState({
+                    tags: [...this.state.tags, this.state.text],
+                    text: "",
+                });
+            }
+        }
+
+    }
+
     render() {
-        const {tags, modalVisible} = this.state
+        const {tags, text, modalVisible} = this.state
         return (
             <View style={styles.CenterAlign}>
                 <Modal
@@ -75,14 +97,21 @@ class EditableTags extends React.Component {
                         >
                             <Icon name='close'/>
                         </TouchableOpacity>
-                        <Text>Edit Tags</Text>
+                        <Text style={styles.Title}>Edit Tags</Text>
+                        <Text style={styles.Description}>Click on the tag to remove</Text>
                         <Tags
-                            initialText=""
                             initialTags={tags}
-                            onChangeTags={tags => this.handleTagsChange(tags)}
-                            onTagPress={(index, tagLabel, event) => this.removeTag(index)}
-                            containerStyle={{justifyContent: "center"}}
-                            inputStyle={{backgroundColor: "white"}}
+                            readonly={true}
+                            tagTextStyle={{fontSize: 11}}
+                            onTagPress={(index) => {
+                                this.removeTag(index)
+                            }}
+                        />
+                        <TextInputWithLabel
+                            label=""
+                            placeholder="tags separated by space"
+                            value={text}
+                            onChange={this.handleTagTextChange}
                         />
                         <SaveButton onPress={this.save.bind(this)}/>
                     </View>
@@ -132,6 +161,17 @@ const styles = StyleSheet.create({
     CloseIconPos: {
         alignSelf: 'flex-end'
     },
+
+    Title: {
+        fontSize: 30,
+        marginBottom: 20,
+    },
+
+    Description: {
+        marginBottom: 10,
+    },
+
+
 });
 
 export default compose()(EditableTags)

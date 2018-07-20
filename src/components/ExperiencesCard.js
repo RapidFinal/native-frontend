@@ -3,28 +3,23 @@ import compose from 'recompose/compose';
 import hoistStatics from 'recompose/hoistStatics';
 import { withContext } from '../context/withContext';
 import PropTypes from 'prop-types';
-import { StyleSheet, Text, View, Alert} from "react-native";
-import {Body, Left, Right, Icon} from "native-base";
+import { StyleSheet, Text, View, Alert, TouchableOpacity} from "react-native";
 import ExperienceItem from './ExperienceItem';
-import ClickButton from "./ClickButton";
 import DatabaseService from '../api/databaseService';
+import {Icon as MaterialIcon} from 'react-native-elements';
 
 const TitleBar = ({isEditable, children, onPress}) => (
-    <View style={[styles.experienceHeader]}>
-        <Left>
-            <Text style={styles.Title}>
-                {children}
-            </Text>
-        </Left>
-        <Right>
-            {
-                isEditable && (
-                    <ClickButton transparent onPress={onPress}>
-                        <Icon name={"add"} type={"MaterialIcons"} />
-                    </ClickButton>
-                )
-            }
-        </Right>
+    <View style={styles.RowAlign}>
+        <Text style={[styles.Title, {marginRight: 10}]}>
+            {children}
+        </Text>
+        {
+            isEditable && (
+                <TouchableOpacity transparent onPress={onPress}>
+                    <MaterialIcon name={"add-circle-outline"} color='#517fa4'/>
+                </TouchableOpacity>
+            )
+        }
     </View>
 );
 
@@ -96,7 +91,6 @@ class ExperiencesCard extends React.Component {
                             />
                         );
                     }
-
                 })}
             </View>
         );
@@ -126,7 +120,7 @@ const styles = StyleSheet.create({
     },
 
     Item: {
-        marginBottom: 10,
+        marginBottom: 20,
     },
 
     DividerLine: {
@@ -134,11 +128,16 @@ const styles = StyleSheet.create({
         borderColor: '#ccc',
         paddingBottom: 15,
     },
-    experienceHeader: {
+
+    RowAlign: {
         flex: 1,
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        alignItems: 'center'
     },
+
+    AddIconPosition: {
+        alignSelf: 'flex-end',
+    }
 });
 
 export default hoistStatics(compose(withContext))(ExperiencesCard);

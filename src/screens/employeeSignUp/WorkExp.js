@@ -141,7 +141,8 @@ class WorkExp extends React.Component {
         try {
             const auth = await CredentialAuthentication.signup({email, password});
             // uid, firstName, lastName, desc, statusId, tags, categories, experiences, major
-            DatabaseService.createEmployeeInfo(
+            const db = new DatabaseService;
+            db.createEmployeeInfo(
                 auth.user._user.uid,
                 employee.firstName,
                 employee.lastName,
