@@ -22,7 +22,7 @@ class ProjectDetail extends React.Component {
         modalVisible: false,
     }
 
-    setModalVisible(visible) {
+    setModalVisible = (visible) => {
         this.setState({modalVisible: visible});
     }
 
@@ -72,9 +72,7 @@ class ProjectDetail extends React.Component {
                 </Modal>
 
                 <TouchableHighlight
-                    onPress={() => {
-                        this.setModalVisible(true);
-                    }}>
+                    onPress={this.setModalVisible(true)}>
                     <Text>Show Modal</Text>
                 </TouchableHighlight>
             </View>

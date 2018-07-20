@@ -1,9 +1,8 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import RecentView from '../components/RecentView'
+import HomeView from '../components/HomeView'
 import {Text, Container} from "native-base";
-import HomeCard from '../components/HomeCard'
 import SwiperFlatList from 'react-native-swiper-flatlist'
 import SearchBox from 'react-native-search-box'
 import { Card } from 'react-native-elements'
@@ -17,6 +16,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import DatabaseService from "../api/databaseService";
 import {Authentication} from "../api";
+import axios from 'axios'
 
 class Home extends React.Component {
 
@@ -48,26 +48,73 @@ class Home extends React.Component {
     state = {
         searchText: '',
         recentView: [],
+        recommendedUsers: [],
         showRecentView: false,
     };
 
-    componentDidMount() {
-        this.fetchData();
+    resetState() {
+        this.setState({
+            searchText: '',
+            recentView: [],
+            recommendedUsers: [],
+            showRecentView: false,
+        });
+    }
+
+    componentDidMount = () => {
+        // console.log('hi');
+        // this.fetchData();
     };
 
-    fetchData() {
+    initializeState() {
+        this.resetState();
+        this.fetchData();
+    }
+
+    didBlurSubscription = this.props.navigation.addListener(
+        'didFocus',
+        payload => {
+            this.initializeState();
+        }
+    );
+
+    fetchData = () => {
         let db = new DatabaseService;
         let currentUser;
         if (Authentication.currentUser() !== null){
             currentUser = Authentication.currentUser();
-            this.fetchRecentView(db, currentUser.uid);
-        }
-        if (this.state.recentView !== []){
-            this.setState({showRecentView: true});
+            let uid = currentUser.uid;
+            this.fetchRecommended(uid);
+            this.fetchRecentView(db, uid);
+        } else {
+            this.fetchRecommended('1');
         }
     };
 
-    fetchRecentView(db, uid) {
+    fetchRecommended = (uid) => {
+        let realLink = 'recommendation.jobme.teparak.me/getRecommendation?uid='+uid;
+        let testLink = 'http://172.20.10.2:5000/getRecommendation?uid='+uid;
+        let data;
+        axios.get(testLink)
+            .then((response) =>  {
+                // handle success
+                console.log('response:', response.data);
+                data = response.data;
+                let dataList = []
+                data.forEach(d => {
+                    if (d !== 'id') {
+                        dataList.push(d);
+                    }
+                })
+                this.setState({recommendedUsers: dataList});
+            })
+            .catch((error) => {
+                // handle error
+                alert("Error loading data.");
+            })
+    }
+
+    fetchRecentView = (db, uid) => {
         db.getUserRole(uid).then((result) => {
             if (result === 'employee') {
                 let listView = [];
@@ -76,21 +123,29 @@ class Home extends React.Component {
                         listView.push(re);
                     });
                     this.setState({ recentView: listView});
+                    this.setShowRecentView(listView);
                 })
             } else if (result === 'employer') {
                 let listView = [];
-                db.getEmployeeRecentView(uid).then((result) => {
+                db.getEmployerRecentView(uid).then((result) => {
                     result.forEach(re => {
                         listView.push(re);
                     });
                     this.setState({ recentView: listView});
+                    this.setShowRecentView(listView);
                 })
             }
         });
     };
 
-    goToProfile = (userID) => {
-        this.props.navigation.navigate("View", { userID: userID });
+    setShowRecentView = (listView) => {
+        if (listView.length > 0){
+            this.setState({showRecentView: true});
+        }
+    }
+
+    goToProfile = (uid) => {
+        this.props.navigation.navigate("View", { uid: uid });
     };
 
     drawer = () => {
@@ -110,40 +165,9 @@ class Home extends React.Component {
     render(){
         const {
             recentView,
-            showRecentView
+            showRecentView,
+            recommendedUsers
         } = this.state;
-
-        const userInfo = [
-            {
-                uid: 1,
-                name: "Pan",
-                major: "text1",
-                status: "looking for job"
-            },
-            {
-                uid: 2,
-                name: "karn",
-                major: "cssss",
-                status: "looking"
-            },
-            {
-                uid: 3,
-                name: "sea",
-                major: "bba",
-                status: "not looking"
-            },
-            {   uid: 4,
-                name: "ice",
-                major: "cssss",
-                status: "looking yo"
-            },
-            {
-                uid: 5,
-                name: "pan",
-                major: "bba yo",
-                status: "not looking HA"
-            }
-        ];
         return (
             <ScrollView>
                 <SearchBox
@@ -162,18 +186,13 @@ class Home extends React.Component {
                         style={styles.swipeBox}
                         index={0}
                     >
-                        {userInfo.map((prop, key) => {
-                            return (
-                                <TouchableHighlight
-                                    style={styles.button}
-                                    onPress={() => this.goToProfile(prop.uid)}
-                                    underlayColor="#EAEAEA"
-                                    key={key}
-                                >
-                                    <HomeCard name={prop.name} major={prop.major} status={prop.status}/>
-                                </TouchableHighlight>
-                            );
-                        })}
+                        {
+                            recommendedUsers.map((prop, key) => {
+                                return (
+                                    <HomeView uid={prop} onPress={this.goToProfile} key={key}/>
+                                )
+                            })
+                        }
                     </SwiperFlatList>
                 </Card>
                 { showRecentView ?
@@ -189,7 +208,7 @@ class Home extends React.Component {
                             {
                                 recentView.map((prop, key) => {
                                     return (
-                                        <RecentView userId={prop} onPress={this.goToProfile} key={key}/>
+                                        <HomeView uid={prop} onPress={this.goToProfile} key={key}/>
                                     )
                                 })
                             }

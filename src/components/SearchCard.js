@@ -1,11 +1,26 @@
 import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import PropTypes from 'prop-types';
-import { StyleSheet, SafeAreaView, View } from 'react-native';
-import { Container, Content, Card, CardItem, Thumbnail, Text, Button, Left, Body, Right } from 'native-base';
+import { StyleSheet, SafeAreaView } from 'react-native';
+import { Content, Card, CardItem, Thumbnail, Text, Left, Body } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Tags from 'react-native-tags';
-import TagInput from 'react-native-tag-input';
+// import TagInput from 'react-native-tag-input';
+
+const StatusIcon = ({status}) => {
+    let color = 'grey';
+    if (status === 'looking for job') {
+        color = 'green';
+    } else if (status === 'looking for opportunity') {
+        color = '#EF9B0F';
+    } else {
+        color = 'grey';
+    }
+    console.log(status, color);
+    return (
+        <Icon name='circle' color={color} style={{fontSize: 12, color: `${color}`}}/>
+    )
+}
 
 class SearchCard extends Component {
 
@@ -30,7 +45,7 @@ class SearchCard extends Component {
                             <Body>
                                 <Text>{i.firstName} {i.lastName}</Text>
                                 <Text note style={styles.statusText}>
-                                      {i.status} <Icon name='circle' color='green' style={{fontSize: 12, color: 'green'}}/>
+                                      {i.status} <StatusIcon status={i.status}/>
                                 </Text>
                                 <Text note style={styles.majorText}>{i.major}</Text>
                                 <Tags

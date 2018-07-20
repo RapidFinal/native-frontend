@@ -4,28 +4,29 @@ import compose from "recompose/compose";
 import {StyleSheet, TouchableHighlight} from "react-native";
 import HomeCard from './HomeCard';
 
-class RecentView extends React.Component {
+class HomeView extends React.Component {
 
     state = {
         firstName: "",
         lastName: "",
         major: "",
-        status: ""
+        status: "",
+        imgUrl: "",
     }
 
-    componentDidMount(){
+    componentDidMount = () =>{
         this.fetchData()
     }
 
-    fetchData() {
+    fetchData = () => {
         const db = new DatabaseService;
-        db.getEmployeeInfo(this.props.userId).then((result) => {
-
+        db.getEmployeeInfo(this.props.uid).then((result) => {
             this.setState({
                 firstName: result.firstName,
                 lastName: result.lastName,
                 major: result.major,
-                status: result.status
+                status: result.status,
+                imgUrl: result.imgUrl,
             });
         })
     }
@@ -35,21 +36,24 @@ class RecentView extends React.Component {
             firstName,
             lastName,
             major,
-            status
+            status,
+            imgUrl,
         } = this.state;
         const {
-            userId,
+            uid,
             onPress
         } = this.props;
         return (
             <TouchableHighlight
                 style={styles.button}
-                onPress={() => onPress(userId)}
+                onPress={() => onPress(uid)}
                 underlayColor="#EAEAEA"
             >
-                <HomeCard name={`${firstName} ${lastName}`}
-                          major={major}
-                          status={status} />
+                <HomeCard
+                    imgUrl={imgUrl}
+                    name={`${firstName} ${lastName}`}
+                    major={major}
+                    status={status} />
             </TouchableHighlight>
         )
     }
@@ -62,4 +66,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default compose() (RecentView)
+export default compose() (HomeView)
