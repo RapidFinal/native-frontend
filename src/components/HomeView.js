@@ -6,12 +6,21 @@ import HomeCard from './HomeCard';
 
 class HomeView extends React.Component {
 
+    static propTypes = {
+        firstName: PropTypes.string,
+        lastName: PropTypes.string,
+        major: PropTypes.string,
+        status: PropTypes.string,
+        imgUrl: PropTypes.string,
+        uid: PropTypes.string
+    };
+
     state = {
-        firstName: "",
-        lastName: "",
-        major: "",
-        status: "",
-        imgUrl: "",
+        firstName: '',
+        lastName: '',
+        major: '',
+        status: '',
+        imgUrl: '',
     }
 
     componentDidMount = () =>{

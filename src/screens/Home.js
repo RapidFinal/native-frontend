@@ -22,7 +22,9 @@ class Home extends React.Component {
 
     static propTypes = {
         searchText: PropTypes.string,
-        recentViewUsers: PropTypes.arrayOf(PropTypes.string),
+        recentView: PropTypes.array,
+        recommendedUsers: PropTypes.array,
+        showRecentView: PropTypes.boo,
     };
 
     static navigationOptions = ({ navigation }) => ({

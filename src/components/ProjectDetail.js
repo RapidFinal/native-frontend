@@ -14,7 +14,7 @@ class ProjectDetail extends React.Component {
         date: PropTypes.string,
         tags: PropTypes.array,
         links: PropTypes.array,
-        modalVisible: PropTypes.bool,
+        modalVisible: PropTypes.boo,
     }
 
 
