@@ -97,7 +97,6 @@ class EditableMajor extends React.Component {
     saveToDB(major) {
         let db = new DatabaseService()
         let uid = Authentication.currentUser().uid
-        alert('Save to db')
         // update employee major to db here
     }
 
