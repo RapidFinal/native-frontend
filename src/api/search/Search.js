@@ -79,7 +79,7 @@ const getEmployees = async (uids)  => {
 export const categorySearch = async (categoryQuery) => {
     const {categoryId, subCategoryId} = categoryQuery;
     let db = new DatabaseService();
-    const uids = await DatabaseService.getEmployeeFromSubCategory(categoryId, subCategoryId);
+    const uids = await db.getEmployeeFromSubCategory(categoryId, subCategoryId);
     console.log('uids', uids);
     return getEmployees(Object.keys(uids));
 }
