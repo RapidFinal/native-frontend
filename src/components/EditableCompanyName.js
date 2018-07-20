@@ -84,6 +84,9 @@ class EditableCompanyName extends React.Component {
         this.setState({credential});
         this.setModalVisible(!this.state.modalVisible)
     }
+    closeModal() {
+        this.setModalVisible(!this.state.modalVisible)
+    }
 
     save() {
         if (this.passAllFlags()) {
@@ -113,14 +116,15 @@ class EditableCompanyName extends React.Component {
                         alert('Modal has been closed.');
                     }}>
 
-                    <TouchableHighlight
+                    <TouchableOpacity
                         style={styles.CloseIconPos}
                         onPress={() => {
-                            this.setModalVisible(!this.state.modalVisible)
+                            this.closeModal();
                         }}
                     >
-                        <Icon name='close' />
-                    </TouchableHighlight>
+                        <Icon name='close'/>
+                    </TouchableOpacity>
+
                     <View style={{marginTop: 40}}>
 
                             <TextInputWithLabel
@@ -142,7 +146,7 @@ class EditableCompanyName extends React.Component {
                     >
                         Work at : {this.props.companyName}
                     </Text>
-                    <TouchableHighlight
+                    <TouchableOpacity
                         onPress={() => {
                             this.openModal();
                         }}
@@ -151,7 +155,7 @@ class EditableCompanyName extends React.Component {
                             style={styles.EditIcon}
                             type="FontAwesome"
                             name='edit' />
-                    </TouchableHighlight>
+                    </TouchableOpacity>
                 </View>
             </View>
         )
