@@ -6,13 +6,14 @@ import android.app.Application;
 import com.facebook.CallbackManager;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.react.ReactApplication;
+<<<<<<< HEAD
+import com.jobme.androiod.app.BuildConfig;
 import com.reactnative.ivpusic.imagepicker.PickerPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import io.invertase.firebase.RNFirebasePackage;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import io.invertase.firebase.RNFirebasePackage;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
-import com.jobme.androiod.app.BuildConfig;
 import com.oblador.vectoricons.VectorIconsPackage;
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.auth.RNFirebaseAuthPackage;
