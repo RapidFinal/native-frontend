@@ -46,6 +46,7 @@ class ViewProfile extends React.Component {
         liked: false,
         major: "",
         categories: [],
+        isEmployeeProfile: false
     };
 
     static navigationOptions = ({navigation}) => ({
@@ -70,6 +71,7 @@ class ViewProfile extends React.Component {
         this.setCanLike();
         this.setLiked();
         this.updateRecentView();
+        this.setIsEmployeeProfile();
     }
 
 
@@ -224,6 +226,18 @@ class ViewProfile extends React.Component {
         }
     }
 
+    setIsEmployeeProfile = () => {
+        const db = new DatabaseService;
+        const paramUid = this.props.navigation.getParam('uid');
+
+        db.getUserRole(paramUid)
+            .then(role => {
+                this.setState({
+                    isEmployeeProfile: role === "employee"
+                })
+            })
+    }
+
     render() {
         const {
             imgUrl,
@@ -239,7 +253,8 @@ class ViewProfile extends React.Component {
             canLike,
             favIcon,
             major,
-            categories
+            categories,
+            isEmployeeProfile
         } = this.state;
         const uid = this.props.navigation.getParam('uid');
 
@@ -276,12 +291,16 @@ class ViewProfile extends React.Component {
                                         setSkillInput={null}
                                         onCurrentEditSkill={null}
                                     />
-                                    <CategoryCard
-                                        categories={categories}
-                                        editable={false}
-                                        uid={uid}
-                                        userRole="employee"
-                                    />
+                                    {
+                                        !isEmployeeProfile ? (
+                                            <CategoryCard
+                                                categories={categories}
+                                                editable={false}
+                                                uid={uid}
+                                                userRole="employee"
+                                            />
+                                        ) : (null)
+                                    }
                                 </View>
                                 { isTimeline ? (
                                         <TimelineProjectCard projects={projects}/>
