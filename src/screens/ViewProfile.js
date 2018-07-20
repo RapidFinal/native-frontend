@@ -182,26 +182,26 @@ class ViewProfile extends React.Component {
             })
     }
 
-    toggleLikeProfile = () => {
+    toggleLikeProfile = async () => {
         const {liked} = this.state;
         const paramUid = this.props.navigation.getParam('uid');
         const {currentUser} = this.props.context;
         const db = new DatabaseService;
         if (liked) {
+            let result = await db.unLikedEmployee(currentUser.uid, paramUid);
             this.setState({
                 liked: false,
                 favIcon: "md-star-outline"
-            })
-            db.unLikedEmployee(currentUser.uid, paramUid);
+            });
         }
         else {
+            let result = await db.likedEmployee(currentUser.uid, paramUid);
             this.setState({
                 liked: true,
                 favIcon: "md-star"
-            })
-            db.likedEmployee(currentUser.uid, paramUid)
+            });
         }
-    }
+    };
 
     updateRecentView = () => {
         const db = new DatabaseService;
