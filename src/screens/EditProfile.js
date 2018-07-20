@@ -18,6 +18,7 @@ import EditableStatus from '../components/EditableStatus';
 import CategoryCard from "../components/CategoryCard";
 import EditableMajor from '../components/EditableMajor';
 import ClickButton from "../components/ClickButton";
+import ImageUploadButton from "../components/ImageUploadButton";
 
 const ModalPopup = ({visible, close, children }) => (
     <Modal
@@ -354,6 +355,7 @@ class EditProfile extends React.Component {
                         ready ? (
                             <View style={styles.MainContainer}>
                                 <CircularProfilePhoto url={imgUrl} diameter={150}/>
+                                <ImageUploadButton/>
                                 <EditableName firstName={firstName}
                                               lastName={lastName}
                                               updateName={this.updateName.bind(this)}
