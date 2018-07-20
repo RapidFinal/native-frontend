@@ -18,7 +18,7 @@ class ImageUploadButton extends React.Component {
     return (
       <ScrollView contentContainerStyle = {styles.buttonContainer}>
         <TouchableOpacity
-          style = {styles.button}
+          style = {[styles.button, this.props.style]}
           onPress = {this.uploadImage}>
           <Icon name={"camera"} size={15} />
         </TouchableOpacity>
