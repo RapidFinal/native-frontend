@@ -13,17 +13,19 @@ class ProjectSection extends React.Component {
     }
 
     render() {
+        const {projects} = this.props;
         return (
             <View style={styles.MainContainer}>
                 <Text style={styles.Title}>Projects</Text>
                 {
-                    this.props.projects.map((value, index) => {
+                    projects.map((value, index) => {
+                        console.log(value);
                         return (
                             <ProjectCard title={value.name}
                                          description={value.description}
                                          date={value.date}
-                                         projectId={value.progId}
-                                         navigation={this.props.navigation}
+                                         links={value.links}
+                                         tagIds={value.tagIds}
                                          key={value.name}
                             />
                         )
@@ -41,8 +43,6 @@ const styles = StyleSheet.create({
         width: '90%',
         paddingTop: 10,
         paddingBottom: 10,
-        paddingRight: 10,
-        paddingLeft: 10,
         borderTopRightRadius: 5,
         borderTopLeftRadius: 5,
         borderBottomRightRadius: 5,

@@ -4,10 +4,14 @@ buildscript {
     repositories {
         google()
         jcenter()
+        maven {
+            url 'https://maven.google.com/'
+            name 'Google'
+        }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.3'
-        classpath 'com.google.gms:google-services:3.2.1' // Do not upgrade above 3.2.1
+        classpath 'com.android.tools.build:gradle:3.1.3' // Do not upgrade above 3.1.3
+        classpath 'com.google.gms:google-services:4.0.1'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -16,8 +20,8 @@ buildscript {
 
 allprojects {
     repositories {
-        google()
         mavenLocal()
+        google()
         jcenter()
         maven {
             // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
@@ -28,4 +32,12 @@ allprojects {
       maven { url 'https://maven.google.com' }
       maven { url "https://jitpack.io" }
     }
+}
+
+ext {
+    buildToolsVersion = "26.0.3"
+    minSdkVersion = 16
+    compileSdkVersion = 26
+    targetSdkVersion = 26
+    supportLibVersion = "26.1.0"
 }

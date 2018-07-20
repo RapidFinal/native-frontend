@@ -2,35 +2,81 @@ import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
 import {StyleSheet, View, ScrollView, Text} from "react-native";
-import {Body, CheckBox, ListItem, Button} from "native-base";
+import {Body, CheckBox, ListItem, Button, Spinner} from "native-base";
 import Modal from "react-native-modal";
 import {withContext} from "../context/withContext";
-import DatabaseService from "../api/databaseService";
+import DatabaseService from "../api/databaseService"
+import {Authentication} from "../api";
 
+const DataLoading = ({}) => (
+    <View style={styles.MainContainer}>
+        <Spinner color={"black"} />
+    </View>
+);
 
 class CategoriesSelection extends React.Component {
 
     static propTypes = {
+        setSelectedState : PropTypes.func,
+        setReady : PropTypes.func,
+        userRole: PropTypes.string,
     };
 
     state = {
         currentCategoryIndex : null,
         currentCategoryId :'',
         categories: [],
-        selectedCategories:{}
+        selectedCategories:{},
+        ready1:false,
+        ready2:false,
     };
 
-    componentWillMount(){
-        DatabaseService.getAllCategories().then(result=>{
-            this.setState({categories: result})
+    componentDidMount(){
+
+        this.getCategoriesData()
+        this.getSelectedCategories()
+    }
+
+    getCategoriesData = () => {
+        let db = new DatabaseService
+        this.props.setReady(false)
+        db.getAllCategories().then(result=>{
+            this.setState({
+                categories: result,
+                ready1: true
+            })
+            this.props.setReady(true)
         })
     }
 
-    componentDidMount(){
-        let {selectedCategories}=this.props.context;
-        this.setState({
-            selectedCategories: selectedCategories,
-        })
+    getSelectedCategories = () => {
+        const {uid,userRole} = this.props;
+        if(uid) {
+            let db = new DatabaseService
+            if(userRole==="employee"){
+                db.getEmployeeCategories(uid).then((result) => {
+                    this.setState({
+                        selectedCategories: result,
+                        ready2: true
+                    })
+                    this.props.setSelectedState(result)
+                })
+            }
+            else {
+                db.getEmployerCategories(uid).then((result) => {
+                    this.setState({
+                        selectedCategories: result,
+                        ready2: true
+                    })
+                    this.props.setSelectedState(result)
+                })
+            }
+        }
+        else{
+            this.setState({
+                ready2: true
+            })
+        }
     }
 
     openModal=(index,categoryId)=>{
@@ -45,11 +91,12 @@ class CategoriesSelection extends React.Component {
             currentCategoryIndex: null,
             currentCategoryId : '',
         })
+        this.props.setSelectedState(this.state.selectedCategories)
     }
 
 
     isSelectedKeyExist=(subKey)=>{
-        const {selectedCategories, currentCategoryId}= this.state;
+        const {currentCategoryId, selectedCategories}= this.state;
         if (selectedCategories.hasOwnProperty(currentCategoryId)){
             if(selectedCategories[currentCategoryId].indexOf(subKey)>-1){
                 return true
@@ -59,22 +106,27 @@ class CategoriesSelection extends React.Component {
     }
 
     _toggleCheckbox = (subKey) =>{
-        let {selectedCategories,currentCategoryId} = this.state;
+        let {currentCategoryId,selectedCategories}= this.state;
+
         if (selectedCategories.hasOwnProperty(currentCategoryId)){
             const index = selectedCategories[currentCategoryId].indexOf(subKey);
             if(selectedCategories[currentCategoryId].indexOf(subKey)>-1){
                 selectedCategories[currentCategoryId].splice(index,1);
+                if (selectedCategories[currentCategoryId].length===0){
+                    delete selectedCategories[currentCategoryId];
+                }
             }
-            else{selectedCategories[currentCategoryId].push(subKey)
+            else{selectedCategories[currentCategoryId].push(subKey);
             }
         }
         else{
             selectedCategories[currentCategoryId]=[subKey];
         }
-        this.props.setContext({selectedCategories:selectedCategories})
+
+        this.setState({
+            selectedCategories : selectedCategories
+        })
     };
-
-
 
     renderSubCategoriesCheckbox =(index)=> {
         if(index!==null){
@@ -112,30 +164,34 @@ class CategoriesSelection extends React.Component {
 
 
     render(){
-        const {categories, currentCategoryIndex} =this.state
+        const {categories, currentCategoryIndex, ready1,ready2} =this.state
         return (
             <View>
-                <ScrollView>
-                    <View style={styles.categoryContainer}
-                    >
-                        {this.renderCategoriesButton(categories)}
-                    </View>
-                </ScrollView>
-
-                <Modal
-                    isVisible={currentCategoryIndex !== null}
-                    onBackdropPress={()=>this.closeModal()}
-                    style={styles.bottomModal}
-                >
-                    <View style={styles.scrollableModal}>
+            { ready1 && ready2 ? (
+                    <View>
                         <ScrollView>
-                            <View style={styles.modalContent}>
-                                {this.renderSubCategoriesCheckbox(currentCategoryIndex)}
+                            <View style={styles.categoryContainer}
+                            >
+                                {this.renderCategoriesButton(categories)}
                             </View>
                         </ScrollView>
-                    </View>
 
-                    </Modal>
+                        <Modal
+                            isVisible={currentCategoryIndex !== null}
+                            onBackdropPress={()=>this.closeModal()}
+                            style={styles.bottomModal}
+                        >
+                            <View style={styles.scrollableModal}>
+                                <ScrollView>
+                                    <View style={styles.modalContent}>
+                                        {this.renderSubCategoriesCheckbox(currentCategoryIndex)}
+                                    </View>
+                                </ScrollView>
+                            </View>
+
+                        </Modal>
+                    </View>
+                ) : (<DataLoading/>)}
             </View>
         )
     }

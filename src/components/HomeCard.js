@@ -11,7 +11,7 @@ const HomeCard = ({photo, name, major, status}) => (
         <Text style={styles.text}>{major}</Text>
         <Text style={styles.text}>{status}</Text>
     </View>
-)
+);
 
 const styles = StyleSheet.create({
     card: {

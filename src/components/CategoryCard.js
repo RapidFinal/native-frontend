@@ -1,19 +1,141 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import {StyleSheet, Text, View, Button} from "react-native";
-import SubCategoryItem from './SubCategoryItem'
+import {StyleSheet, Text, View, Button, TouchableHighlight, TouchableOpacity} from "react-native";
+import SubCategoryItem from './SubCategoryList'
+import {Icon, Toast} from "native-base";
+import CategoriesSelection from "./CategoriesSelection";
+import SaveButton from "./SaveButton";
+import DatabaseService from "../api/databaseService";
+
+import Modal from "react-native-modal";
 
 class CategoryCard extends React.Component {
 
-    static propTypes = {}
+    static propTypes = {
+        editable:PropTypes.bool,
+        updateCategories:PropTypes.func,
+        userRole:PropTypes.string,
+    }
+
+    state = {
+        isModalVisible:false,
+        selectedCategories:{},
+        showSave:false,
+    }
+
+    openModal(){
+        this.setState({
+            isModalVisible:true
+        })
+    }
+
+    closeModal(){
+        this.setState({
+            isModalVisible:false
+        })
+    }
+
+    setSelectedState = (selected) => {
+        this.setState({
+            selectedCategories: selected,
+        })
+    }
+
+    setReady = (status) =>{
+        this.setState({
+            showSave: status
+        })
+    }
+
+    save(){
+        const {uid,userRole} = this.props
+        const {selectedCategories}= this.state
+        console.log(selectedCategories)
+        if (Object.keys(selectedCategories).length <1){
+            Toast.show({
+                text: "Please select at least one category!",
+                buttonText: "Okay",
+                duration: 3000,
+            })
+            this.closeModal()
+            return;
+        }
+
+
+        let db= new DatabaseService;
+
+        if(userRole==="employee"){
+            db.updateEmployeeCategories(uid,selectedCategories)
+            db.getEmployeeInfo(uid).then(result=>{
+                this.props.updateCategories(result.categories)
+            })
+        }
+        else{
+            db.updateEmployerCategories(uid,selectedCategories)
+            db.getEmployerInfo(uid).then(result=>{
+                this.props.updateCategories(result.categories)
+            })
+        }
+
+        this.closeModal()
+    }
+
 
     render() {
-        const {categories} = this.props;
+        const {isModalVisible,showSave} = this.state;
+        const {categories,editable,uid,userRole} = this.props;
         return (
             <View style={styles.MainContainer}>
-                <Text style={styles.Title}>Categories</Text>
-                {/*{console.log(categories)}*/}
+                <View style={styles.Inline}>
+                    <Text style={styles.Title}>Categories</Text>
+
+                    {editable ? (
+                        <View>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    this.openModal();
+                                }}
+                            >
+                                <Icon
+                                    style={styles.EditIcon}
+                                    type="FontAwesome"
+                                    name='edit' />
+                            </TouchableOpacity>
+                            <Modal
+                                style={styles.Modal}
+                                isVisible={isModalVisible}
+                            >
+                                <View style={styles.ModalContent}>
+                                    <TouchableOpacity
+                                        style={styles.CloseIconPos}
+                                        onPress={() => {
+                                            this.closeModal();
+                                        }}
+                                    >
+                                        <Icon name='close' />
+                                    </TouchableOpacity>
+
+                                    <View style={{
+                                        marginTop:40,
+                                    }}>
+
+                                        <CategoriesSelection
+                                            uid={uid}
+                                            userRole={userRole}
+                                            setSelectedState={this.setSelectedState}
+                                            setReady={this.setReady}
+                                        />
+                                    </View>
+                                    { showSave ? (
+                                        <SaveButton onPress={()=>this.save()}/>)
+                                    : null}
+                                </View>
+                            </Modal>
+                        </View>
+                    ) : (null)}
+                </View>
+
                 {categories.map((value, index) => {
                     if (index === this.props.categories.length -1) {
                         return (
@@ -40,6 +162,7 @@ class CategoryCard extends React.Component {
     }
 
 }
+
 
 const styles = StyleSheet.create({
     MainContainer: {
@@ -71,7 +194,38 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderColor: '#ccc',
         paddingBottom: 15,
+    },
+
+    EditIcon:{
+        marginTop: 5,
+        fontSize: 25,
+    },
+
+    CloseIconPos: {
+        position: 'absolute',
+        right: 10,
+        paddingRight:10,
+        marginTop:10,
+    },
+
+    Inline:{
+        flex:1,
+        flexDirection:"row",
+        justifyContent:'space-between'
+    },
+
+    Modal:{
+        backgroundColor:'white',
+        margin:0
+    },
+
+    ModalContent:{
+        flex:1,
+        backgroundColor:'white',
+        width:'100%',
+        height:'100%'
     }
+
 });
 
 export default compose()(CategoryCard)

@@ -2,31 +2,15 @@ import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
 import {Image, StyleSheet} from "react-native";
-import {Container, Content, List, ListItem, Text} from "native-base";
+import {Container, Content, List, ListItem, Spinner, Text} from "native-base";
 import IonIcons from 'react-native-vector-icons/Ionicons'
 import hoistStatics from "recompose/hoistStatics";
 import CategoryItem from './CategoryItem'
+import DatabaseService from '../api/databaseService'
 import SubCategorySideMenu from "./SubCategorySideMenu";
-
-const category = [
-    {
-        key: "1",
-        name: "Graphic & Design"
-    },
-    {
-        key: "2",
-        name: "Marketing"
-    },
-    {
-        key: "3",
-        name: "Web & Programming"
-    },
-    {
-        key: "4",
-        name: "Consultant"
-    }
-];
-
+import _ from 'lodash'
+import CenterMe from "./CenterMe";
+import CenterTopMe from "./CenterTopMe";
 
 class CategorySideMenu extends React.Component {
 
@@ -35,8 +19,40 @@ class CategorySideMenu extends React.Component {
     };
 
     state = {
-        selectedCategory: null
+        items: null,
+        categoriesDetails: null,
+        error: null
     };
+
+    async componentDidMount(){
+        this.fetchData()
+    }
+
+    fetchData = async () => {
+        console.log("fetching data");
+        try {
+            const data = await DatabaseService.getAllCategories();
+            console.log("data",data);
+
+            const mutate = data.reduce((accu, val) => {
+                accu[val.categoryId] = {
+                    id: val.categoryId,
+                    name: val.categoryName,
+                    sub: val.subCategory
+                };
+
+                return accu;
+            }, {});
+
+            this.setState({
+                items: _.map(data, 'categoryId'),
+                categoriesDetails: mutate
+            })
+        } catch (e) {
+            // TODO: catch error
+            // TODO: Network error
+        }
+    }
 
     static navigationOptions = ({navigation}) => {
         return ({
@@ -45,16 +61,45 @@ class CategorySideMenu extends React.Component {
     };
 
     handleClicked = (key) => () => {
-        this.props.navigation.push("SubCategorySideMenu", {subcategory: key})
-
-    }
+        console.log(this.state.categoriesDetails[key])
+        this.props.navigation.push("SubCategorySideMenu", {
+            categoryKey: key,
+            subCategories: this.state.categoriesDetails[key].sub,
+        })
+    };
 
     render(){
-        // const {} = this.state; // to easily access state put desire variable in the curly brace so it may become const {variable} = this.state;
+        const {categoriesDetails, items} = this.state;
+
+        if (items === null){
+            return (
+                <CenterTopMe>
+                    <Spinner color={"black"}/>
+                </CenterTopMe>
+            );
+        }
+
+        if (_.isEmpty(items)){
+            return (
+                <CenterMe>
+                    <Text>Nothing exist here!</Text>
+                </CenterMe>
+            );
+        }
+
         return (
             <Container>
                 <Content>
-                    <List dataArray={category} renderRow={({key, name}) => <CategoryItem  key={key} onPress={this.handleClicked(key)} >{name}</CategoryItem>} />
+                    <List>
+                        {
+                            items.map(v => {
+                                const {id, name} = categoriesDetails[v];
+                                return (
+                                    <CategoryItem key={id} onPress={this.handleClicked(id)}>{name}</CategoryItem>
+                                )
+                            })
+                        }
+                    </List>
                 </Content>
             </Container>
         )
