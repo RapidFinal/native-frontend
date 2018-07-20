@@ -1,9 +1,8 @@
 import React from 'react';
 import compose from 'recompose/compose'
 import PropTypes from 'prop-types'
-import RecentView from '../components/RecentView'
+import HomeView from '../components/HomeView'
 import {Text, Container} from "native-base";
-import HomeCard from '../components/HomeCard'
 import SwiperFlatList from 'react-native-swiper-flatlist'
 import SearchBox from 'react-native-search-box'
 import { Card } from 'react-native-elements'
@@ -190,7 +189,7 @@ class Home extends React.Component {
                         {
                             recommendedUsers.map((prop, key) => {
                                 return (
-                                    <RecentView uid={prop} onPress={this.goToProfile} key={key}/>
+                                    <HomeView uid={prop} onPress={this.goToProfile} key={key}/>
                                 )
                             })
                         }
@@ -209,7 +208,7 @@ class Home extends React.Component {
                             {
                                 recentView.map((prop, key) => {
                                     return (
-                                        <RecentView uid={prop} onPress={this.goToProfile} key={key}/>
+                                        <HomeView uid={prop} onPress={this.goToProfile} key={key}/>
                                     )
                                 })
                             }

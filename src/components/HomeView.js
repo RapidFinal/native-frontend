@@ -4,7 +4,7 @@ import compose from "recompose/compose";
 import {StyleSheet, TouchableHighlight} from "react-native";
 import HomeCard from './HomeCard';
 
-class RecentView extends React.Component {
+class HomeView extends React.Component {
 
     state = {
         firstName: "",
@@ -66,4 +66,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default compose() (RecentView)
+export default compose() (HomeView)
