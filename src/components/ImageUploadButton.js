@@ -21,18 +21,33 @@ class ImageUploadButton extends React.Component {
     </TouchableOpacity>
   }
 
-  const Blob = RNFetchBlob.polyfill.Blob
-  window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
-  window.Blob = Blob
+  /**
+   * Crop and upload Image
+   **/
+  const uploadImage = () => {
+    const Blob = RNFetchBlob.polyfill.Blob
+    const fs = RNFetchBlob.fs
+    window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
+    window.Blob = Blob
 
-  const uploadImage = (uri, mime = 'application/octet-stream') => {
     return new Promise((resolve, reject) => {
-      const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
-        const sessionId = new Date().getTime()
+
+      ImagePicker.openPicker({
+        width: 400,
+        height: 400,
+        cropping: true,
+        mediaType: 'photo'
+      }).then(image => {
+
+        const imagePath = image.path
+
         let uploadBlob = null
+        let mime = 'image/jpg'
+
+        const sessionId = new Date().getTime()
         const imageRef = storage.ref('profile-photo').child(`${sessionId}`)
 
-        fs.readFile(uploadUri, 'base64')
+        fs.readFile(imagePath, 'base64')
         .then((data) => {
           return Blob.build(data, { type: `${mime};BASE64` })
         })
@@ -50,6 +65,7 @@ class ImageUploadButton extends React.Component {
         .catch((error) => {
           reject(error)
         })
+      })
     })
   }
 }
