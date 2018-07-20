@@ -10,7 +10,8 @@ class RecentView extends React.Component {
         firstName: "",
         lastName: "",
         major: "",
-        status: ""
+        status: "",
+        imgUrl: "",
     }
 
     componentDidMount = () =>{
@@ -24,7 +25,8 @@ class RecentView extends React.Component {
                 firstName: result.firstName,
                 lastName: result.lastName,
                 major: result.major,
-                status: result.status
+                status: result.status,
+                imgUrl: result.imgUrl,
             });
         })
     }
@@ -34,7 +36,8 @@ class RecentView extends React.Component {
             firstName,
             lastName,
             major,
-            status
+            status,
+            imgUrl,
         } = this.state;
         const {
             uid,
@@ -46,9 +49,11 @@ class RecentView extends React.Component {
                 onPress={() => onPress(uid)}
                 underlayColor="#EAEAEA"
             >
-                <HomeCard name={`${firstName} ${lastName}`}
-                          major={major}
-                          status={status} />
+                <HomeCard
+                    imgUrl={imgUrl}
+                    name={`${firstName} ${lastName}`}
+                    major={major}
+                    status={status} />
             </TouchableHighlight>
         )
     }

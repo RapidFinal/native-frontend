@@ -1,12 +1,13 @@
 import React from 'react';
 import { StyleSheet, View, Image} from 'react-native';
 import {Text} from "native-base";
+import CircularProfilePhoto from './CircularProfilePhoto';
 
-const HomeCard = ({photo, name, major, status}) => (
+const HomeCard = ({imgUrl, name, major, status}) => (
     <View style={styles.card}>
-        <Image
-            style={styles.image} source = {require('../static/snoopy.jpg')}
-            resizeMode="contain"/>
+        <View style={styles.image}>
+            <CircularProfilePhoto url={imgUrl} diameter={100}/>
+        </View>
         <Text style={styles.title}>{name}</Text>
         <Text style={styles.text}>{major}</Text>
         <Text style={styles.text}>{status}</Text>
@@ -35,10 +36,7 @@ const styles = StyleSheet.create({
     image: {
         justifyContent: 'center',
         alignItems: 'center',
-        marginLeft: 35,
-        height: 100,
-        borderRadius: 50,
-        width: 100,
+        marginLeft: 5,
         marginBottom: 6,
     },
 });
