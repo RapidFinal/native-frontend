@@ -5,6 +5,7 @@ import {StyleSheet, TouchableHighlight} from "react-native";
 import HomeCard from './HomeCard';
 
 class RecentView extends React.Component {
+
     state = {
         firstName: "",
         lastName: "",
@@ -16,7 +17,7 @@ class RecentView extends React.Component {
         this.fetchData()
     }
 
-    fetchData = () => {
+    fetchData() {
         const db = new DatabaseService;
         db.getEmployeeInfo(this.props.userId).then((result) => {
 
@@ -26,7 +27,6 @@ class RecentView extends React.Component {
                 major: result.major,
                 status: result.status
             });
-            console.log('NAME: '+result.firstName)
         })
     }
 
@@ -36,12 +36,11 @@ class RecentView extends React.Component {
             lastName,
             major,
             status
-        } = this.state
-
+        } = this.state;
         const {
             userId,
             onPress
-        } = this.props
+        } = this.props;
         return (
             <TouchableHighlight
                 style={styles.button}
@@ -59,7 +58,6 @@ class RecentView extends React.Component {
 const styles = StyleSheet.create({
     button: {
         alignItems: 'center',
-        // backgroundColor: '#FFFFFF',
         padding: 7,
     },
 });
