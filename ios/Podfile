@@ -6,7 +6,7 @@ target 'JobMe' do
   # use_frameworks!
 
   # Pods for JobMe
-  
+
   pod 'React', :path => '../node_modules/react-native', :subspecs => [
   'Core',
   'CxxBridge', # Include this for RN >= 0.47
@@ -19,7 +19,7 @@ target 'JobMe' do
   ]
   # Explicitly include Yoga if you are using RN >= 0.42.0
   pod 'yoga', :path => '../node_modules/react-native/ReactCommon/yoga'
-  
+
   # Third party deps podspec link
   pod 'DoubleConversion', :podspec => '../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec'
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
@@ -28,6 +28,8 @@ target 'JobMe' do
 
   pod 'ReactNativeSearchBar', :path => '../node_modules/react-native-search-bar'
 
+  pod 'react-native-fetch-blob', :path => '../node_modules/react-native-fetch-blob'
+  pod 'RNImageCropPicker', :path => '../node_modules/react-native-image-crop-picker'
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
   pod 'Firebase/Core', '~> 5.3.0'
   pod 'Firebase/Auth', '~> 5.3.0'
@@ -36,4 +38,10 @@ target 'JobMe' do
   pod 'FBSDKCoreKit'
   pod 'FBSDKShareKit'
   pod 'FBSDKLoginKit'
+
+  target 'JobMeTests' do
+    inherit! :search_paths
+    # Pods for testing
+  end
+
 end
