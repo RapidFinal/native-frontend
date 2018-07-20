@@ -20,7 +20,7 @@ class DatabaseService {
   //   "categoryId1": ["subcategoryId1", "subcategoryId2", "subcategoryId3"],
   //   "categoryId2": ["subcategoryId1", "subcategoryId2", "subcategoryId3"]
   // }
-  static createEmployeeInfo(uid, firstName, lastName, desc, statusId, tags, categories, experiences, major) {
+  createEmployeeInfo(uid, firstName, lastName, desc, statusId, tags, categories, experiences, major) {
     this.getAllTags().then((allTags) => {
       let tagIds = [];
       tags.forEach(tag => {
@@ -65,7 +65,7 @@ class DatabaseService {
   }
 
 
-  static createEmployeeExperiences(uid, title, desc) {
+  createEmployeeExperiences(uid, title, desc) {
     let value = {
       experience_title: title,
       experience_description: desc
@@ -73,19 +73,21 @@ class DatabaseService {
     firebase.database().ref("employeeInfo/" + uid + "/experiences/").push(value)
   }
 
-  // tags = ["java", "python"]
-  createEmployeeProjects(uid, progName, progDesc, date, tags) {
+  // links: {youtube: www.youtube.com
+  //         website: www.helloworld.com}
+  // tag: ["java", "python"]
+  createEmployeeProjects(uid, progName, progDesc, date, tags, links) {
     this.getAllTags().then((allTags) => {
       let progId = firebase.database().ref("employeeInfo/" + uid + "/projects/").push().key;
       let tagIds = [];
       tags.forEach(tag => {
-        if ( allTags[tag] !== null) {
+        if ( typeof(allTags[tag]) !== 'undefined') {
           let tagId = allTags[tag];
           tagIds.push(tagId);
           this.addProjectIdToTag(uid, progId, tagId);
         } else {
           let tagId = firebase.database().ref("tags/").push().key;
-          tagIds.push(allTags[tag]);
+          tagIds.push(tagId);
           firebase.database().ref("tags/" + tagId + "/").set({tagName: tag});
           this.addProjectIdToTag(uid, progId, tagId)
         }
@@ -98,87 +100,116 @@ class DatabaseService {
         tagIds: tagIds
       };
       firebase.database().ref("employeeInfo/" + uid + "/projects/" + progId +"/").set(value);
+
+      if (links !== null) {
+        Object.entries(links).forEach(
+          ([type, link]) => {
+            let val = {type: type,
+              link: link};
+            firebase.database().ref("employeeInfo/" + uid + "/projects/" + progId + "/links/").push(val);
+          })
+      }
     });
   }
 
-  CreateEmployeeSkillSet(uid, skill) {
-    this.getEmployeeSkillSet(uid).then(skills => {
-      // console.log(skills.val());
-      skills[skill] = true;
-      firebase.database().ref("employeeInfo/" + uid + "/skillSet/").set(skills);
-    })
+  createEmployeeSkillSet(uid, skill, cb) {
+    firebase.database().ref("employeeInfo/" + uid + "/skillSet/").push(skill, cb);
   }
-
-  getEmployeeSkillSet(uid) {
-    return new Promise((resolve, reject) => {
-      firebase.database().ref("employeeInfo/" + uid + "/skillSet/").once('value').then(snapshot => {
-        resolve(snapshot.val());
-      });
-    });
-  }
-
 
   getEmployeeInfo(uid) {
     return new Promise((resolve, reject) => {
-      firebase.database().ref("employeeInfo/" + uid + "/").once('value').then((snapshot) => {
-        this.getStatus(snapshot.val().statusId).then(status => {
-          const ret = {};
-          let val = snapshot.val();
+      this.getCategoriesInfo().then(allCats => {
+        firebase.database().ref("employeeInfo/" + uid + "/").once('value').then((snapshot) => {
+          this.getStatus(snapshot.val().statusId).then(status => {
+            const ret = {};
+            let val = snapshot.val();
 
-          let ex = [];
-          if (typeof(val.experiences) !== 'undefined'){
-            Object.entries(val.experiences).forEach( ([id, info]) => {
-              ex.push({title: info.experience_title, description: info.experience_description});
-            });
-          } else {
-            ex = [];
-          }
+            let cat = [];
+            Object.entries(val.categories).forEach(
+              ([categoryId, subCatIds]) => {
+                let tmp = {};
+                let arr = [];
+                subCatIds.subCategoryIds.forEach( (subCatId) => {
+                  let subCats = {
+                    subCategoryId: subCatId,
+                    subCategoryName: allCats[categoryId].subCategory[subCatId].subCategoryName
+                  };
+                  arr.push(subCats);
+                });
+                tmp.categoryId = categoryId;
+                tmp.categoryName = allCats[categoryId].categoryName;
+                tmp.subCategory = arr;
+                cat.push(tmp);
+              }
+            );
 
-          let prog = [];
-          // console.log(val.projects);
-          if (typeof(val.projects) !== 'undefined'){
-            Object.entries(val.projects).forEach( ([id, info]) => {
-              prog.push({name: info.projectName, description: info.projectDescription,
-                date: info.date, tags: info.tagIds});
-            });
-          } else {
-            prog = [];
-          }
+            let ex = [];
+            if (typeof(val.experiences) !== 'undefined'){
+              Object.entries(val.experiences).forEach( ([id, info]) => {
+                ex.push({id: id, title: info.experience_title, description: info.experience_description});
+              });
+            } else {
+              ex = [];
+            }
 
-          let skills = [];
-          if (typeof(val.skillSet) !== 'undefined'){
-            Object.entries(val.skillSet).forEach( ([skill, bool]) => {
-              skills.push(skill);
-            });
-          } else {
-            skills = [];
-          }
+            let prog = [];
+            if (typeof(val.projects) !== 'undefined'){
+              Object.entries(val.projects).forEach( ([id, info]) => {
+                let tmp = [];
+                Object.entries(info.links).forEach(([id, val]) => {
+                  let v = {};
+                  v[id] = id;
+                  v["type"] = val.type;
+                  v["links"] = val.link;
+                  tmp.push(v);
+                });
+                prog.push({id:id, name: info.projectName, description: info.projectDescription,
+                  date: info.date, tags: info.tagIds, links: tmp});
+              });
+            } else {
+              prog = [];
+            }
 
-          let imgUrl = "";
-          if (typeof(val.imgUrl) !== 'undefined'){
-            imgUrl = val.imgUrl;
-          } else {
-            imgUrl = "";
-          }
+            let skills = [];
+            if (typeof(val.skillSet) !== 'undefined'){
+              Object.entries(val.skillSet).forEach( ([id, skill]) => {
+                let tmp = {
+                  id: id,
+                  skill: skill
+                };
+                skills.push(tmp);
+              });
+            } else {
+              skills = [];
+            }
 
-          ret.firstName = val.firstName;
-          ret.lastName = val.lastName;
-          ret.description = val.description;
-          ret.imgUrl = imgUrl;
-          ret.status = status;
-          ret.experiences = ex;
-          ret.tagIds = val.tagIds;
-          ret.projects = prog;
-          ret.skillSet = skills;
-          ret.major = val.major;
-          resolve(ret)
-        })
+            let imgUrl = "";
+            if (typeof(val.imgUrl) !== 'undefined'){
+              imgUrl = val.imgUrl;
+            } else {
+              imgUrl = "";
+            }
+
+            ret.firstName = val.firstName;
+            ret.lastName = val.lastName;
+            ret.description = val.description;
+            ret.imgUrl = imgUrl;
+            ret.status = status;
+            ret.experiences = ex;
+            ret.tagIds = val.tagIds;
+            ret.projects = prog;
+            ret.skillSet = skills;
+            ret.major = val.major;
+            ret.categories = cat;
+            resolve(ret)
+          });
+        });
       });
     });
   }
 
-  updateEmployeeDegree(uid, degree) {
-    firebase.database().ref("employeeInfo/" + uid + "/degree").set(degree);
+  updateEmployeeMajor(uid, major) {
+    firebase.database().ref("employeeInfo/" + uid + "/major").set(major);
   }
 
   updateEmployeeFirstName(uid, firstName) {
@@ -225,10 +256,24 @@ class DatabaseService {
     });
   }
 
-  // exp = {title: "title2", desc: "defefefefefefer"}, {title: "title3", desc: "defefefefefefer"}
-  // need to talk with sky on the the process of edit
-  updateEmployeeExperience(uid, exp) {
+  updateEmployeeSkillSet(uid, skillId, skill, onComplete) {
+    firebase.database().ref("employeeInfo/" + uid + "/skillSet/" + skillId + "/").set(skill, onComplete);
+  }
 
+  deleteEmployeeSkillSet(uid, skillId, onComplete) {
+    firebase.database().ref("employeeInfo/" + uid + "/skillSet/" + skillId + "/").remove(onComplete);
+  }
+
+  updateEmployeeExperience(uid, expId, title, desc) {
+    let val = {
+      experience_title: title,
+      experience_description: desc
+    };
+    firebase.database().ref("employeeInfo/" + uid + "/experiences/" + expId + "/").set(val);
+  }
+
+  deleteEmployeeExperience(uid, expId){
+    firebase.database().ref("employeeInfo/" + uid + "/experiences/" + expId + "/").remove();
   }
 
   updateEmployeeProject(uid, projectId, progName, progDesc, date, tags) {
@@ -265,6 +310,10 @@ class DatabaseService {
     });
   }
 
+  deleteEmployeeProject(uid, projectId){
+    firebase.database().ref("employeeInfo/" + uid + "/projects/" + projectId + "/").remove();
+  }
+
   getEmployeeTags(uid) {
     return new Promise((resolve, reject) => {
       firebase.database().ref("employeeInfo/" + uid + "/tagIds/").once('value').then((snapshot) => {
@@ -277,19 +326,18 @@ class DatabaseService {
     firebase.database().ref("employeeInfo/" + uid + "/imgUrl/").set(url);
   }
 
-  // assume you want to get at projects filed
-  // getEmployeeInfoAt("uid", "projects") -> array of object
-  //                                      -> [{},{}]
-  getEmployeeInfoAt(uid, field) {
-    let ret = [{
-      name: "Note Sharing", description: "a web application to share and comment notes",
-      date: "01/06/2018", tags: ["firebase", "Vue", "Cordova"]
-    }];
-    return ret;
-  }
-
-  updateEmployeeLiked(uid, val){
-    firebase.database().ref("employeeInfo/" + uid + "/liked/").set(val);
+  /* All employeeInfo must be created with the node "liked: 0"*/
+  updateEmployeeLiked(uid, operator){
+    firebase.database().ref("employeeInfo/" + uid + "/liked/").transaction((currentVal) => {
+      if (currentVal !== null) {
+        if (operator === "increment") currentVal++;
+        else if (operator === "decrement") currentVal--
+      }
+      else {
+        // run commitSuicide.exe
+      }
+      return currentVal;
+    });
   }
 
   getEmployeeLiked(uid) {
@@ -297,6 +345,76 @@ class DatabaseService {
       firebase.database().ref("employeeInfo/" + uid + "/liked/").once('value').then(function(snapshot) {
         resolve(snapshot.val())
       });
+    });
+  };
+
+  updateEmployeeRecentView(uid, recentViewUid) {
+    this.getEmployeeRecentView(uid).then(recentViews => {
+      let val = [];
+      if (recentViews === []) {
+        val.push(recentViewUid);
+        firebase.database().ref("employeeInfo/" + uid + "/recentViews/").set(val);
+      } else {
+        val = recentViews.reverse();
+        if (recentViews.length < 5){
+          if (recentViews.includes(recentViewUid)){
+            let index = recentViews.indexOf(recentViewUid);
+            val.splice(index, 1);
+            val.push(recentViewUid)
+          } else {
+            val.push(recentViewUid);
+          }
+        } else {
+          if (recentViews.includes(recentViewUid)){
+            let index = recentViews.indexOf(recentViewUid);
+            val.splice(index, 1);
+            val.push(recentViewUid)
+          } else {
+            val.splice(0, 1);
+            val.push(recentViewUid);
+          }
+        }
+        firebase.database().ref("employeeInfo/" + uid + "/recentViews/").set(val.reverse());
+      }
+    })
+  }
+
+  getEmployeeRecentView(uid) {
+    return new Promise((resolve, reject) => {
+      firebase.database().ref("employeeInfo/" + uid + "/recentViews/").once('value').then(function(snapshot) {
+        if (snapshot.val() === null){
+          resolve([])
+        } else {
+          resolve(snapshot.val())
+        }
+      });
+    });
+  }
+
+  // cat = map of categoey-subcategory that selected
+  // {
+  //   "categoryId1": ["subcategoryId1", "subcategoryId2", "subcategoryId3"],
+  //   "categoryId2": ["subcategoryId1", "subcategoryId2", "subcategoryId3"]
+  // }
+  updateEmployeeCategories(uid, cat) {
+    let val = {}
+    Object.entries(cat).forEach(
+      ([categoryId, subCatIds]) => {
+        val[categoryId] = {subCategoryIds: subCatIds}
+      }
+    );
+    firebase.database().ref("employeeInfo/" + uid + "/categories/").set(val);
+  }
+
+  getEmployeeCategories(uid){
+    return new Promise((resolve, reject) => {
+      firebase.database().ref("employeeInfo/" + uid + "/categories/").once('value').then((snapshot) => {
+        let ret = {}
+        snapshot.forEach(s => {
+          ret[s.key] = s.val().subCategoryIds;
+        })
+        resolve(ret);
+      })
     });
   }
 
@@ -336,12 +454,83 @@ class DatabaseService {
     firebase.database().ref("employerInfo/" + uid + "/lastName").set(lastName);
   }
 
-  updateEmployerDescription(uid, desc) {
-    firebase.database().ref("employerInfo/" + uid + "/deacription").set(desc);
+  updateEmployerCompanyName(uid, companyName) {
+    firebase.database().ref("employerInfo/" + uid + "/companyName").set(companyName);
   }
 
+  // cat = map of categoey-subcategory that selected
+  // {
+  //   "categoryId1": ["subcategoryId1", "subcategoryId2", "subcategoryId3"],
+  //   "categoryId2": ["subcategoryId1", "subcategoryId2", "subcategoryId3"]
+  // }
   updateEmployerCategories(uid, cat) {
+    let val = {}
+    Object.entries(cat).forEach(
+      ([categoryId, subCatIds]) => {
+        val[categoryId] = {subCategoryIds: subCatIds}
+      }
+    );
+    firebase.database().ref("employerInfo/" + uid + "/categories/").set(val);
+  }
 
+
+  // {
+  //   "categoryId1": ["subcategoryId1", "subcategoryId2", "subcategoryId3"],
+  //   "categoryId2": ["subcategoryId1", "subcategoryId2", "subcategoryId3"]
+  // }
+  getEmployerCategories(uid){
+    return new Promise((resolve, reject) => {
+      firebase.database().ref("employerInfo/" + uid + "/categories/").once('value').then((snapshot) => {
+        let ret = {};
+        snapshot.forEach(s => {
+          ret[s.key] = s.val().subCategoryIds;
+        });
+        resolve(ret);
+      })
+    });
+  }
+
+  updateEmployerRecentView(uid, recentViewUid) {
+    this.getEmployerRecentView(uid).then(recentViews => {
+      let val = [];
+      if (recentViews === []) {
+        val.push(recentViewUid);
+        firebase.database().ref("employerInfo/" + uid + "/recentViews/").set(val);
+      } else {
+        val = recentViews.reverse();
+        if (recentViews.length < 5){
+          if (recentViews.includes(recentViewUid)){
+            let index = recentViews.indexOf(recentViewUid);
+            val.splice(index, 1);
+            val.push(recentViewUid)
+          } else {
+            val.push(recentViewUid);
+          }
+        } else {
+          if (recentViews.includes(recentViewUid)){
+            let index = recentViews.indexOf(recentViewUid);
+            val.splice(index, 1);
+            val.push(recentViewUid)
+          } else {
+            val.splice(0, 1);
+            val.push(recentViewUid);
+          }
+        }
+        firebase.database().ref("employerInfo/" + uid + "/recentViews/").set(val.reverse());
+      }
+    })
+  }
+
+  getEmployerRecentView(uid) {
+    return new Promise((resolve, reject) => {
+      firebase.database().ref("employerInfo/" + uid + "/recentViews/").once('value').then(function(snapshot) {
+        if (snapshot.val() === null){
+          resolve([])
+        } else {
+          resolve(snapshot.val())
+        }
+      });
+    });
   }
 
   // ret = {firstName: "Alice", lastName:"Smith", companyName: "MUIC", imgUrl,
@@ -372,7 +561,7 @@ class DatabaseService {
         firebase.database().ref("employerInfo/" + uid + "/").once('value').then((snapshot) => {
           const ret = {};
           let val = snapshot.val();
-          let cat = []
+          let cat = [];
           Object.entries(val.categories).forEach(
             ([categoryId, subCatIds]) => {
               let tmp = {};
@@ -381,12 +570,12 @@ class DatabaseService {
                 let subCats = {
                   subCategoryId: subCatId,
                   subCategoryName: allCats[categoryId].subCategory[subCatId].subCategoryName
-                }
+                };
                 arr.push(subCats);
               });
               tmp.categoryId = categoryId;
               tmp.categoryName = allCats[categoryId].categoryName;
-              tmp.subCategory = arr
+              tmp.subCategory = arr;
               cat.push(tmp);
             }
           );
@@ -411,9 +600,7 @@ class DatabaseService {
 
   likedEmployee(employerUid, employeeUid){
     this.getLikedEmployee(employerUid).then((list) => {
-      this.getEmployeeLiked(employeeUid).then((liked) => {
-        this.updateEmployeeLiked(employeeUid, liked+1)
-      });
+      this.updateEmployeeLiked(employeeUid, "increment");
       if (typeof(list[employeeUid]) === 'undefined'){
         list[employeeUid] = true;
         firebase.database().ref("employerInfo/" + employerUid + "/likedEmployee/").set(list);
@@ -424,14 +611,8 @@ class DatabaseService {
 
   unLikedEmployee(employerUid, employeeUid){
     this.getLikedEmployee(employerUid).then((list) => {
-      this.getEmployeeLiked(employeeUid).then((liked) => {
-        this.updateEmployeeLiked(employeeUid, liked-1)
-      });
+      this.updateEmployeeLiked(employeeUid, "decrement");
       firebase.database().ref("employerInfo/" + employerUid + "/likedEmployee/" + employeeUid + "/").remove();
-    });
-
-    this.getEmployeeLiked(employeeUid).then((liked) => {
-      this.updateEmployeeLiked(uid, liked-1)
     });
   }
 
@@ -473,7 +654,7 @@ class DatabaseService {
   // return map of id and status
   // {"id1": "looking for job",
   //  "id2": "looking for opportunity"}
-  static getAllStatus() {
+  getAllStatus() {
     return new Promise((resolve, reject) => {
       firebase.database().ref("status/").once('value').then((snapshot) => {
         const ret = {};
@@ -508,7 +689,7 @@ class DatabaseService {
     });
   }
 
-  static addUidToSubCategory(uid, catId, subCatIds) {
+  addUidToSubCategory(uid, catId, subCatIds) {
     Object.entries(subCatIds).forEach(([i, subCatId]) => {
       this.getEmployeeFromSubCategory(catId).then(employeeIds => {
         if (typeof(employeeIds[uid]) === 'undefined'){
@@ -520,7 +701,7 @@ class DatabaseService {
   }
 
   // return array of uids
-  static getEmployeeFromSubCategory(catId, subCatId) {
+  getEmployeeFromSubCategory(catId, subCatId) {
     return new Promise((resolve, reject) => {
       firebase.database().ref("categories/" + catId + "/subCategories/" + subCatId + "/").once('value').then(function(snapshot) {
         if (snapshot.hasChild("employeeIds")){
@@ -562,22 +743,27 @@ class DatabaseService {
   //     }]
   static getAllCategories() {
     return new Promise((resolve, reject) => {
-      firebase.database().ref("categories/").once('value').then(function(snapshot) {
-        // console.log(snapshot.val());
-        let ret = [];
-        snapshot.forEach(cat => {
-          let tmpObj = {};
-          let tmpArray = [];
-          Object.entries(cat.val().subCategories).forEach(([key, info]) => {
-            tmpArray.push({subCategoryId: key, subCategoryName: info.subCategoryName})
-          });
-          tmpObj.subCategory = tmpArray;
-          tmpObj.categoryId = cat.key;
-          tmpObj.categoryName = cat.val().categoryName;
-          ret.push(tmpObj);
-        });
-        resolve(ret);
-      });
+      firebase.database().ref("categories/").once('value')
+          .then(function(snapshot) {
+            // console.log(snapshot.val());
+            const ret = [];
+            snapshot.forEach(cat => {
+              const tmpObj = {};
+              const tmpArray = [];
+              Object.entries(cat.val().subCategories).forEach(([key, info]) => {
+                tmpArray.push({subCategoryId: key, subCategoryName: info.subCategoryName})
+              });
+              tmpObj.subCategory = tmpArray;
+              tmpObj.categoryId = cat.key;
+              tmpObj.categoryName = cat.val().categoryName;
+              ret.push(tmpObj);
+            });
+            resolve(ret);
+          })
+          .catch((e) => {
+            // TODO: Handle error
+              reject(e)
+          })
     });
   }
 
@@ -588,7 +774,7 @@ class DatabaseService {
     firebase.database().ref("tags/").push({tagName: tagName});
   }
 
-  static addUidToTag(uid, tagId) {
+  addUidToTag(uid, tagId) {
     this.getEmployeeFromTag(tagId).then(employeeIds => {
       if (typeof(employeeIds[uid]) === 'undefined'){
         employeeIds[uid] = true;
@@ -607,7 +793,7 @@ class DatabaseService {
   }
 
   // return array of uid
-  static getEmployeeFromTag(tagId) {
+  getEmployeeFromTag(tagId) {
     return new Promise((resolve, reject) => {
       firebase.database().ref("tags/" + tagId + "/").once('value').then(function(snapshot) {
         if (snapshot.hasChild("employeeIds")){
@@ -637,7 +823,7 @@ class DatabaseService {
   }
 
   // categoryId that employee pick
-  static getSuggestedTagsFrom(categoryId) {
+  getSuggestedTagsFrom(categoryId) {
     return new Promise((resolve, reject) => {
       firebase.database().ref("suggestedTags/" + categoryId + "/").once('value').then(function(snapshot) {
         resolve(snapshot.val().suggestions);
@@ -654,7 +840,7 @@ class DatabaseService {
     });
   }
 
-  static getAllTags() {
+  getAllTags() {
     return new Promise((resolve, reject) => {
       firebase.database().ref("tags/").once('value').then(function(snapshot) {
         // resolve(snapshot);

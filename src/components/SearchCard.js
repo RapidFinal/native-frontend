@@ -5,45 +5,34 @@ import { StyleSheet, SafeAreaView, View } from 'react-native';
 import { Container, Content, Card, CardItem, Thumbnail, Text, Button, Left, Body, Right } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Tags from 'react-native-tags';
+import TagInput from 'react-native-tag-input';
 
 class SearchCard extends Component {
 
     static propTypes = {
-        results: PropTypes.array.isRequired
+        results: PropTypes.array.isRequired,
+        onPress: PropTypes.func.isRequired
     };
     state = { };
 
-    // componentDidUpdate(prevProps) {
-    //     if (this.props.results === prevProps.results)
-	  //         return true;
-    // }
-
     render() {
         const {} = this.state;
-        const { results } = this.props;
-        //console.log("SearchCard Results:", results);
-
-        // Use a LIST???
-
+        const { results, onPress } = this.props;
         return (
-            <SafeAreaView style={{
-                flex: 1,
-                // flexDirection: 'column',
-                // justifyContent: 'space-between',
-                // alignItems: 'flex-start',
-                // flexWrap: 'wrap'
-            }}>
-                <Content style={{flex: 1}}>
+            <SafeAreaView style={styles.container}>
+                <Content style={styles.container}>
             { results.map( (i, d) =>
                 <Card key={d}>
-                    <CardItem bordered>
+                    <CardItem button onPress={() => onPress(i.uid)}>
                         <Left>
-                            <Thumbnail style={{width: 105, height: 105, borderRadius: 105/2}}
+                            <Thumbnail style={styles.thumbnail}
                                        source={ (i.imgUrl) ? {uri: i.imgUrl} : require('../static/placeholder.png')}/>
                             <Body>
                                 <Text>{i.firstName} {i.lastName}</Text>
-                                <Text note style={{fontSize: 12, color: "black"}}>{i.status} <Icon name='circle' color='green' style={{fontSize: 12, color: 'green'}}/></Text>
-                                <Text note style={{fontSize: 12}}>{i.major}</Text>
+                                <Text note style={styles.statusText}>
+                                      {i.status} <Icon name='circle' color='green' style={{fontSize: 12, color: 'green'}}/>
+                                </Text>
+                                <Text note style={styles.majorText}>{i.major}</Text>
                                 <Tags
                                     initialTags={(i.tags) ? i.tags : []}
                                     readonly={true}
@@ -57,12 +46,29 @@ class SearchCard extends Component {
             )}
                 </Content>
             </SafeAreaView>
-        )
+        );
     }
 }
 
 const styles = StyleSheet.create({
-
+    container: {
+        flex: 1
+    },
+    thumbnail: {
+        width: 105,
+        height: 105,
+        borderRadius: 105/2
+    },
+    statusText:{
+        fontSize: 12,
+        color: 'black'
+    },
+    majorText: {
+        fontSize: 12
+    },
+    tagText: {
+        fontSize: 11
+    }
 });
 
-export default compose() (SearchCard)
+export default compose() (SearchCard);

@@ -2,27 +2,27 @@ import React from 'react'
 import {withContext} from "../../context/withContext";
 import compose from "recompose/compose";
 import hoistStatics from "recompose/hoistStatics";
-import {Container} from "native-base";
+import {Container, Toast} from "native-base";
 import {FacebookAuthentication, CredentialAuthentication} from '../../api/authentication/index'
 import {
     ClickButton
 } from '../../components/index'
 import {
-    Alert, StyleSheet
+    Alert, StyleSheet, Text, TouchableOpacity
 } from 'react-native'
 
 // TODO: Fix proxy component problem
 class AccountManagement extends React.Component {
 
-    logout = () => {
+    logout = async () => {
         const {authProvider} = this.props.context;
         switch (authProvider){
             case "password":
-                CredentialAuthentication.signout();
+                await CredentialAuthentication.signout();
                 break;
 
             case "facebook.com":
-                FacebookAuthentication.facebookLogout();
+                await FacebookAuthentication.facebookLogout();
                 break;
         }
     };
@@ -62,22 +62,63 @@ class AccountManagement extends React.Component {
         this.props.navigation.navigate("ChangePassword");
     };
 
-    sendVerificationEmail = () => {
-        CredentialAuthentication.sendEmailVerification().then(() => {
-            console.log("Auth Email Sent")
-        })
+    showToast = ({text, duration=3500, type="success", buttonText="Okey"}) => {
+        Toast.show({
+            text,
+            duration,
+            type,
+            buttonText
+        });
+    }
+
+    sendVerificationEmail = async () => {
+        try {
+            const verify = await CredentialAuthentication.sendEmailVerification()
+            this.showToast({
+                text: "Verification email send"
+            })
+        } catch (e) {
+            if (e.code !== null || e.code !== undefined){
+                this.showToast({
+                    text: e.message,
+                    type: "warning"
+                })
+            } else {
+                this.showToast({
+                    text: "There was a problem sending verification email",
+                    type: "warning"
+                })
+            }
+        }
+    };
+
+    editProfile = (uid) => () => {
+        this.props.navigation.navigate("EditEmployerProfile", {uid})
     }
 
     render(){
-        const {authProvider, emailVerified} = this.props.context
+        const {authProvider, emailVerified, role, currentUser} = this.props.context
         return (
             <Container style={styles.container}>
                 {
-                    authProvider === "password" && !emailVerified && (<ClickButton onPress={this.sendVerificationEmail}>Resent Confirmation Email</ClickButton>)
+                    authProvider === "password" && !emailVerified && (<ClickButton warning rounded onPress={this.sendVerificationEmail}>Resent Confirmation Email</ClickButton>)
                 }
-                <ClickButton onPress={this.changeEmail}>Change Email</ClickButton>
-                <ClickButton onPress={this.changePassword}>Change Password</ClickButton>
-                <ClickButton danger onPress={this.logout}>Logout</ClickButton>
+                {
+                    role === "employer" && (
+                        <ClickButton rounded onPress={this.editProfile(currentUser.uid)}>Edit Profile</ClickButton>
+                    )
+                }
+                {
+                    authProvider === "password" && (
+                        <ClickButton rounded onPress={this.changeEmail}>Change Email</ClickButton>
+                    )
+                }
+                {
+                    authProvider === "password" && (
+                        <ClickButton rounded onPress={this.changePassword}>Change Password</ClickButton>
+                    )
+                }
+                <ClickButton rounded danger onPress={this.logout}>Logout</ClickButton>
             </Container>
         )
     }

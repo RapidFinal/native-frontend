@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import PropTypes from 'prop-types';
-import {StyleSheet, SafeAreaView, Alert} from 'react-native';
+import {StyleSheet, SafeAreaView, Alert, View} from 'react-native';
 import { Container, Content, Card, CardItem, Thumbnail, Text, Button, Left, Body, Right } from 'native-base';
-import Icon from 'react-native-vector-icons/FontAwesome'
+import Icon from 'react-native-vector-icons/FontAwesome';
 import Tags from 'react-native-tags';
 import SnackBar from 'react-native-snackbar-component'
 import ActionSheet from "react-native-actionsheet";
@@ -38,57 +38,75 @@ class LikeCard extends Component {
     }
 
     render() {
-        return (
-            <SafeAreaView style={{
-                flex: 1,
-            }}>
-                <Content style={{flex: 1}}>
-                    { this.state.profiles.map( (i, d) =>
-                        <Card key={d}>
-                            <CardItem bordered button onPress={this.showActionSheet.bind(this,d)}>
-                                <Left>
-                                    <Thumbnail style={{width: 105, height: 105, borderRadius: 105/2}}
-                                               source={{uri: i.imgUrl}}/>
-                                    <Body>
-                                    <Text>{i.firstName} {i.lastName}</Text>
-                                    <Text note style={{fontSize: 12, color: "black"}}>{i.status} <Icon name='circle' color='green' style={{fontSize: 12, color: 'green'}}/></Text>
-                                    <Text note style={{fontSize: 12}}>{i.major}</Text>
-                                    <Tags
-                                        initialTags={["java", "css"]}
-                                        readonly={true}
-                                        tagTextStyle={{fontSize: 11}}
-                                        onTagPress={() => {return null;}}
-                                    />
-                                    </Body>
-                                </Left>
-                            </CardItem>
-                            <ActionSheet
-                                ref={o => this.actionSheetRefs[d] = o}
-                                options={['Cancel', 'Go to profile', "Remove"]}
-                                title= {i.firstName + " " + i.lastName}
-                                cancelButtonIndex={0}
-                                onPress={(buttonIndex) => {
-                                    if (buttonIndex === 1) this.goToProfile();
-                                    if (buttonIndex === 2) this.showDeleteAlert(d);
-                                }}
-                            />
-                        </Card>
-                    )}
-                </Content>
-                <SnackBar visible={this.state.showDeleteSnackbar} textMessage={this.state.deleteSnackbarMessage} accentColor="green" actionHandler={()=>this.restoreProfileToDB()} actionText="Undo"/>
-                <SnackBar visible={this.state.showRestoreSnackbar} textMessage={this.state.restoreSnackbarMessage} accentColor="green" actionHandler={
-                    () => {this.setState({showRestoreSnackbar: false});}
+        const {profiles} = this.state;
+        if (profiles.length === 0) return (
+            <View style = {styles.NothingContainer}>
+                <Text>
+                    Nothing here, but us chickens
+                </Text>
+                <SnackBar visible={this.state.showDeleteSnackbar} textMessage={this.state.deleteSnackbarMessage}
+                          accentColor="green" actionHandler={() => this.restoreProfileToDB()} actionText="Undo"/>
+                <SnackBar visible={this.state.showRestoreSnackbar} textMessage={this.state.restoreSnackbarMessage}
+                          accentColor="green" actionHandler={
+                    () => {
+                        this.setState({showRestoreSnackbar: false});
+                    }
                 } actionText="Close"/>
-            </SafeAreaView>
-        )
+            </View>
+        );
+        else {
+            return (
+                <SafeAreaView style={styles.container}>
+                    <Content style={styles.container}>
+                        { this.state.profiles.map( (i, d) =>
+                            <Card key={d}>
+                                <CardItem bordered button onPress={this.showActionSheet.bind(this,d)}>
+                                    <Left>
+                                        <Thumbnail style={styles.thumbnail}
+                                                   source={ (i.imgUrl) ? {uri: i.imgUrl} : require('../static/placeholder.png')}/>
+                                        <Body>
+                                        <Text>{i.firstName} {i.lastName}</Text>
+                                        <Text note style={styles.statusText}>
+                                            {i.status} <Icon name='circle' color='green' style={{fontSize: 12, color: 'green'}}/>
+                                        </Text>
+                                        <Text note style={styles.majorText}>{i.major}</Text>
+                                        <Tags
+                                            initialTags={(i.tags) ? i.tags : []}
+                                            readonly={true}
+                                            tagTextStyle={{fontSize: 11}}
+                                            onTagPress={() => {return null;}}
+                                        />
+                                        </Body>
+                                    </Left>
+                                </CardItem>
+                                <ActionSheet
+                                    ref={o => this.actionSheetRefs[d] = o}
+                                    options={['Cancel', 'Go to profile', "Remove"]}
+                                    title= {i.firstName + " " + i.lastName}
+                                    cancelButtonIndex={0}
+                                    onPress={(buttonIndex) => {
+                                        if (buttonIndex === 1) this.goToProfile(i.uid);
+                                        if (buttonIndex === 2) this.showDeleteAlert(d);
+                                    }}
+                                />
+                            </Card>
+                        )}
+                    </Content>
+                    <SnackBar visible={this.state.showDeleteSnackbar} textMessage={this.state.deleteSnackbarMessage} accentColor="green" actionHandler={()=>this.restoreProfileToDB()} actionText="Undo"/>
+                    <SnackBar visible={this.state.showRestoreSnackbar} textMessage={this.state.restoreSnackbarMessage} accentColor="green" actionHandler={
+                        () => {this.setState({showRestoreSnackbar: false});}
+                    } actionText="Close"/>
+                </SafeAreaView>
+            )
+        }
     }
 
     showActionSheet = (index) => {
         this.actionSheetRefs[index].show()
     };
 
-    goToProfile = () => {
-        this.props.navigation.navigate("View");
+    goToProfile = (uid) => {
+        this.props.navigation.navigate('View', { uid: uid});
     };
 
     restoreProfileToDB = () => {
@@ -144,7 +162,29 @@ class LikeCard extends Component {
 }
 
 const styles = StyleSheet.create({
-
+    NothingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    container: {
+        flex: 1
+    },
+    thumbnail: {
+        width: 105,
+        height: 105,
+        borderRadius: 105/2
+    },
+    statusText:{
+        fontSize: 12,
+        color: 'black'
+    },
+    majorText: {
+        fontSize: 12
+    },
+    tagText: { // Not currently used due to throwing warning
+        fontSize: 11
+    }
 });
 
 export default compose() (withNavigation(LikeCard))

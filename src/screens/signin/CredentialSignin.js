@@ -27,7 +27,8 @@ class CredentialSignin extends React.Component {
 
     state = {
         email: "",
-        password: ""
+        password: "",
+        disableSignin: false
     };
 
     handleStateChange = (name) => (e) => {
@@ -44,40 +45,65 @@ class CredentialSignin extends React.Component {
         })
     };
 
+    showToast = ({text, duration=3500, type="success", buttonText="Okey"}) => {
+        Toast.show({
+            text,
+            duration,
+            type,
+            buttonText
+        });
+    };
+
     handleSigin = async () => {
-        const {email, password} = this.state;
-        try {
-            const auth = await CredentialAuthentication.signin({email, password})
-            if (auth !== null){
-                this.props.navigation.navigate("MainEmployer")
+
+        this.setState({
+            disableSignin: true,
+
+        }, async () => {
+
+            const {email, password} = this.state;
+            try {
+                await CredentialAuthentication.signin({email, password})
+                this.setState({
+                    disableSignin: false
+                })
+
+            } catch (e) {
+
+                console.log(e.code);
+                console.log(e.message)
+
+                this.setState({
+                    signinState: "Sign in",
+                    disableSignin: false
+                }, () => {
+                    if (e.code === "auth/invalid-email"){
+                        this.showToast({
+                            text: "Incorrect email format",
+                            type: "warning"
+                        });
+                    } else {
+                        this.showToast({
+                            text: "Incorrect Email or Password",
+                            type: "warning"
+                        });
+                    }
+                })
             }
-        } catch (e) {
 
-            console.log(e.code)
+        })
 
-            let message = "Incorrect Email or Password"
-            if (e.code === "auth/invalid-email"){
-                message = "Incorrect email format"
-            }
 
-            Toast.show({
-                text: message,
-                buttonText: "Okay",
-                type: "warning",
-                duration: 3500
-            })
-
-        }
     };
 
     render(){
-        const {email, password} = this.state;
+        const {email, password, signinState, disableSignin} = this.state;
         return (
             <Container style={{paddingTop: "20%"}}>
                 <TextInput text={"Email"} onChange={this.handleStateChange("email")} value={email} />
                 <TextInput text={"Password"} onChange={this.handleStateChange("password")} value={password} secureTextEntry={true} />
                 <Container style={styles.buttonContainer}>
-                    <ClickButton rounded onPress={this.handleSigin}>Signin</ClickButton>
+                    <ClickButton disabled={disableSignin} rounded onPress={this.handleSigin}>{disableSignin ? "Signing in..." : "Sign in"}</ClickButton>
                 </Container>
             </Container>
         )
@@ -88,7 +114,6 @@ class CredentialSignin extends React.Component {
 const styles = StyleSheet.create({
     form: {
         paddingTop: '15%'
-
     },
     textInput: {
         marginBottom: "2%",
