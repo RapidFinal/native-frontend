@@ -22,7 +22,9 @@ class Home extends React.Component {
 
     static propTypes = {
         searchText: PropTypes.string,
-        recentViewUsers: PropTypes.arrayOf(PropTypes.string),
+        recentView: PropTypes.array,
+        recommendedUsers: PropTypes.array,
+        showRecentView: PropTypes.boo,
     };
 
     static navigationOptions = ({ navigation }) => ({
@@ -92,10 +94,10 @@ class Home extends React.Component {
     };
 
     fetchRecommended = (uid) => {
-        let realLink = 'recommendation.jobme.teparak.me/getRecommendation?uid='+uid;
+        let realLink = 'https://recommendation.jobme.teparak.me/getRecommendation?uid='+uid;
         let testLink = 'http://172.20.10.2:5000/getRecommendation?uid='+uid;
         let data;
-        axios.get(testLink)
+        axios.get(realLink)
             .then((response) =>  {
                 // handle success
                 console.log('response:', response.data);

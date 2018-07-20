@@ -3,15 +3,25 @@ import React from "react";
 import compose from "recompose/compose";
 import {StyleSheet, TouchableHighlight} from "react-native";
 import HomeCard from './HomeCard';
+import PropTypes from 'prop-types'
 
 class HomeView extends React.Component {
 
+    static propTypes = {
+        firstName: PropTypes.string,
+        lastName: PropTypes.string,
+        major: PropTypes.string,
+        status: PropTypes.string,
+        imgUrl: PropTypes.string,
+        uid: PropTypes.string
+    };
+
     state = {
-        firstName: "",
-        lastName: "",
-        major: "",
-        status: "",
-        imgUrl: "",
+        firstName: '',
+        lastName: '',
+        major: '',
+        status: '',
+        imgUrl: '',
     }
 
     componentDidMount = () =>{
