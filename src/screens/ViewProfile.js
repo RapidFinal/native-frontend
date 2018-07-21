@@ -42,7 +42,6 @@ class ViewProfile extends React.Component {
         scrollView: null,
         isTimeline: true,
         canLike: false,
-        favIcon: "ios-heart",
         liked: false,
         major: "",
         categories: [],
@@ -68,10 +67,6 @@ class ViewProfile extends React.Component {
             fetchData: this.fetchData.bind(this),
             scrollToTop: this.scrollToTop.bind(this)
         })
-        // this.setCanLike();
-        // this.setLiked();
-        // this.updateRecentView();
-        // this.setIsEmployeeProfile();
     }
 
 
@@ -126,7 +121,6 @@ class ViewProfile extends React.Component {
             scrollView: null,
             isTimeline: true,
             canLike: false,
-            favIcon: "ios-heart",
             liked: false,
             major: "",
             categories: [],
@@ -195,7 +189,6 @@ class ViewProfile extends React.Component {
                     if (result[paramUid]) {
                         this.setState({
                             liked: true,
-                            favIcon: "ios-heart"
                         })
                     }
                 })
@@ -211,14 +204,12 @@ class ViewProfile extends React.Component {
             let result = await db.unLikedEmployee(currentUser.uid, paramUid);
             this.setState({
                 liked: false,
-                favIcon: "md-star-outline"
             });
         }
         else {
             let result = await db.likedEmployee(currentUser.uid, paramUid);
             this.setState({
                 liked: true,
-                favIcon: "md-star"
             });
         }
     };
@@ -266,10 +257,10 @@ class ViewProfile extends React.Component {
             ready,
             isTimeline,
             canLike,
-            favIcon,
             major,
             categories,
-            isEmployeeProfile
+            isEmployeeProfile,
+            liked
         } = this.state;
         const uid = this.props.navigation.getParam('uid');
 
@@ -329,7 +320,7 @@ class ViewProfile extends React.Component {
                             { canLike ?
                                 (<FavButton
                                     onPress={this.toggleLikeProfile}
-                                    favIcon={favIcon}
+                                    liked={liked}
                                 />)
                                     :
                                 (null)
@@ -364,14 +355,14 @@ const SwitchButton = ({onPress, isTimeline}) => (
     </Button>
 );
 
-const FavButton = ({onPress, favIcon}) => (
+const FavButton = ({onPress, liked}) => (
     <Fab
         style={styles.Fab}
         onPress={onPress}
     >
         <Icon
             type={"Ionicons"}
-            name={favIcon}
+            name={liked ? "ios-heart" : "ios-heart-outline"}
             style={styles.Icon}
         />
     </Fab>
