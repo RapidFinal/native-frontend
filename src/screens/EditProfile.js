@@ -68,6 +68,7 @@ class EditProfile extends React.Component {
         experienceNameInput: "",
         experienceDescInput: "",
         currentExperienceId: null,
+        currentProjectId: null,
         saveStatus: "Save",
         onSaving: false,
         selectedCategories: {},
@@ -98,8 +99,10 @@ class EditProfile extends React.Component {
         })
     }
 
-    updateProjects() {
-
+    updateProjects(newProjects) {
+        this.setState({
+          projects: newProjects
+        })
     }
 
     deleteProject(index) {
@@ -374,7 +377,7 @@ class EditProfile extends React.Component {
                                     updateCategories={this.updateCategories}
                                     userRole="employee"
                                 />
-                                <EditableProjectSection projects={projects} deleteProject={this.deleteProject.bind(this)}/>
+                                <EditableProjectSection projects={projects} updateProjects={this.updateProjects.bind(this)} deleteProject={this.deleteProject.bind(this)}/>
                             </View>
                         ) : (
                             <DataLoading/>

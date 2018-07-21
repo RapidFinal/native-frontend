@@ -75,6 +75,7 @@ class EmployeeCategorySelect extends React.Component {
                 />
                 {ready ? (
                     <NextButton
+                        style={styles.NextButton}
                         onPress={this.submit}
                     />
                 ) : null}
@@ -90,6 +91,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    NextButton: {
+        position: 'absolute',
+        bottom:0,
+    }
 });
 
 export default hoistStatics(compose(withContext)) (EmployeeCategorySelect)

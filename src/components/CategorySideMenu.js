@@ -31,7 +31,8 @@ class CategorySideMenu extends React.Component {
     fetchData = async () => {
         console.log("fetching data");
         try {
-            const data = await DatabaseService.getAllCategories();
+            const db = new DatabaseService;
+            const data = await db.getAllCategories();
             console.log("data",data);
 
             const mutate = data.reduce((accu, val) => {

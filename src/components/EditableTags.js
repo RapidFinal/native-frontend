@@ -74,7 +74,6 @@ class EditableTags extends React.Component {
                 });
             }
         }
-
     }
 
     render() {

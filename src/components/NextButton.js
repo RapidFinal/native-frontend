@@ -16,11 +16,12 @@ class NextButton extends React.Component {
 
     render(){
         const {} = this.state;
+        const {onPress, style} = this.props;
         return (
             <Button
-                style={styles.button}
+                style={[styles.button, style]}
                 iconRight
-                onPress={this.props.onPress}
+                onPress={onPress}
             >
                 <Text>Next</Text>
                 <Icon name='arrow-forward' />
