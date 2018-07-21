@@ -9,11 +9,16 @@ target 'JobMe' do
 
   pod 'React', :path => '../node_modules/react-native', :subspecs => [
   'Core',
+  'RCTActionSheet',
+  'RCTGeolocation',
   'CxxBridge', # Include this for RN >= 0.47
   'DevSupport', # Include this to enable In-App Devmenu if RN >= 0.43
   'RCTText',
   'RCTNetwork',
   'RCTImage',
+  'RCTLinkingIOS',
+  'RCTSettings',
+  'RCTVibration',
   'RCTWebSocket', # Needed for debugging
   'RCTAnimation', # Needed for FlatList and animations running on native UI thread
   # Add any other subspecs you want to use in your project
@@ -45,4 +50,14 @@ target 'JobMe' do
     # Pods for testing
   end
 
+end
+
+# very important to have, unless you removed React dependencies for Libraries
+# and you rely on Cocoapods to manage it
+post_install do |installer|
+    installer.pods_project.targets.each do |target|
+        if target.name == "React"
+            target.remove_from_project
+        end
+    end
 end
