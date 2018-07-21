@@ -131,18 +131,6 @@ class EditableProjectCard extends React.Component {
               "PROJECT TAGS: " + projectTags)
     }
 
-    attemptDelete(index, projectName) {
-        Alert.alert(
-            'Confirm Delete',
-            'Delete ' + projectName + '?',
-            [
-                {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-                {text: 'Delete', onPress: () => this.props.deleteProject(index)},
-            ],
-            {cancelable: false}
-        )
-    }
-
     removeTag = (tagIndex) => {
         let tagList = this.state.credential.projectTags;
         if (tagIndex !== -1) tagList.splice(tagIndex, 1);
@@ -150,7 +138,11 @@ class EditableProjectCard extends React.Component {
     }
 
     handleTagsChange = (tags) => {
-        this.setState({tags: tags})
+        this.setState({
+          credential: {
+            projectTags: tags
+          }
+        })
     }
 
     handleTagTextChange = (event) => {
@@ -182,9 +174,7 @@ class EditableProjectCard extends React.Component {
                     animationType="slide"
                     transparent={false}
                     visible={modalVisible}
-                    onRequestClose={() => {
-                        alert('Modal has been closed.');
-                    }}>
+                    onRequestClose={() => {this.closeModal()}}>
                     <View contentContainerStyle = {styles.MainContainer}>
                       <TouchableOpacity
                           style={styles.CloseIconPos}
