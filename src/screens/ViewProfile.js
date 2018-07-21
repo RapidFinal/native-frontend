@@ -68,10 +68,10 @@ class ViewProfile extends React.Component {
             fetchData: this.fetchData.bind(this),
             scrollToTop: this.scrollToTop.bind(this)
         })
-        this.setCanLike();
-        this.setLiked();
-        this.updateRecentView();
-        this.setIsEmployeeProfile();
+        // this.setCanLike();
+        // this.setLiked();
+        // this.updateRecentView();
+        // this.setIsEmployeeProfile();
     }
 
 
@@ -123,12 +123,24 @@ class ViewProfile extends React.Component {
             skillSets: [],
             projects: [],
             tags: [],
+            scrollView: null,
+            isTimeline: true,
+            canLike: false,
+            favIcon: "md-star-outline",
+            liked: false,
+            major: "",
+            categories: [],
+            isEmployeeProfile: false
         });
     }
 
     initializeState() {
         this.resetState();
         this.fetchData();
+        this.updateRecentView();
+        this.setCanLike();
+        this.setLiked();
+        this.setIsEmployeeProfile();
     }
 
     didBlurSubscription = this.props.navigation.addListener(
@@ -213,16 +225,19 @@ class ViewProfile extends React.Component {
 
     updateRecentView = () => {
         const db = new DatabaseService;
-        const {currentUser, role} = this.props.context;
+        const {currentUser} = this.props.context;
         const paramUid = this.props.navigation.getParam('uid');
 
         if (currentUser && currentUser.uid !== paramUid) {
-            if (role === "employee") {
-                db.updateEmployeeRecentView(currentUser.uid, paramUid)
-            }
-            else {
-                db.updateEmployerRecentView(currentUser.uid, paramUid)
-            }
+            db.getUserRole(paramUid)
+                .then(role => {
+                    if (role === "employee") {
+                        db.updateEmployeeRecentView(currentUser.uid, paramUid)
+                    }
+                    else {
+                        db.updateEmployerRecentView(currentUser.uid, paramUid)
+                    }
+                })
         }
     }
 

@@ -22,20 +22,18 @@ class ImageUploadButton extends React.Component {
 
   render() {
     return (
-      <ScrollView contentContainerStyle = {styles.buttonContainer}>
         <TouchableOpacity
-          style = {styles.button}
+          style = {[styles.button, this.props.style]}
           onPress = {this.uploadImage}>
           <Icon name={"camera"} size={15} />
         </TouchableOpacity>
-      </ScrollView>
     );
   }
 
   /**
    * Crop and upload Image
    **/
-   uploadImage(){
+   uploadImage = () => {
     const Blob = RNFetchBlob.polyfill.Blob
     const fs = RNFetchBlob.fs
     window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
@@ -66,12 +64,9 @@ class ImageUploadButton extends React.Component {
           return imageRef.getDownloadURL()
         })
         .then((url) => {
-
           if (url !== "") {
-              const db = new DatabaseService();
-              db.updateEmployeeImgUrl(uid, url);
+              this.props.update('imgUrl', url)
           }
-          this.props.update('imgUrl', url)
           resolve(url)
         })
         .catch((error) => {
@@ -83,14 +78,6 @@ class ImageUploadButton extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  buttonContainer: {
-    alignItems:'center',
-    justifyContent:'center',
-    marginLeft: 20,
-    marginRight: 20,
-    marginTop: 30,
-    marginBottom: 80,
-  },
   button: {
     borderWidth:1,
     borderColor:'rgba(0,0,0,0.2)',

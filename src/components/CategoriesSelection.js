@@ -6,7 +6,6 @@ import {Body, CheckBox, ListItem, Button, Spinner} from "native-base";
 import Modal from "react-native-modal";
 import {withContext} from "../context/withContext";
 import DatabaseService from "../api/databaseService"
-import {Authentication} from "../api";
 
 const DataLoading = ({}) => (
     <View style={styles.MainContainer}>
@@ -32,7 +31,6 @@ class CategoriesSelection extends React.Component {
     };
 
     componentDidMount(){
-
         this.getCategoriesData()
         this.getSelectedCategories()
     }
@@ -161,7 +159,6 @@ class CategoriesSelection extends React.Component {
             </Button>
         ));
     }
-
 
     render(){
         const {categories, currentCategoryIndex, ready1,ready2} =this.state

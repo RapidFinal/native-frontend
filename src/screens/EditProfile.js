@@ -74,6 +74,7 @@ class EditProfile extends React.Component {
         selectedCategories: {},
         categories: [],
         major: "",
+        uid: "",
     }
 
     componentDidMount(){
@@ -97,6 +98,12 @@ class EditProfile extends React.Component {
         this.setState({
             [field]: value
         })
+    }
+
+    updateProfileImage(field, value) {
+        let db = new DatabaseService
+        this.update(field, value)
+        db.updateEmployeeImgUrl(this.state.uid, value)
     }
 
     updateProjects(newProjects) {
@@ -310,6 +317,7 @@ class EditProfile extends React.Component {
                 skillSets: result.skillSet,
                 major: result.major,
                 categories: result.categories,
+                uid: uid,
                 ready: true
             })
         }).catch((error) => {
@@ -349,16 +357,15 @@ class EditProfile extends React.Component {
     );
 
     render() {
-        const {ready, imgUrl, firstName, lastName, description, status, experiences, skillSets, projects, tags, showSkillModal, skillInput, saveStatus, onSaving, major, categories, showExperienceModal, experienceModal, experienceNameInput, experienceDescInput} = this.state;
-        const uid = Authentication.currentUser().uid;
+        const {ready, imgUrl, firstName, lastName, description, status, experiences, skillSets, projects, tags, showSkillModal, skillInput, saveStatus, onSaving, major, categories, showExperienceModal, experienceModal, experienceNameInput, experienceDescInput, uid} = this.state;
         return (
             <View>
                 <ScrollView contentContainerStyle={styles.ScrollContainer} ref={scrollView => this.scrollView = scrollView}>
                     {
                         ready ? (
                             <View style={styles.MainContainer}>
-                                <CircularProfilePhoto url={imgUrl} diameter={150}/>
-                                <ImageUploadButton update={this.update.bind(this)}/>
+                                <CircularProfilePhoto url={imgUrl} diameter={150} style={styles.Under}/>
+                                <ImageUploadButton update={this.updateProfileImage.bind(this)} style={styles.Uploader}/>
                                 <EditableName firstName={firstName}
                                               lastName={lastName}
                                               updateName={this.updateName.bind(this)}
@@ -435,11 +442,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
 
+    Under: {
+      zIndex: -1,
+    },
+
     Uploader: {
+        alignItems: 'center',
         position: 'absolute',
-        left: 50,
         top: 120,
-        zIndex: -1,
+        zIndex: 1,
         borderWidth: 1,
         borderColor: '#ddd',
         shadowColor: '#989898',

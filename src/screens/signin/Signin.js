@@ -71,20 +71,20 @@ class Signin extends React.Component {
                     </SpanTextButton>
                 </Container>
 
-                <View style={{flexDirection: 'row', paddingLeft: "8%",paddingRight: "8%"}}>
-                    <View style={{backgroundColor: 'grey', height: 2, flex: 1, alignSelf: 'center'}} />
-                    <Text style={{ alignSelf:'center', paddingHorizontal:5, fontSize: 24 }}>OR</Text>
-                    <View style={{backgroundColor: 'grey', height: 2, flex: 1, alignSelf: 'center'}} />
-                </View>
-                <Container style={[styles.button]} >
-                    <SpanTextButton
-                        rounded
-                        onPress={this.facebookAuth}
-                        fonttype={"FontAwesome"}
-                        icon={"facebook"}>
-                        {"   Login with Facebook"}
-                    </SpanTextButton>
-                </Container>
+                {/*<View style={{flexDirection: 'row', paddingLeft: "8%",paddingRight: "8%"}}>*/}
+                    {/*<View style={{backgroundColor: 'grey', height: 2, flex: 1, alignSelf: 'center'}} />*/}
+                    {/*<Text style={{ alignSelf:'center', paddingHorizontal:5, fontSize: 24 }}>OR</Text>*/}
+                    {/*<View style={{backgroundColor: 'grey', height: 2, flex: 1, alignSelf: 'center'}} />*/}
+                {/*</View>*/}
+                {/*<Container style={[styles.button]} >*/}
+                    {/*<SpanTextButton*/}
+                        {/*rounded*/}
+                        {/*onPress={this.facebookAuth}*/}
+                        {/*fonttype={"FontAwesome"}*/}
+                        {/*icon={"facebook"}>*/}
+                        {/*{"   Login with Facebook"}*/}
+                    {/*</SpanTextButton>*/}
+                {/*</Container>*/}
             </Container>
 
 
