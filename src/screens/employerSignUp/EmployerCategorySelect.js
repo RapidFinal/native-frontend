@@ -121,9 +121,11 @@ const styles = StyleSheet.create({
     center: {
         alignSelf: "center",
     },
+
     submitButton: {
         marginVertical: 60,
-    },
+        backgroundColor: "#15BBCF"
+    }
 
 });
 
