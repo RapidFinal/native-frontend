@@ -56,6 +56,13 @@ class EditableProjectSection extends React.Component {
           this.setState({credential});
       };
 
+      handleDateChange = (date) => {
+          //console.log(date);
+          const credential = {...this.state.credential};
+          credential["projectDate"] = date;
+          this.setState({credential})
+      }
+
       validate = (errorField) => {
           const {credential} = this.state;
           if (credential[errorField] === '') {
@@ -229,7 +236,7 @@ class EditableProjectSection extends React.Component {
                           date = {projectDate}
                           mode="date"
                           placeholder="select date"
-                          format="DD-MM-YYYY"
+                          format="DD/MM/YYYY"
                           confirmBtnText="Confirm"
                           cancelBtnText="Cancel"
                           showIcon={false}
