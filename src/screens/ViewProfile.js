@@ -431,9 +431,10 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         borderColor: "#15BBCF",
         borderWidth: 1,
-        width: "110%",
-        height: "110%",
-        borderRadius: 50
+        width: 70,
+        height: 70,
+        borderRadius: 35,
+        marginRight: 10
     },
 
     Text: {
