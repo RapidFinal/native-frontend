@@ -59,10 +59,7 @@ class ImageUploadButton extends React.Component {
         const imageRef = RNfirebase.storage().ref('profile-photo/').child(`${uid}.jpg`)
 
         fs.readFile(imagePath, 'base64')
-        .then((data) => {
-          return Blob.build(data, { type: `${mime};BASE64` })
-        })
-        .then((blob) => {
+        .then(() => {
           return imageRef.putFile(imagePath, { contentType: mime })
         })
         .then(() => {
