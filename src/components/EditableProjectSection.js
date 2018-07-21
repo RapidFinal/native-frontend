@@ -37,8 +37,6 @@ class EditableProjectSection extends React.Component {
                   projectName: false,
                   projectDescription: false,
                   projectDate: false,
-                  projectGit: false,
-                  projectVideo: false,
               },
               message: {
                   projectName: "Required",
@@ -254,7 +252,6 @@ class EditableProjectSection extends React.Component {
                         <TextInputWithLabel
                             placeholder="Project Git"
                             value={projectGit}
-                            hasError={flags.projectGit}
                             onBlur={() => this.validate("projectGit")}
                             onChange={this.handleChange("projectGit")}
                             errorMessage={message.projectGit}
@@ -268,7 +265,6 @@ class EditableProjectSection extends React.Component {
                         <TextInputWithLabel
                             placeholder="Project Video"
                             value={projectVideo}
-                            hasError={flags.projectVideo}
                             onBlur={() => this.validate("projectVideo")}
                             onChange={this.handleChange("projectVideo")}
                             errorMessage={message.projectVideo}
