@@ -42,7 +42,7 @@ class ViewProfile extends React.Component {
         scrollView: null,
         isTimeline: true,
         canLike: false,
-        favIcon: "md-star-outline",
+        favIcon: "ios-heart",
         liked: false,
         major: "",
         categories: [],
@@ -126,7 +126,7 @@ class ViewProfile extends React.Component {
             scrollView: null,
             isTimeline: true,
             canLike: false,
-            favIcon: "md-star-outline",
+            favIcon: "ios-heart",
             liked: false,
             major: "",
             categories: [],
@@ -195,7 +195,7 @@ class ViewProfile extends React.Component {
                     if (result[paramUid]) {
                         this.setState({
                             liked: true,
-                            favIcon: "md-star"
+                            favIcon: "ios-heart"
                         })
                     }
                 })
@@ -424,22 +424,18 @@ const styles = StyleSheet.create({
 
     Icon: {
         color: '#15BBCF',
-        fontSize: 40
+        fontSize: 25
     },
 
     Fab: {
         backgroundColor: "white",
         borderColor: "#15BBCF",
         borderWidth: 1,
-        width: 70,
-        height: 70,
         borderRadius: 35,
-        marginRight: 10
     },
 
     Text: {
         marginTop: "2%",
-        fontSize: 20,
     }
 });
 
