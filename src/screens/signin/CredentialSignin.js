@@ -66,7 +66,7 @@ class CredentialSignin extends React.Component {
                 await CredentialAuthentication.signin({email, password})
                 this.setState({
                     disableSignin: false
-                })
+                }, () => this.props.navigation.navigate("Initial"))
 
             } catch (e) {
 
