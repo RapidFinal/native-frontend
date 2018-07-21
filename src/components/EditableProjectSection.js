@@ -108,9 +108,20 @@ class EditableProjectSection extends React.Component {
           this.setModalVisible(!this.state.modalVisible)
       }
 
+      cleanLink(link) {
+          if (link.indexOf('http://') !== -1) {
+              link.replace(/http:\/\//i, 'https://');
+              return link;
+          }
+          if (link.indexOf('https://') === -1)
+              return "https://" + link;
+          return link;
+      }
+
       save() {
-          const allLinks = {github: this.state.credential.projectGit,
-                            youtube: this.state.credential.projectVideo}
+          const allLinks = {github: this.cleanLink(this.state.credential.projectGit),
+                            youtube: this.cleanLink(this.state.credential.projectVideo)};
+            
           this.saveToDB(this.state.credential.projectName, this.state.credential.projectDescription,
                         this.state.credential.projectDate, this.state.credential.projectTags, allLinks)
 
@@ -128,11 +139,11 @@ class EditableProjectSection extends React.Component {
           let db = new DatabaseService()
           let uid = Authentication.currentUser().uid
           db.createEmployeeProjects(uid, projectName, projectDescription, projectDate, projectTags, projectLinks);
-          alert("UID: " + uid + "\n" +
-                "PROJECT NAME: " + projectName + "\n" +
-                "PROJECT DESC: " + projectDescription + "\n" +
-                "PROJECT DATE: " + projectDate + "\n" +
-                "PROJECT TAGS: " + projectTags)
+          //   alert("UID: " + uid + "\n" +
+          //         "PROJECT NAME: " + projectName + "\n" +
+          //         "PROJECT DESC: " + projectDescription + "\n" +
+          //         "PROJECT DATE: " + projectDate + "\n" +
+          //         "PROJECT TAGS: " + projectTags)
       }
 
       attemptDelete(index, projectName) {
