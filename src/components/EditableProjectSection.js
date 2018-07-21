@@ -27,15 +27,17 @@ class EditableProjectSection extends React.Component {
                     </TouchableOpacity>
                 </View>
                 {
-                    this.props.projects.map((value, index) => {
+                    this.props.projects.map((item, index) => {
                         return (
-                            <EditableProjectCard name={value.name}
-                                         description={value.description}
-                                         date={value.date}
-                                         projectId={value.id}
-                                         index={index}
-                                         deleteProject={this.props.deleteProject}
-                                         key={value.id}
+                            <EditableProjectCard projectName={item.name}
+                                                  projectId={item.id}
+                                                  projectDescription={item.description}
+                                                  projectDate={item.date}
+                                                  projectTags={item.tags}
+                                                  index={index}
+                                                  updateProjects={this.props.updateProjects}
+                                                  deleteProject={this.props.deleteProject}
+                                                  key={item.id}
                             />
                         )
                     })
