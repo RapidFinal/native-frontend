@@ -9,6 +9,7 @@ import {Authentication} from '../api'
 import {Spinner} from "native-base";
 import EditableCompanyName from "../components/EditableCompanyName";
 import EditableName from "../components/EditableName";
+import ImageUploadButton from "../components/ImageUploadButton";
 
 
 const DataLoading = ({}) => (
@@ -36,7 +37,6 @@ class EditEmployerProfile extends React.Component {
         ready:false,
         scrollView: null,
         selectedCategories:{},
-
     };
 
 
@@ -49,7 +49,6 @@ class EditEmployerProfile extends React.Component {
     fetchData() {
         console.log("fetching data..")
         let db = new DatabaseService
-        // let uid = this.props.navigation.getParam('uid') //need Pan to add param when edit to here
         let uid = Authentication.currentUser().uid;
 
         db.getEmployerInfo(uid).then((result) => {
@@ -133,6 +132,15 @@ class EditEmployerProfile extends React.Component {
         })
     }
 
+    update(field, value){
+        this.setState({
+            [field] : value
+        })
+        let db = new DatabaseService
+        const uid = Authentication.currentUser().uid
+        db.updateEmployerImgUrl(uid,value)
+    }
+
     render(){
         const {imgUrl, firstName,lastName, companyName, categories, ready} = this.state;
         const uid = Authentication.currentUser().uid;
@@ -141,8 +149,10 @@ class EditEmployerProfile extends React.Component {
                 {
                     ready ? (
                         <View style={styles.MainContainer}>
-                            <CircularProfilePhoto url={imgUrl} diameter={150}/>
-
+                            <CircularProfilePhoto url={imgUrl}
+                                                  diameter={150} style={styles.under}/>
+                            <ImageUploadButton update={this.update.bind(this)}
+                                               style={styles.over}/>
                             <EditableName firstName={firstName} lastName={lastName}
                                           updateName={this.updateName.bind(this)}/>
                             <EditableCompanyName
@@ -193,14 +203,15 @@ const styles = StyleSheet.create({
     },
 
     under:{
-        zIndex:1,
+        zIndex:-1,
     },
 
     over:{
+        alignItems:'center',
+        justifyContent:'center',
         position: 'absolute',
-        left:50,
         top: 120,
-        zIndex: -1,
+        zIndex: 1,
         borderWidth: 1,
         borderColor: '#ddd',
         shadowColor: '#989898',
