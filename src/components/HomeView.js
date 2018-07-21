@@ -38,7 +38,7 @@ class HomeView extends React.Component {
                 status: result.status,
                 imgUrl: result.imgUrl,
             });
-        })
+        }).catch(e => {console.log(e, this.props.uid);});
     }
 
     render() {

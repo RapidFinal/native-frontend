@@ -81,7 +81,7 @@ class ViewProfile extends React.Component {
     }
 
     fetchData() {
-        console.log("fetching data..")
+        //console.log("fetching data..")
         let db = new DatabaseService
         let uid = "";
         let paramUid = this.props.navigation.getParam('uid')
@@ -90,9 +90,9 @@ class ViewProfile extends React.Component {
         } else {
             uid = this.props.uid;
         }
-        console.log("uid : " + uid)
+        //console.log("uid : " + uid)
         db.getEmployeeInfo(uid).then((result) => {
-            console.log(result);
+            //console.log(result);
             this.getAllTags(result.tagIds);
             this.setState({
                 imgUrl: result.imgUrl,

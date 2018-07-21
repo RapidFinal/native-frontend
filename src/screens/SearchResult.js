@@ -44,10 +44,10 @@ class SearchResult extends React.Component {
     }
 
     categorySearch = (categoryQuery) => {
-        console.log('catSearch');
+        //console.log('catSearch');
         this.setState({loading: true});
         Search.categorySearch(categoryQuery).then((d) => {
-            console.log("done");
+            //console.log("done");
             this.setState({results: d, loading: false});
         }).catch(e=>console.error(e));
     }

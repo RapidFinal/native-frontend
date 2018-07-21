@@ -59,18 +59,18 @@ export const search = async (searchString) => {
 };
 
 const getEmployees = async (uids)  => {
-    console.log('uidssss', uids);
+    //console.log('uidssss', uids);
     let db = new DatabaseService;
     const tagsSnapshot = await firebase.database().ref('tags').once('value');
-    console.log(tagsSnapshot);
+    //console.log(tagsSnapshot);
     const snapshot = tagsSnapshot.val();
-    console.log(snapshot);
+    //console.log(snapshot);
     const infos = await Promise.all(uids.map( async (id) => {
         var info = await db.getEmployeeInfo(id);
-        console.log(info);
+        //console.log(info);
         info.tags = info.tagIds.map( id => snapshot[id].tagName );
         info.uid = id;
-        console.log(info);
+        //console.log(info);
         return info;
     }));
     return infos;
@@ -80,6 +80,6 @@ export const categorySearch = async (categoryQuery) => {
     const {categoryId, subCategoryId} = categoryQuery;
     let db = new DatabaseService();
     const uids = await db.getEmployeeFromSubCategory(categoryId, subCategoryId);
-    console.log('uids', uids);
+    //console.log('uids', uids);
     return getEmployees(Object.keys(uids));
 }

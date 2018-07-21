@@ -288,7 +288,7 @@ class EditProfile extends React.Component {
                     tags: [...prevState.tags, tagName]
                 }))
             }).catch((error) => {
-                console.log(error)
+                console.log(error, id);
             })
         })
     }
@@ -297,7 +297,7 @@ class EditProfile extends React.Component {
         let db = new DatabaseService
         let uid = Authentication.currentUser().uid
         db.getEmployeeInfo(uid).then((result) => {
-            console.log(result)
+            //console.log(result)
             this.getAllTags(result.tagIds)
             this.setState({
                 imgUrl: result.imgUrl,

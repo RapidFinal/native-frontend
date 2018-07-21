@@ -47,13 +47,13 @@ class EditEmployerProfile extends React.Component {
     }
 
     fetchData() {
-        console.log("fetching data..")
+        //console.log("fetching data..")
         let db = new DatabaseService
         // let uid = this.props.navigation.getParam('uid') //need Pan to add param when edit to here
         let uid = Authentication.currentUser().uid;
 
         db.getEmployerInfo(uid).then((result) => {
-            console.log(result)
+            //console.log(result)
             this.setState({
                 imgUrl: result.imgUrl,
                 firstName: result.firstName,

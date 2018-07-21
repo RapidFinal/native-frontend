@@ -24,7 +24,7 @@ class Home extends React.Component {
         searchText: PropTypes.string,
         recentView: PropTypes.array,
         recommendedUsers: PropTypes.array,
-        showRecentView: PropTypes.boo,
+        showRecentView: PropTypes.bool,
     };
 
     static navigationOptions = ({ navigation }) => ({
@@ -64,8 +64,6 @@ class Home extends React.Component {
     }
 
     componentDidMount = () => {
-        // console.log('hi');
-        // this.fetchData();
     };
 
     initializeState() {
@@ -100,7 +98,7 @@ class Home extends React.Component {
         axios.get(realLink)
             .then((response) =>  {
                 // handle success
-                console.log('response:', response.data);
+                //console.log('response:', response.data);
                 data = response.data;
                 let dataList = []
                 data.forEach(d => {
@@ -152,7 +150,7 @@ class Home extends React.Component {
 
     drawer = () => {
         this.props.navigation.openDrawer();
-        console.log("drawer open")
+        //console.log("drawer open")
     };
 
     onChangeText = (text) => {
@@ -160,7 +158,7 @@ class Home extends React.Component {
     };
 
     onSearchButtonPress = () => {
-        console.log('OnSearchPress:', this.state.searchText);
+        //console.log('OnSearchPress:', this.state.searchText);
         this.props.navigation.navigate("SearchResult", { textInput: this.state.searchText });
     };
 

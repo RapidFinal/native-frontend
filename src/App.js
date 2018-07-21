@@ -85,12 +85,12 @@ class App extends React.Component {
     }
 
     updateState = (nextState, cb) => {
-        console.log("nextState", nextState);
+        //console.log("nextState", nextState);
         this.setState({
             ..._.pick(nextState, Object.keys(this.state))
         }, () => {
             cb && cb();
-            console.log("states", this.state)
+            //console.log("states", this.state)
         });
     };
 

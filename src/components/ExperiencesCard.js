@@ -60,7 +60,7 @@ class ExperiencesCard extends React.Component {
 
 
     render() {
-        console.log(`ExperiencesCard ${this.props.experiences}`, this.props.experiences);
+        //console.log(`ExperiencesCard ${this.props.experiences}`, this.props.experiences);
         const {isEditable = false, showModal} = this.props;
         return (
             <View style={styles.MainContainer}>

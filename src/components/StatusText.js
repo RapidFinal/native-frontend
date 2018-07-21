@@ -13,7 +13,7 @@ const StatusIcon = ({status}) => {
     } else {
         color = 'grey';
     }
-    console.log(status, color);
+    //console.log(status, color);
     return (
         <Icon name='circle' color={color} style={{fontSize: 20, color: `${color}`}}/>
     )
